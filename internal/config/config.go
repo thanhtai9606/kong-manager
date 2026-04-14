@@ -35,6 +35,10 @@ type Config struct {
 	// Used to build OIDC redirect_uri when reverse proxies do not set X-Forwarded-* reliably. Optional if the
 	// request Host + X-Forwarded-Proto are enough.
 	PublicBaseURL string
+	// OIDCTLSkipVerify disables TLS certificate verification for outbound OIDC discovery/token/JWKS (Issuer URL).
+	// Set OIDC_TLS_SKIP_VERIFY=true for local IdPs with self-signed certs (e.g. Keycloak on https://localhost).
+	// Do not use in production.
+	OIDCTLSkipVerify bool
 }
 
 func getenv(key, def string) string {
@@ -84,5 +88,6 @@ func Load() *Config {
 		BootstrapPassword: getenv("BOOTSTRAP_ADMIN_PASSWORD", ""),
 		CookieSecure:      parseBool(getenv("COOKIE_SECURE", "false"), false),
 		PublicBaseURL:     strings.TrimSpace(getenv("PUBLIC_BASE_URL", "")),
+		OIDCTLSkipVerify:  parseBool(getenv("OIDC_TLS_SKIP_VERIFY", ""), false),
 	}
 }

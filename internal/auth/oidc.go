@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/tls"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -25,6 +26,39 @@ import (
 )
 
 const oidcNonceCookie = "km_oidc_nonce"
+
+func newOIDCHTTPClient(cfg *config.Config) *http.Client {
+	t, ok := http.DefaultTransport.(*http.Transport)
+	var rt http.RoundTripper
+	if ok {
+		tr := t.Clone()
+		if cfg.OIDCTLSkipVerify {
+			if tr.TLSClientConfig == nil {
+				tr.TLSClientConfig = &tls.Config{MinVersion: tls.VersionTLS12}
+			} else {
+				tr.TLSClientConfig = tr.TLSClientConfig.Clone()
+			}
+			tr.TLSClientConfig.InsecureSkipVerify = true
+		}
+		rt = tr
+	} else {
+		rt = &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			TLSClientConfig: &tls.Config{
+				MinVersion:         tls.VersionTLS12,
+				InsecureSkipVerify: cfg.OIDCTLSkipVerify,
+			},
+		}
+	}
+	return &http.Client{Timeout: 45 * time.Second, Transport: rt}
+}
+
+// oidcWithHTTPClient attaches a client for discovery, token exchange, and JWKS (TLS options from config).
+func oidcWithHTTPClient(parent context.Context, cfg *config.Config) context.Context {
+	hc := newOIDCHTTPClient(cfg)
+	ctx := oidc.ClientContext(parent, hc)
+	return context.WithValue(ctx, oauth2.HTTPClient, hc)
+}
 
 // PublicSSOProviders returns enabled IdPs for the login screen (no secrets).
 func (s *Service) PublicSSOProvidersHandler(db *gorm.DB) http.HandlerFunc {
@@ -222,13 +256,13 @@ func (s *Service) OIDCLoginHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+		ctx, cancel := context.WithTimeout(oidcWithHTTPClient(r.Context(), s.cfg), 30*time.Second)
 		defer cancel()
 
 		oidcProvider, err := oidc.NewProvider(ctx, strings.TrimRight(provider.IssuerURL, "/"))
 		if err != nil {
 			log.Printf("oidc: provider discovery %q: %v", provider.IssuerURL, err)
-			http.Error(w, "oidc discovery failed", http.StatusBadGateway)
+			http.Error(w, "oidc discovery failed (check Issuer URL, network, TLS; see server log)", http.StatusBadGateway)
 			return
 		}
 
@@ -323,7 +357,7 @@ func (s *Service) OIDCCallbackHandler(db *gorm.DB, enforcer *casbin.Enforcer) ht
 		}
 		http.SetCookie(w, &http.Cookie{Name: oidcNonceCookie, Value: "", Path: "/", MaxAge: -1, HttpOnly: true})
 
-		ctx, cancel := context.WithTimeout(r.Context(), 45*time.Second)
+		ctx, cancel := context.WithTimeout(oidcWithHTTPClient(r.Context(), s.cfg), 45*time.Second)
 		defer cancel()
 
 		oidcProvider, err := oidc.NewProvider(ctx, strings.TrimRight(provider.IssuerURL, "/"))

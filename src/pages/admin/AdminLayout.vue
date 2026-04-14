@@ -1,6 +1,7 @@
 <template>
   <AppLayout :sidebar-top-items="sidebarItems">
     <template #navbar-right>
+      <KongClusterSwitch />
       <UserProfileBar v-if="config.AUTH_REQUIRED" />
     </template>
     <template #sidebar-header>
@@ -16,6 +17,7 @@ import { useRoute } from 'vue-router'
 import { AppLayout, type SidebarPrimaryItem } from '@kong-ui-public/app-layout'
 import { config } from 'config'
 import NavbarLogo from '@/components/NavbarLogo.vue'
+import KongClusterSwitch from '@/components/KongClusterSwitch.vue'
 import UserProfileBar from '@/components/UserProfileBar.vue'
 import { useI18n } from '@/composables/useI18n'
 

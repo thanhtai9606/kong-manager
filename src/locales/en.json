@@ -35,7 +35,10 @@
       "error": {
         "load": "Could not load users.",
         "forbidden": "You do not have permission to view users (admin role required)."
-      }
+      },
+      "editRoles": "Assign roles",
+      "saveRoles": "Save",
+      "rolesSaved": "Role assignments updated."
     },
     "rbac": {
       "description": "Effective Casbin policies: which roles can access which paths, and which users belong to which roles.",
@@ -52,6 +55,49 @@
       "error": {
         "load": "Could not load RBAC data.",
         "forbidden": "You do not have permission to view RBAC (admin role required)."
+      },
+      "roles": {
+        "title": "Roles",
+        "newNamePlaceholder": "new-role-name",
+        "create": "Add role",
+        "rename": "Rename",
+        "delete": "Delete",
+        "policies": "Policies",
+        "policyHint": "Path must start with / (e.g. /kong-admin/*) or be *. Action: GET, POST, PATCH, DELETE, or *.",
+        "addPolicyRow": "Add rule",
+        "savePolicies": "Save policies",
+        "systemRole": "System",
+        "rawSnapshot": "Raw Casbin snapshot",
+        "policiesFor": "Policies for role: {name}",
+        "roleCreated": "Role created.",
+        "roleDeleted": "Role deleted.",
+        "roleRenamed": "Role renamed.",
+        "policiesSaved": "Policies saved.",
+        "confirmDelete": "Delete role \"{name}\"?",
+        "deleteBlockedUsers": "Remove all users from this role before deleting it."
+      }
+    },
+    "clusters": {
+      "switchLabel": "Gateway cluster",
+      "description": "Each entry is a Kong Admin API base URL. Traffic is proxied as /kong-admin/c/{slug}/… . Start the BFF with KONG_ADMIN_URL pointing at your Kong (e.g. http://127.0.0.1:9090) so the seeded default cluster is correct, or edit the default row here.",
+      "addTitle": "Add cluster",
+      "loading": "Loading…",
+      "fields": {
+        "name": "Display name",
+        "slug": "Slug (URL segment)",
+        "adminBaseUrl": "Kong Admin base URL",
+        "adminTokenOptional": "Kong Admin token (optional)",
+        "enabled": "Enabled"
+      },
+      "delete": "Delete",
+      "created": "Cluster added.",
+      "saved": "Cluster updated.",
+      "deleted": "Cluster removed.",
+      "confirmDelete": "Delete cluster \"{name}\"?",
+      "deleteBlocked": "Cannot delete this cluster.",
+      "error": {
+        "load": "Could not load clusters.",
+        "forbidden": "You do not have permission to manage clusters."
       }
     },
     "pages": {

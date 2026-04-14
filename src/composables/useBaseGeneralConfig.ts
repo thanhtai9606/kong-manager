@@ -1,11 +1,12 @@
 import { reactive } from 'vue'
-import { config } from 'config'
+import { kongAdminUrlForSlug } from '@/services/apiService'
 import { useInfoStore } from '@/stores/info'
+import { useKongClusterStore } from '@/stores/kongCluster'
 import type { KongManagerConfig } from '@kong-ui-public/entities-shared'
 
-const infoStore = useInfoStore()
-
 export const useBaseGeneralConfig = () => {
+  const infoStore = useInfoStore()
+  const kongClusterStore = useKongClusterStore()
   return reactive({
     app: 'kongManager' as const,
     workspace: '',
@@ -13,6 +14,9 @@ export const useBaseGeneralConfig = () => {
       edition: infoStore.kongEdition,
       version: infoStore.kongVersion,
     },
-    apiBaseUrl: config.ADMIN_API_URL,
+    get apiBaseUrl() {
+      void kongClusterStore.selectedSlug
+      return kongAdminUrlForSlug(kongClusterStore.selectedSlug || 'default')
+    },
   }) as KongManagerConfig
 }

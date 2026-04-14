@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
@@ -37,11 +36,6 @@ func main() {
 		log.Fatalf("bootstrap: %v", err)
 	}
 
-	kongURL, err := url.Parse(cfg.KongAdminURL)
-	if err != nil {
-		log.Fatalf("KONG_ADMIN_URL: %v", err)
-	}
-
 	jwtSvc := auth.NewService(cfg)
 
 	r := chi.NewRouter()
@@ -49,6 +43,8 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	// Align request path with Casbin policies when the SPA uses a non-root asset base (ADMIN_GUI_PATH / kconfig).
+	r.Use(httpapi.StripGUIPath(cfg.AdminGUIPath))
 
 	r.Get("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -59,14 +55,25 @@ func main() {
 
 	r.Route("/api/admin", func(ar chi.Router) {
 		ar.Use(httpapi.JWTAuth(jwtSvc))
-		ar.Use(httpapi.CasbinAuthorize(enforcer))
+		ar.Use(httpapi.CasbinAuthorize(enforcer, cfg.KongProxyPrefix))
+		ar.Put("/users/{userID}/groups", admin.PutUserGroups(db, enforcer))
 		ar.Get("/users", admin.ListUsers(db))
+		ar.Get("/groups", admin.ListGroups(db))
+		ar.Post("/groups", admin.CreateGroup(db))
+		ar.Get("/groups/{groupID}/policies", admin.GetGroupPolicies(db, enforcer))
+		ar.Put("/groups/{groupID}/policies", admin.PutGroupPolicies(db, enforcer))
+		ar.Patch("/groups/{groupID}", admin.UpdateGroup(db, enforcer))
+		ar.Delete("/groups/{groupID}", admin.DeleteGroup(db, enforcer))
 		ar.Get("/rbac", admin.RBACSnapshot(enforcer))
+		ar.Get("/kong-clusters", admin.ListKongClusters(db))
+		ar.Post("/kong-clusters", admin.CreateKongCluster(db))
+		ar.Patch("/kong-clusters/{clusterID}", admin.PatchKongCluster(db))
+		ar.Delete("/kong-clusters/{clusterID}", admin.DeleteKongCluster(db))
 	})
 
 	kongHandler := httpapi.JWTAuth(jwtSvc)(
-		httpapi.CasbinAuthorize(enforcer)(
-			proxy.Handler(kongURL, cfg.KongAdminToken, cfg.KongProxyPrefix),
+		httpapi.CasbinAuthorize(enforcer, cfg.KongProxyPrefix)(
+			proxy.DynamicKongHandler(db, cfg),
 		),
 	)
 
@@ -84,7 +91,7 @@ func main() {
 		httpapi.SPA(cfg.StaticDir).ServeHTTP(w, r)
 	}))
 
-	log.Printf("listening on %s (static=%s kong=%s)", cfg.HTTPAddr, cfg.StaticDir, cfg.KongAdminURL)
+	log.Printf("listening on %s (static=%s default_kong=%s)", cfg.HTTPAddr, cfg.StaticDir, cfg.KongAdminURL)
 	if err := http.ListenAndServe(cfg.HTTPAddr, r); err != nil {
 		log.Fatal(err)
 	}

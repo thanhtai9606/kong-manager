@@ -68,7 +68,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'admin-clusters',
         path: 'clusters',
-        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        component: () => import('@/pages/admin/AdminClustersPage.vue'),
         meta: {
           shell: 'admin',
           adminPageKey: 'clusters',

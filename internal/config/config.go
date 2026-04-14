@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -17,6 +18,9 @@ type Config struct {
 	KongAdminURL       string
 	KongAdminToken     string
 	KongProxyPrefix    string
+	// AdminGUIPath is the SPA base path (e.g. /__km_base__) without trailing slash; empty if served at /.
+	// Must match window.K_CONFIG.ADMIN_GUI_PATH so API paths are normalized before Casbin.
+	AdminGUIPath       string
 	BootstrapUsername  string
 	BootstrapPassword  string
 	CookieSecure       bool
@@ -63,6 +67,7 @@ func Load() *Config {
 		KongAdminURL:    getenv("KONG_ADMIN_URL", "http://127.0.0.1:8001"),
 		KongAdminToken:  getenv("KONG_ADMIN_TOKEN", ""),
 		KongProxyPrefix: getenv("KONG_PROXY_PREFIX", "/kong-admin"),
+		AdminGUIPath:    strings.TrimSpace(getenv("ADMIN_GUI_PATH", "")),
 		BootstrapUsername: getenv("BOOTSTRAP_ADMIN_USERNAME", ""),
 		BootstrapPassword: getenv("BOOTSTRAP_ADMIN_PASSWORD", ""),
 		CookieSecure:      parseBool(getenv("COOKIE_SECURE", "false"), false),

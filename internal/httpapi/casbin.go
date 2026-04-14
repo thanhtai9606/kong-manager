@@ -2,12 +2,15 @@ package httpapi
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/casbin/casbin/v2"
 )
 
 // CasbinAuthorize enforces RBAC for the Kong proxy path.
-func CasbinAuthorize(e *casbin.Enforcer) func(http.Handler) http.Handler {
+// kongProxyPrefix should match config (e.g. /kong-admin) so /kong-admin/c/{slug}/... normalizes for policy checks.
+func CasbinAuthorize(e *casbin.Enforcer, kongProxyPrefix string) func(http.Handler) http.Handler {
+	kongProxyPrefix = strings.TrimSpace(kongProxyPrefix)
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			claims, ok := ClaimsFrom(r.Context())
@@ -15,7 +18,8 @@ func CasbinAuthorize(e *casbin.Enforcer) func(http.Handler) http.Handler {
 				http.Error(w, "unauthorized", http.StatusUnauthorized)
 				return
 			}
-			allowed, err := e.Enforce(claims.Username, r.URL.Path, r.Method)
+			obj := KongPathForPolicy(r.URL.Path, kongProxyPrefix)
+			allowed, err := e.Enforce(claims.Username, obj, r.Method)
 			if err != nil {
 				http.Error(w, "authorization error", http.StatusInternalServerError)
 				return

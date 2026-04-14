@@ -10,6 +10,7 @@
     :sidebar-top-items="sidebarItems"
   >
     <template #navbar-right>
+      <KongClusterSwitch />
       <UserProfileBar v-if="config.AUTH_REQUIRED" />
       <GithubStar
         v-else
@@ -31,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { AppLayout, type SidebarPrimaryItem } from '@kong-ui-public/app-layout'
@@ -39,14 +40,38 @@ import { GithubStar } from '@kong-ui-public/misc-widgets'
 import { config } from 'config'
 import { useAuthStore } from '@/stores/auth'
 import { useInfoStore } from '@/stores/info'
+import { useKongClusterStore } from '@/stores/kongCluster'
 import NavbarLogo from '@/components/NavbarLogo.vue'
+import KongClusterSwitch from '@/components/KongClusterSwitch.vue'
 import MakeAWish from '@/components/MakeAWish.vue'
 import UserProfileBar from '@/components/UserProfileBar.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
 const infoStore = useInfoStore()
+const kongClusterStore = useKongClusterStore()
 const { isHybridMode } = storeToRefs(infoStore)
+
+async function loadClustersIfAuth() {
+  if (!config.AUTH_REQUIRED || !authStore.isAuthenticated) {
+    return
+  }
+  await kongClusterStore.loadClusters()
+  await infoStore.getInfo({ silent: true })
+}
+
+onMounted(() => {
+  void loadClustersIfAuth()
+})
+
+watch(
+  () => authStore.isAuthenticated,
+  (ok) => {
+    if (ok && config.AUTH_REQUIRED) {
+      void loadClustersIfAuth()
+    }
+  },
+)
 
 const isAdminShell = computed(() =>
   route.matched.some((r) => r.meta?.shell === 'admin'),

@@ -5,8 +5,38 @@ import {
 import { config } from 'config'
 import { useAxios } from '@kong-ui-public/entities-shared'
 
+const KM_CLUSTER_SLUG_KEY = 'km_kong_cluster_slug'
+
+function storedClusterSlug(): string {
+  if (typeof sessionStorage === 'undefined') {
+    return 'default'
+  }
+  return sessionStorage.getItem(KM_CLUSTER_SLUG_KEY) ?? 'default'
+}
+
+let activeClusterSlug = storedClusterSlug()
+
+/** Builds Kong Admin base URL for a cluster slug (BFF path /kong-admin/c/{slug}). */
+export function kongAdminUrlForSlug(slug: string): string {
+  if (!config.AUTH_REQUIRED) {
+    return config.ADMIN_API_URL
+  }
+  const gui = config.ADMIN_GUI_PATH.replace(/\/$/, '') || ''
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  const s = slug || 'default'
+  return `${origin}${gui}/kong-admin/c/${s}`
+}
+
+/** Called when user switches Kong cluster (avoid Pinia↔apiService circular imports). */
+export function setActiveClusterSlug(slug: string) {
+  activeClusterSlug = slug || 'default'
+  if (typeof sessionStorage !== 'undefined') {
+    sessionStorage.setItem(KM_CLUSTER_SLUG_KEY, activeClusterSlug)
+  }
+}
+
 function adminApiUrl(): string {
-  return config.ADMIN_API_URL
+  return kongAdminUrlForSlug(activeClusterSlug)
 }
 
 /** Same-origin BFF app API (e.g. `/api/admin/*`), not Kong Admin. */
@@ -93,6 +123,22 @@ class ApiService {
   /** GET against the Go BFF (JWT + Casbin), not Kong Admin. */
   bffGet<T>(path: string, reqConfig: AxiosRequestConfig = {}) {
     return this.instance.get<T>(bffAppUrl(path), reqConfig)
+  }
+
+  bffPost<T>(path: string, data?: Record<string, unknown>, reqConfig: AxiosRequestConfig = {}) {
+    return this.instance.post<T>(bffAppUrl(path), data, reqConfig)
+  }
+
+  bffPut<T>(path: string, data?: Record<string, unknown>, reqConfig: AxiosRequestConfig = {}) {
+    return this.instance.put<T>(bffAppUrl(path), data, reqConfig)
+  }
+
+  bffPatch<T>(path: string, data?: Record<string, unknown>, reqConfig: AxiosRequestConfig = {}) {
+    return this.instance.patch<T>(bffAppUrl(path), data, reqConfig)
+  }
+
+  bffDelete(path: string, reqConfig: AxiosRequestConfig = {}) {
+    return this.instance.delete(bffAppUrl(path), reqConfig)
   }
 }
 

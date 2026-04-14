@@ -32,6 +32,9 @@ func SeedDefaultPolicies(e *casbin.Enforcer) error {
 		return err
 	}
 	_, _ = e.AddPolicy("viewer", "/kong-admin/*", "GET")
+	// Exact root (GET /kong-admin) does not match /kong-admin/* in keyMatch2.
+	_, _ = e.AddPolicy("admin", "/kong-admin", "*")
+	_, _ = e.AddPolicy("viewer", "/kong-admin", "GET")
 	// BFF admin API (user list, RBAC snapshot) — admin role only.
 	_, _ = e.AddPolicy("admin", "/api/admin/*", "*")
 	return nil

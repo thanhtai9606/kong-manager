@@ -4,6 +4,9 @@
       <SupportText>
         {{ t('admin.sso.description', { origin: publicOrigin, gui: guiPath }) }}
       </SupportText>
+      <SupportText class="admin-sso__warn">
+        {{ t('admin.sso.redirectUriKeycloak') }}
+      </SupportText>
     </template>
   </PageHeader>
 
@@ -81,13 +84,8 @@
           >
             <td>{{ p.name }}</td>
             <td><code>{{ p.slug }}</code></td>
-            <td>
-              <template v-if="editingId === p.id">
-                <KInput v-model="editDraft.issuer_url" />
-              </template>
-              <template v-else>
-                {{ p.issuer_url }}
-              </template>
+            <td class="admin-sso__issuer-cell">
+              {{ p.issuer_url }}
             </td>
             <td>
               <KCheckbox
@@ -96,50 +94,120 @@
               />
             </td>
             <td class="admin-sso__actions">
-              <template v-if="editingId === p.id">
-                <KButton
-                  size="small"
-                  appearance="primary"
-                  @click="saveEdit(p)"
-                >
-                  {{ t('global.buttons.save') }}
-                </KButton>
-                <KButton
-                  size="small"
-                  appearance="tertiary"
-                  @click="cancelEdit"
-                >
-                  {{ t('global.buttons.back') }}
-                </KButton>
-              </template>
-              <template v-else>
-                <KButton
-                  size="small"
-                  appearance="secondary"
-                  @click="startEdit(p)"
-                >
-                  {{ t('global.buttons.edit') }}
-                </KButton>
-                <KButton
-                  size="small"
-                  appearance="danger"
-                  @click="removeProvider(p)"
-                >
-                  {{ t('admin.sso.delete') }}
-                </KButton>
-              </template>
+              <KButton
+                size="small"
+                appearance="secondary"
+                @click="openEditModal(p)"
+              >
+                {{ t('global.buttons.edit') }}
+              </KButton>
+              <KButton
+                size="small"
+                appearance="danger"
+                @click="removeProvider(p)"
+              >
+                {{ t('admin.sso.delete') }}
+              </KButton>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </KCard>
+
+  <KModal
+    :visible="editModalVisible"
+    :title="t('admin.sso.editTitle')"
+    :max-width="'640px'"
+    :action-button-text="t('global.buttons.save')"
+    :cancel-button-text="t('global.buttons.cancel')"
+    :action-button-disabled="savingModal"
+    @cancel="closeEditModal"
+    @proceed="saveEditModal"
+  >
+    <div
+      v-if="editingRow"
+      class="admin-sso__modal-body"
+    >
+      <p class="admin-sso__modal-lead">
+        {{ t('admin.sso.editLead') }}
+      </p>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.slug') }}</span>
+        <code class="admin-sso__readonly">{{ editingRow.slug }}</code>
+      </label>
+
+      <div class="admin-sso__field admin-sso__redirect-block">
+        <span class="admin-sso__label">{{ t('admin.sso.redirectUriLabel') }}</span>
+        <p class="admin-sso__redirect-hint">
+          {{ t('admin.sso.redirectUriRegister') }}
+        </p>
+        <div class="admin-sso__redirect-row">
+          <code class="admin-sso__redirect-url">{{ callbackUrlForSlug(editingRow.slug) }}</code>
+          <KButton
+            size="small"
+            appearance="secondary"
+            @click="copyRedirectUri"
+          >
+            {{ t('admin.sso.copyRedirectUri') }}
+          </KButton>
+        </div>
+      </div>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.name') }}</span>
+        <KInput v-model="editDraft.name" />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.issuerUrl') }}</span>
+        <KInput v-model="editDraft.issuer_url" />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.clientId') }}</span>
+        <KInput v-model="editDraft.client_id" />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.clientSecret') }}</span>
+        <KInput
+          v-model="editDraft.client_secret"
+          type="password"
+          :placeholder="t('admin.sso.secretPlaceholder')"
+        />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.scopes') }}</span>
+        <KInput v-model="editDraft.scopes" />
+      </label>
+
+      <label class="admin-sso__field admin-sso__field--inline">
+        <KCheckbox
+          :model-value="editDraft.enabled"
+          @update:model-value="(v: boolean) => { editDraft.enabled = v }"
+        />
+        <span>{{ t('admin.sso.fields.enabled') }}</span>
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.sortOrder') }}</span>
+        <KInput
+          :model-value="String(editDraft.sort_order)"
+          type="number"
+          @update:model-value="(v: string) => { editDraft.sort_order = parseInt(v, 10) || 0 }"
+        />
+      </label>
+    </div>
+  </KModal>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { KButton, KCard, KCheckbox, KInput } from '@kong/kongponents'
+import { KButton, KCard, KCheckbox, KInput, KModal } from '@kong/kongponents'
 import SupportText from '@/components/SupportText.vue'
 import { useI18n } from '@/composables/useI18n'
 import { useToaster } from '@/composables/useToaster'
@@ -167,8 +235,20 @@ const rows = ref<SSOProviderRow[]>([])
 const loading = ref(true)
 const saving = ref(false)
 const errorMessage = ref('')
-const editingId = ref<number | null>(null)
-const editDraft = reactive({ issuer_url: '' })
+
+const editModalVisible = ref(false)
+const editingRow = ref<SSOProviderRow | null>(null)
+const savingModal = ref(false)
+
+const editDraft = reactive({
+  name: '',
+  issuer_url: '',
+  client_id: '',
+  client_secret: '',
+  scopes: '',
+  enabled: true,
+  sort_order: 0,
+})
 
 const publicOrigin = computed(() => {
   if (typeof window === 'undefined') {
@@ -187,6 +267,72 @@ const createForm = reactive({
   client_secret: '',
   scopes: '',
 })
+
+/** Must match BFF buildOIDCRedirectURI (same origin + gui + /api/auth/oidc/{slug}/callback). */
+function callbackUrlForSlug(slug: string): string {
+  const gui = guiPath.value
+  return `${publicOrigin.value}${gui}/api/auth/oidc/${encodeURIComponent(slug)}/callback`
+}
+
+function openEditModal(p: SSOProviderRow) {
+  editingRow.value = p
+  editDraft.name = p.name
+  editDraft.issuer_url = p.issuer_url
+  editDraft.client_id = p.client_id
+  editDraft.client_secret = ''
+  editDraft.scopes = p.scopes || ''
+  editDraft.enabled = p.enabled
+  editDraft.sort_order = p.sort_order ?? 0
+  editModalVisible.value = true
+}
+
+function closeEditModal() {
+  editModalVisible.value = false
+  editingRow.value = null
+  editDraft.client_secret = ''
+}
+
+async function copyRedirectUri() {
+  if (!editingRow.value) {
+    return
+  }
+  const text = callbackUrlForSlug(editingRow.value.slug)
+  try {
+    await navigator.clipboard.writeText(text)
+    toaster.open({ appearance: 'success', message: t('admin.sso.redirectUriCopied') })
+  } catch {
+    toaster.open({ appearance: 'danger', message: t('admin.sso.copyFailed') })
+  }
+}
+
+async function saveEditModal() {
+  if (!editingRow.value) {
+    return
+  }
+  savingModal.value = true
+  try {
+    const body: Record<string, unknown> = {
+      name: editDraft.name.trim(),
+      issuer_url: editDraft.issuer_url.trim(),
+      client_id: editDraft.client_id.trim(),
+      scopes: editDraft.scopes.trim(),
+      enabled: editDraft.enabled,
+      sort_order: Number.isFinite(editDraft.sort_order) ? Number(editDraft.sort_order) : 0,
+    }
+    const sec = editDraft.client_secret.trim()
+    if (sec) {
+      body.client_secret = sec
+    }
+    await apiService.bffPatch(`/api/admin/sso-providers/${editingRow.value.id}`, body)
+    toaster.open({ appearance: 'success', message: t('admin.sso.saved') })
+    closeEditModal()
+    await load()
+  } catch {
+    toaster.open({ appearance: 'danger', message: t('global.error') })
+  } finally {
+    savingModal.value = false
+  }
+}
 
 async function load() {
   loading.value = true
@@ -231,28 +377,6 @@ async function createProvider() {
   }
 }
 
-function startEdit(p: SSOProviderRow) {
-  editingId.value = p.id
-  editDraft.issuer_url = p.issuer_url
-}
-
-function cancelEdit() {
-  editingId.value = null
-}
-
-async function saveEdit(p: SSOProviderRow) {
-  try {
-    await apiService.bffPatch(`/api/admin/sso-providers/${p.id}`, {
-      issuer_url: editDraft.issuer_url.trim(),
-    })
-    editingId.value = null
-    toaster.open({ appearance: 'success', message: t('admin.sso.saved') })
-    await load()
-  } catch {
-    toaster.open({ appearance: 'danger', message: t('global.error') })
-  }
-}
-
 async function toggleEnabled(p: SSOProviderRow) {
   try {
     await apiService.bffPatch(`/api/admin/sso-providers/${p.id}`, {
@@ -283,6 +407,10 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.admin-sso__warn {
+  margin-top: 0.75rem;
+}
+
 .admin-sso__card {
   margin-bottom: 1.5rem;
 }
@@ -336,10 +464,77 @@ onMounted(() => {
   }
 }
 
+.admin-sso__issuer-cell {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .admin-sso__actions {
   white-space: nowrap;
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+}
+
+.admin-sso__modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-sso__modal-lead {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--kui-color-text-neutral, #6b6b6b);
+}
+
+.admin-sso__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-sso__field--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-sso__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.admin-sso__readonly {
+  font-size: 0.875rem;
+  padding: 0.25rem 0;
+}
+
+.admin-sso__redirect-block {
+  padding: 0.75rem;
+  border-radius: 4px;
+  background: var(--kui-color-background-neutral-weakest, #f5f5f5);
+}
+
+.admin-sso__redirect-hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--kui-color-text-neutral, #6b6b6b);
+}
+
+.admin-sso__redirect-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.admin-sso__redirect-url {
+  flex: 1 1 200px;
+  font-size: 0.75rem;
+  word-break: break-all;
+  line-height: 1.4;
 }
 </style>

@@ -165,6 +165,15 @@
       "deleted": "SSO provider removed.",
       "delete": "Delete",
       "confirmDelete": "Delete SSO provider \"{name}\"?",
+      "editTitle": "Edit SSO provider",
+      "editLead": "Update IdP settings. The redirect URI below must be added exactly in Keycloak (or your IdP) under the client’s Valid redirect URIs.",
+      "redirectUriKeycloak": "If Keycloak shows “Invalid parameter: redirect_uri”, the callback URL registered on the IdP does not match the URL Kong Manager sends. Copy the value from Edit → Redirect URI and paste it into the client configuration (scheme, host, path, and port must match).",
+      "redirectUriLabel": "Redirect URI (register this on the IdP)",
+      "redirectUriRegister": "Add this exact URL to Valid redirect URIs. You may use a trailing wildcard in Keycloak (e.g. https://host/*) only if it still matches the path your browser uses.",
+      "copyRedirectUri": "Copy",
+      "secretPlaceholder": "Leave empty to keep the current secret",
+      "redirectUriCopied": "Redirect URI copied to clipboard.",
+      "copyFailed": "Could not copy to clipboard.",
       "error": {
         "load": "Could not load SSO providers.",
         "forbidden": "You do not have permission (admin role required)."

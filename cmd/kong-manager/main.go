@@ -52,6 +52,9 @@ func main() {
 	})
 
 	r.Post("/api/auth/login", jwtSvc.LoginHandler(db))
+	r.Get("/api/auth/sso/providers", jwtSvc.PublicSSOProvidersHandler(db))
+	r.Get("/api/auth/oidc/{slug}/login", jwtSvc.OIDCLoginHandler(db))
+	r.Get("/api/auth/oidc/{slug}/callback", jwtSvc.OIDCCallbackHandler(db, enforcer))
 
 	r.Route("/api/admin", func(ar chi.Router) {
 		ar.Use(httpapi.JWTAuth(jwtSvc))
@@ -73,6 +76,10 @@ func main() {
 		ar.Post("/kong-clusters", admin.CreateKongCluster(db))
 		ar.Patch("/kong-clusters/{clusterID}", admin.PatchKongCluster(db))
 		ar.Delete("/kong-clusters/{clusterID}", admin.DeleteKongCluster(db))
+		ar.Get("/sso-providers", admin.ListSSOProviders(db))
+		ar.Post("/sso-providers", admin.CreateSSOProvider(db))
+		ar.Patch("/sso-providers/{ssoProviderID}", admin.PatchSSOProvider(db))
+		ar.Delete("/sso-providers/{ssoProviderID}", admin.DeleteSSOProvider(db))
 	})
 
 	kongHandler := httpapi.JWTAuth(jwtSvc)(

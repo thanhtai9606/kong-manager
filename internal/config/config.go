@@ -31,6 +31,10 @@ type Config struct {
 	BootstrapUsername  string
 	BootstrapPassword  string
 	CookieSecure       bool
+	// PublicBaseURL is the browser-facing origin (scheme + host, no path), e.g. https://kong-manager.example.com
+	// Used to build OIDC redirect_uri when reverse proxies do not set X-Forwarded-* reliably. Optional if the
+	// request Host + X-Forwarded-Proto are enough.
+	PublicBaseURL string
 }
 
 func getenv(key, def string) string {
@@ -79,5 +83,6 @@ func Load() *Config {
 		BootstrapUsername: getenv("BOOTSTRAP_ADMIN_USERNAME", ""),
 		BootstrapPassword: getenv("BOOTSTRAP_ADMIN_PASSWORD", ""),
 		CookieSecure:      parseBool(getenv("COOKIE_SECURE", "false"), false),
+		PublicBaseURL:     strings.TrimSpace(getenv("PUBLIC_BASE_URL", "")),
 	}
 }

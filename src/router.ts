@@ -86,6 +86,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'admin-sso',
+        path: 'sso',
+        component: () => import('@/pages/admin/AdminSSOProvidersPage.vue'),
+        meta: {
+          shell: 'admin',
+          adminPageKey: 'sso',
+          title: 'SSO',
+        },
+      },
+      {
         name: 'admin-notifications',
         path: 'notifications',
         component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),

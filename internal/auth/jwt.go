@@ -15,6 +15,49 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+// OIDCStateClaims is signed into the OAuth state parameter for CSRF protection.
+type OIDCStateClaims struct {
+	Slug  string `json:"slg"`
+	Pid   uint   `json:"pid"`
+	Nonce string `json:"nce"`
+	jwt.RegisteredClaims
+}
+
+// SignOIDCState returns a short-lived JWT for the OIDC authorize redirect.
+func (s *Service) SignOIDCState(slug string, providerID uint, nonce string) (string, error) {
+	now := time.Now()
+	c := OIDCStateClaims{
+		Slug:  slug,
+		Pid:   providerID,
+		Nonce: nonce,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(now.Add(15 * time.Minute)),
+			IssuedAt:  jwt.NewNumericDate(now),
+			Issuer:    "kong-manager-oidc-state",
+		},
+	}
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, &c)
+	return t.SignedString([]byte(s.cfg.JWTSecret))
+}
+
+// ParseOIDCState validates state from the OAuth callback.
+func (s *Service) ParseOIDCState(raw string) (*OIDCStateClaims, error) {
+	parsed, err := jwt.ParseWithClaims(raw, &OIDCStateClaims{}, func(t *jwt.Token) (any, error) {
+		if t.Method != jwt.SigningMethodHS256 {
+			return nil, errors.New("unexpected signing method")
+		}
+		return []byte(s.cfg.JWTSecret), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := parsed.Claims.(*OIDCStateClaims)
+	if !ok || !parsed.Valid {
+		return nil, errors.New("invalid state")
+	}
+	return claims, nil
+}
+
 // TokenPair is returned after successful login (MVP: access token only).
 type TokenPair struct {
 	AccessToken string `json:"token"`

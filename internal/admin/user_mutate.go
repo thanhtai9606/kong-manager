@@ -80,6 +80,10 @@ func PatchUser(db *gorm.DB, e *casbin.Enforcer) http.HandlerFunc {
 			}
 		}
 		if body.Password != nil {
+			if u.SSOProviderID != nil && u.ExternalSub != "" {
+				http.Error(w, "password change not applicable for SSO users", http.StatusBadRequest)
+				return
+			}
 			p := *body.Password
 			if len(p) < 8 {
 				http.Error(w, "password must be at least 8 characters", http.StatusBadRequest)

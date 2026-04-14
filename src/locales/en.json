@@ -5,6 +5,10 @@
     "password": "Password",
     "submit": "Sign in",
     "invalid": "Invalid username or password",
+    "ssoDivider": "Or sign in with SSO",
+    "ssoLoginWith": "Continue with {name}",
+    "ssoError": "External sign-in failed ({code}).",
+    "ssoRequired": "This account uses organization SSO. Use the SSO button instead.",
     "signOut": "Sign out",
     "menu": {
       "admin": "Admin",
@@ -19,6 +23,7 @@
       "auditLog": "Audit log",
       "rbac": "RBAC",
       "clusters": "Kong clusters",
+      "sso": "SSO",
       "notifications": "Notifications"
     },
     "placeholder": {
@@ -140,6 +145,31 @@
         "forbidden": "You do not have permission to manage clusters."
       }
     },
+    "sso": {
+      "title": "SSO (OpenID Connect)",
+      "description": "Register each IdP with redirect URI {origin}{gui}/api/auth/oidc/{slug}/callback (append {gui} only when ADMIN_GUI_PATH is set). Set PUBLIC_BASE_URL on the server if the public origin is not inferred correctly.",
+      "addTitle": "Add provider",
+      "loading": "Loading…",
+      "fields": {
+        "slug": "URL slug",
+        "name": "Display name",
+        "issuerUrl": "Issuer URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "scopes": "Scopes (optional)",
+        "enabled": "Enabled",
+        "sortOrder": "Sort order"
+      },
+      "created": "SSO provider created.",
+      "saved": "SSO provider updated.",
+      "deleted": "SSO provider removed.",
+      "delete": "Delete",
+      "confirmDelete": "Delete SSO provider \"{name}\"?",
+      "error": {
+        "load": "Could not load SSO providers.",
+        "forbidden": "You do not have permission (admin role required)."
+      }
+    },
     "pages": {
       "home": {
         "title": "Admin"
@@ -155,6 +185,9 @@
       },
       "clusters": {
         "title": "Kong clusters"
+      },
+      "sso": {
+        "title": "SSO"
       },
       "notifications": {
         "title": "Notifications"

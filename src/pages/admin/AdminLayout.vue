@@ -70,6 +70,12 @@ const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
     active: route.name === 'admin-clusters',
   },
   {
+    name: t('admin.nav.sso'),
+    to: { name: 'admin-sso' },
+    key: 'admin-sso',
+    active: route.name === 'admin-sso',
+  },
+  {
     name: t('admin.nav.notifications'),
     to: { name: 'admin-notifications' },
     key: 'admin-notifications',

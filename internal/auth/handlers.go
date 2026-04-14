@@ -45,6 +45,13 @@ func (s *Service) LoginHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
+		if user.SSOProviderID != nil && user.ExternalSub != "" {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusUnauthorized)
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": "sso_required"})
+			return
+		}
+
 		if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
 			http.Error(w, "invalid credentials", http.StatusUnauthorized)
 			return

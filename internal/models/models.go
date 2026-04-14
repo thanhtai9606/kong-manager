@@ -11,6 +11,9 @@ type User struct {
 	ID           uint           `gorm:"primaryKey" json:"id"`
 	Username     string         `gorm:"uniqueIndex;size:191;not null" json:"username"`
 	PasswordHash string         `gorm:"size:255;not null" json:"-"`
+	Email        string         `gorm:"size:191" json:"email,omitempty"`
+	SSOProviderID *uint         `gorm:"index" json:"sso_provider_id,omitempty"`
+	ExternalSub  string         `gorm:"size:512" json:"external_sub,omitempty"`
 	CreatedAt    time.Time      `json:"created_at"`
 	UpdatedAt    time.Time      `json:"updated_at"`
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`

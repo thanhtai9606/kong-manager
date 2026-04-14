@@ -19,6 +19,17 @@ const getConfig = <T>(key: string, defaultValue: T): T => {
   }
 }
 
+function authRequired(): boolean {
+  const v = import.meta.env.VITE_AUTH_REQUIRED
+  if (v === 'true') {
+    return true
+  }
+  if (v === 'false') {
+    return false
+  }
+  return getConfig<boolean>('AUTH_REQUIRED', false)
+}
+
 export const config = {
 
   get ADMIN_GUI_PATH() {
@@ -47,6 +58,12 @@ export const config = {
       return `${window.location.protocol}//${ADMIN_API_URL}`
     }
 
+    // BFF: when login is required but kconfig omitted ADMIN_API_URL, use the proxy path.
+    if (authRequired()) {
+      const gui = config.ADMIN_GUI_PATH.replace(/\/$/, '') || ''
+      return `${window.location.origin}${gui}/kong-admin`
+    }
+
     const port = window.location.protocol.toLowerCase() === 'https:'
       ? config.ADMIN_API_SSL_PORT
       : config.ADMIN_API_PORT
@@ -56,7 +73,7 @@ export const config = {
 
   /** When true, router requires login and Kong calls go through the BFF (see ADMIN_API_URL). */
   get AUTH_REQUIRED() {
-    return getConfig<boolean>('AUTH_REQUIRED', false)
+    return authRequired()
   },
 
   get ANONYMOUS_REPORTS() {

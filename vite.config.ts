@@ -7,6 +7,9 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 const basePath = process.env.NODE_ENV !== 'production' || process.env.DISABLE_BASE_PATH === 'true' ? '/' : '/__km_base__/'
 
+/** Go BFF (login + Kong Admin proxy). Vite runs on :8080 by default; run the binary on another port. */
+const kongManagerBff = process.env.KONG_MANAGER_BFF_URL || 'http://127.0.0.1:8081'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: basePath,
@@ -41,6 +44,8 @@ export default defineConfig({
   ],
   server: {
     proxy: {
+      '/api': { target: kongManagerBff, changeOrigin: true },
+      '/kong-admin': { target: kongManagerBff, changeOrigin: true },
       '/kconfig.js': process.env.KONG_GUI_URL || 'http://127.0.0.1:8002',
     },
     port: 8080,

@@ -1,9 +1,14 @@
 <template>
   <AppLayout
+    v-if="showAppShell"
     :sidebar-top-items="sidebarItems"
   >
     <template #navbar-right>
-      <GithubStar url="https://github.com/kong/kong" />
+      <UserProfileBar v-if="config.AUTH_REQUIRED" />
+      <GithubStar
+        v-else
+        url="https://github.com/kong/kong"
+      />
     </template>
     <template #sidebar-header>
       <NavbarLogo />
@@ -11,6 +16,12 @@
     <router-view />
     <MakeAWish />
   </AppLayout>
+  <div
+    v-else
+    class="auth-only-view"
+  >
+    <router-view />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -19,13 +30,25 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { AppLayout, type SidebarPrimaryItem } from '@kong-ui-public/app-layout'
 import { GithubStar } from '@kong-ui-public/misc-widgets'
+import { config } from 'config'
+import { useAuthStore } from '@/stores/auth'
 import { useInfoStore } from '@/stores/info'
 import NavbarLogo from '@/components/NavbarLogo.vue'
 import MakeAWish from '@/components/MakeAWish.vue'
+import UserProfileBar from '@/components/UserProfileBar.vue'
 
 const route = useRoute()
+const authStore = useAuthStore()
 const infoStore = useInfoStore()
 const { isHybridMode } = storeToRefs(infoStore)
+
+/** With BFF auth, unauthenticated users only see the login route (no sidebar/header). */
+const showAppShell = computed(() => {
+  if (!config.AUTH_REQUIRED) {
+    return true
+  }
+  return authStore.isAuthenticated
+})
 
 const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
   {
@@ -131,5 +154,10 @@ const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
 :deep(.json-content.k-code-block) {
   border-top-left-radius: $kui-border-radius-0 !important;
   border-top-right-radius: $kui-border-radius-0 !important;
+}
+
+.auth-only-view {
+  min-height: 100vh;
+  background: var(--kui-color-background, #f7f7f7);
 }
 </style>

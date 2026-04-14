@@ -3,7 +3,7 @@ import {
 } from 'vue-router'
 
 import { config } from 'config'
-import { KM_TOKEN_KEY } from '@/services/apiService'
+import { useAuthStore } from '@/stores/auth'
 import { useInfoStore } from './stores/info'
 
 const routes: RouteRecordRaw[] = [
@@ -486,12 +486,12 @@ export const router = createRouter({
 
 router.beforeEach(async (to) => {
   if (config.AUTH_REQUIRED) {
-    const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(KM_TOKEN_KEY) : null
-    if (to.name === 'login' && token) {
+    const authStore = useAuthStore()
+    if (to.name === 'login' && authStore.isAuthenticated) {
       const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/'
       return { path: redirect }
     }
-    if (!to.meta?.public && !token) {
+    if (!to.meta?.public && !authStore.isAuthenticated) {
       return { name: 'login', query: { redirect: to.fullPath } }
     }
   }

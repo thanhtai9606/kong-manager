@@ -52,13 +52,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { KButton, KCard, KInput } from '@kong/kongponents'
 import { useI18n } from '@/composables/useI18n'
 import { config } from 'config'
-import { setKmToken } from '@/services/apiService'
+import { useAuthStore } from '@/stores/auth'
 
 defineOptions({ name: 'AuthLoginPage' })
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
 
 const username = ref('')
 const password = ref('')
@@ -90,7 +91,7 @@ async function submit() {
       error.value = t('global.error')
       return
     }
-    setKmToken(data.token)
+    authStore.setSession(data.token)
     const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/'
     await router.replace(redirect)
   } catch {
@@ -106,8 +107,9 @@ async function submit() {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+  min-height: 100vh;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .login-card {

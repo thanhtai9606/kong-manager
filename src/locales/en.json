@@ -4,7 +4,8 @@
     "username": "Username",
     "password": "Password",
     "submit": "Sign in",
-    "invalid": "Invalid username or password"
+    "invalid": "Invalid username or password",
+    "signOut": "Sign out"
   },
   "global": {
     "copied": "Successfully copied to clipboard",

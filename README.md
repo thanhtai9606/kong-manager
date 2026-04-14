@@ -4,6 +4,10 @@
 
 > **BFF / backend (fork & roadmap):** xem [BACKEND_PLAN.md](BACKEND_PLAN.md) — kế hoạch Go + auth + Casbin + proxy Kong và trạng thái triển khai.
 
+**Chạy UI + Go BFF (login + proxy Kong):** build với `DISABLE_BASE_PATH=true` (tránh base `/__km_base__/`) và bật auth bằng `VITE_AUTH_REQUIRED=true`, rồi phục vụ thư mục `dist` bằng binary Go. Hoặc copy [public/kconfig.bff.example.js](public/kconfig.bff.example.js) → `public/kconfig.js` rồi `pnpm build`. Cổng mặc định của Go là `:8080` (`HTTP_ADDR`).
+
+**Test local (Vite + Go):** terminal 1 — `HTTP_ADDR=:8081 KONG_ADMIN_URL=http://127.0.0.1:8001 BOOTSTRAP_ADMIN_USERNAME=admin BOOTSTRAP_ADMIN_PASSWORD=changeme go run ./cmd/kong-manager` (SQLite mặc định). Terminal 2 — `pnpm serve:bff` (UI `http://localhost:8080`, auth bật; proxy `/api` và `/kong-admin` → `http://127.0.0.1:8081`). Đổi cổng BFF bằng `KONG_MANAGER_BFF_URL` khi chạy Vite.
+
 ![Kong Manager OSS - Plugin list](./media/Plugin%20list.png)
 
 Kong Manager OSS, a **free** and **open-source** UI for [Kong](https://github.com/kong/kong), the world's most used open source API Gateway.

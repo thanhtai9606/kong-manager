@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "serve": "vite",
+    "serve:bff": "VITE_AUTH_REQUIRED=true vite",
     "build": "vite build",
     "install:e2e": "pnpm --dir tests/playwright install",
     "test:e2e": "pnpm --dir tests/playwright run test",

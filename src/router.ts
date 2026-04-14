@@ -56,6 +56,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'admin-audit-log',
+        path: 'audit-log',
+        component: () => import('@/pages/admin/AdminAuditLogPage.vue'),
+        meta: {
+          shell: 'admin',
+          adminPageKey: 'audit-log',
+          title: 'Audit log',
+        },
+      },
+      {
         name: 'admin-rbac',
         path: 'rbac',
         component: () => import('@/pages/admin/AdminRbacPage.vue'),

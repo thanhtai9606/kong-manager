@@ -16,6 +16,7 @@
       "backToGateway": "Back to Gateway",
       "home": "Admin",
       "users": "Users",
+      "auditLog": "Audit log",
       "rbac": "RBAC",
       "clusters": "Kong clusters",
       "notifications": "Notifications"
@@ -38,7 +39,32 @@
       },
       "editRoles": "Assign roles",
       "saveRoles": "Save",
-      "rolesSaved": "Role assignments updated."
+      "rolesSaved": "Role assignments updated.",
+      "createTitle": "Add user",
+      "createHint": "Password must be at least 8 characters. Optionally assign roles before the first sign-in.",
+      "createSubmit": "Create user",
+      "created": "User created.",
+      "createError": "Could not create user (duplicate name or invalid input)."
+    },
+    "auditLog": {
+      "description": "Append-only record of privileged actions (who did what, and when).",
+      "loading": "Loading…",
+      "empty": "No audit entries yet.",
+      "prev": "Previous",
+      "next": "Next",
+      "refresh": "Refresh",
+      "headers": {
+        "time": "Time",
+        "actor": "Actor",
+        "action": "Action",
+        "resource": "Resource",
+        "details": "Details",
+        "ip": "Client IP"
+      },
+      "error": {
+        "load": "Could not load audit log.",
+        "forbidden": "You do not have permission to view the audit log (admin role required)."
+      }
     },
     "rbac": {
       "description": "Effective Casbin policies: which roles can access which paths, and which users belong to which roles.",
@@ -106,6 +132,9 @@
       },
       "users": {
         "title": "Users"
+      },
+      "auditLog": {
+        "title": "Audit log"
       },
       "rbac": {
         "title": "RBAC"

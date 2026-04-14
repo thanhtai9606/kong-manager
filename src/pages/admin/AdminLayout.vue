@@ -46,6 +46,12 @@ const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
     active: route.name === 'admin-users',
   },
   {
+    name: t('admin.nav.auditLog'),
+    to: { name: 'admin-audit-log' },
+    key: 'admin-audit-log',
+    active: route.name === 'admin-audit-log',
+  },
+  {
     name: t('admin.nav.rbac'),
     to: { name: 'admin-rbac' },
     key: 'admin-rbac',

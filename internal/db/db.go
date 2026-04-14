@@ -38,5 +38,6 @@ func AutoMigrate(db *gorm.DB) error {
 		&models.User{},
 		&models.Group{},
 		&models.KongCluster{},
+		&models.AuditLog{},
 	)
 }

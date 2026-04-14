@@ -3,9 +3,13 @@ package admin
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/casbin/casbin/v2"
+	"github.com/kong/kong-manager/internal/audit"
+	"github.com/kong/kong-manager/internal/httpapi"
 	"github.com/kong/kong-manager/internal/models"
 	"github.com/kong/kong-manager/internal/rbac"
 	"gorm.io/gorm"
@@ -67,6 +71,13 @@ func PutUserGroups(db *gorm.DB, e *casbin.Enforcer) http.HandlerFunc {
 		if err := db.Preload("Groups").First(&u, u.ID).Error; err != nil {
 			http.Error(w, "database error", http.StatusInternalServerError)
 			return
+		}
+		claims, ok := httpapi.ClaimsFrom(r.Context())
+		if ok && claims != nil {
+			details, _ := json.Marshal(map[string]any{"group_ids": body.GroupIDs})
+			if err := audit.Append(db, r, claims.Username, "user.groups.update", "user:"+strconv.FormatUint(uint64(u.ID), 10), string(details)); err != nil {
+				log.Printf("audit: user.groups.update: %v", err)
+			}
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(u)

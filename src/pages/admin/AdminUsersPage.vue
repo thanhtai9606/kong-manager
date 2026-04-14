@@ -7,6 +7,54 @@
     </template>
   </PageHeader>
 
+  <KCard class="admin-users__create-card">
+    <h2 class="admin-users__create-title">
+      {{ t('admin.users.createTitle') }}
+    </h2>
+    <div class="admin-users__create-fields">
+      <label class="admin-users__field">
+        <span>{{ t('auth.username') }}</span>
+        <KInput
+          v-model="newUsername"
+          autocomplete="off"
+          data-testid="admin-new-username"
+        />
+      </label>
+      <label class="admin-users__field">
+        <span>{{ t('auth.password') }}</span>
+        <KInput
+          v-model="newPassword"
+          type="password"
+          autocomplete="new-password"
+          data-testid="admin-new-password"
+        />
+      </label>
+    </div>
+    <p class="admin-users__create-hint">
+      {{ t('admin.users.createHint') }}
+    </p>
+    <div
+      v-if="allGroups.length"
+      class="admin-users__checks admin-users__create-groups"
+    >
+      <KCheckbox
+        v-for="g in allGroups"
+        :key="`new-${g.id}`"
+        :model-value="newGroupIds.has(g.id)"
+        :label="g.name"
+        @change="toggleNewGroup(g.id)"
+      />
+    </div>
+    <KButton
+      appearance="primary"
+      :disabled="creating || !newUsername.trim() || newPassword.length < 8"
+      data-testid="admin-create-user"
+      @click="createUser"
+    >
+      {{ t('admin.users.createSubmit') }}
+    </KButton>
+  </KCard>
+
   <KCard>
     <div
       v-if="loading"
@@ -108,7 +156,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { KBadge, KButton, KCard, KCheckbox } from '@kong/kongponents'
+import { KBadge, KButton, KCard, KCheckbox, KInput } from '@kong/kongponents'
 import dayjs from 'dayjs'
 import SupportText from '@/components/SupportText.vue'
 import { useI18n } from '@/composables/useI18n'
@@ -140,6 +188,11 @@ const editingUserId = ref<number | null>(null)
 const draftGroupIds = ref<Set<number>>(new Set())
 const savingUserId = ref<number | null>(null)
 
+const newUsername = ref('')
+const newPassword = ref('')
+const newGroupIds = ref<Set<number>>(new Set())
+const creating = ref(false)
+
 function formatAt(iso: string) {
   return dayjs(iso).format('MMM DD, YYYY, h:mm A')
 }
@@ -154,6 +207,16 @@ function toggleEdit(userId: number) {
   draftGroupIds.value = new Set((u?.groups ?? []).map((g) => g.id))
 }
 
+function toggleNewGroup(groupId: number) {
+  const next = new Set(newGroupIds.value)
+  if (next.has(groupId)) {
+    next.delete(groupId)
+  } else {
+    next.add(groupId)
+  }
+  newGroupIds.value = next
+}
+
 function toggleDraftGroup(groupId: number) {
   const next = new Set(draftGroupIds.value)
   if (next.has(groupId)) {
@@ -162,6 +225,26 @@ function toggleDraftGroup(groupId: number) {
     next.add(groupId)
   }
   draftGroupIds.value = next
+}
+
+async function createUser() {
+  creating.value = true
+  try {
+    await apiService.bffPost<AdminUserRow>('/api/admin/users', {
+      username: newUsername.value.trim(),
+      password: newPassword.value,
+      group_ids: [...newGroupIds.value],
+    })
+    newUsername.value = ''
+    newPassword.value = ''
+    newGroupIds.value = new Set()
+    toaster.open({ appearance: 'success', message: t('admin.users.created') })
+    await load()
+  } catch {
+    toaster.open({ appearance: 'danger', message: t('admin.users.createError') })
+  } finally {
+    creating.value = false
+  }
 }
 
 async function saveUserGroups(u: AdminUserRow) {
@@ -270,5 +353,44 @@ onMounted(() => {
 
 .admin-users__save {
   margin-top: 0.25rem;
+}
+
+.admin-users__create-card {
+  margin-bottom: 1.25rem;
+}
+
+.admin-users__create-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+}
+
+.admin-users__create-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.admin-users__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 12rem;
+
+  span {
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+}
+
+.admin-users__create-hint {
+  font-size: 0.8125rem;
+  color: var(--kui-color-text-neutral, #525252);
+  margin: 0 0 0.75rem;
+}
+
+.admin-users__create-groups {
+  margin-bottom: 0.75rem;
 }
 </style>

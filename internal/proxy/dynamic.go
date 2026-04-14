@@ -103,10 +103,14 @@ func DynamicKongHandler(db *gorm.DB, cfg *config.Config) http.Handler {
 		rp := &httputil.ReverseProxy{
 			Transport: rt,
 			Director: func(req *http.Request) {
+				// Incoming req still has Host from the client (e.g. localhost:8081).
+				// http.Transport prefers req.Host over req.URL.Host when writing the request line;
+				// without this, Kong / ingress see Host: localhost and return 404 or mis-route.
 				req.URL.Scheme = target.Scheme
 				req.URL.Host = target.Host
 				req.URL.Path = suffix
 				req.URL.RawQuery = r.URL.RawQuery
+				req.Host = target.Host
 				if token != "" {
 					req.Header.Set("Kong-Admin-Token", token)
 				}

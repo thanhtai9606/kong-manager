@@ -1,0 +1,13 @@
+function h(u) {
+  return function(e, n, i) {
+    for (var f = -1, r = Object(e), t = i(e), l = t.length; l--; ) {
+      var a = t[++f];
+      if (n(r[a], a, r) === !1)
+        break;
+    }
+    return e;
+  };
+}
+export {
+  h as default
+};

@@ -1,0 +1,38 @@
+import type { PropType } from 'vue';
+import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    config: {
+        type: PropType<ExactMatchFilterConfig | FuzzyMatchFilterConfig>;
+        required: true;
+        default: () => {
+            isExactMatch: boolean;
+            placeholder: string;
+        };
+    };
+    modelValue: {
+        type: StringConstructor;
+        required: true;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    "update:modelValue": (query: string) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    config: {
+        type: PropType<ExactMatchFilterConfig | FuzzyMatchFilterConfig>;
+        required: true;
+        default: () => {
+            isExactMatch: boolean;
+            placeholder: string;
+        };
+    };
+    modelValue: {
+        type: StringConstructor;
+        required: true;
+    };
+}>> & Readonly<{
+    "onUpdate:modelValue"?: ((query: string) => any) | undefined;
+}>, {
+    config: ExactMatchFilterConfig | FuzzyMatchFilterConfig;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=EntityFilter.vue.d.ts.map

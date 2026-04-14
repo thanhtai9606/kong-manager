@@ -36,6 +36,26 @@
       v-else
       class="admin-audit__table-wrap"
     >
+      <div
+        v-if="showPager"
+        class="admin-audit__toolbar"
+      >
+        <AuditLogPagination
+          :page-size="pageSize"
+          :offset="offset"
+          :total="total"
+          :page-end="pageEnd"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :last-offset="lastOffset"
+          @update:page-size="onPageSizeUpdate"
+          @first="goFirst"
+          @prev="pagePrev"
+          @next="pageNext"
+          @last="goLast"
+          @refresh="reload"
+        />
+      </div>
       <table class="admin-audit__table">
         <thead>
           <tr>
@@ -64,33 +84,24 @@
         </tbody>
       </table>
       <div
-        v-if="total > limit"
-        class="admin-audit__pager"
+        v-if="showPager"
+        class="admin-audit__toolbar admin-audit__toolbar--bottom"
       >
-        <KButton
-          appearance="secondary"
-          size="small"
-          :disabled="offset === 0"
-          @click="pagePrev"
-        >
-          {{ t('admin.auditLog.prev') }}
-        </KButton>
-        <span class="admin-audit__pager-meta">{{ offset + 1 }}–{{ pageEnd }} / {{ total }}</span>
-        <KButton
-          appearance="secondary"
-          size="small"
-          :disabled="offset + limit >= total"
-          @click="pageNext"
-        >
-          {{ t('admin.auditLog.next') }}
-        </KButton>
-        <KButton
-          appearance="secondary"
-          size="small"
-          @click="reload"
-        >
-          {{ t('admin.auditLog.refresh') }}
-        </KButton>
+        <AuditLogPagination
+          :page-size="pageSize"
+          :offset="offset"
+          :total="total"
+          :page-end="pageEnd"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :last-offset="lastOffset"
+          @update:page-size="onPageSizeUpdate"
+          @first="goFirst"
+          @prev="pagePrev"
+          @next="pageNext"
+          @last="goLast"
+          @refresh="reload"
+        />
       </div>
     </div>
   </KCard>
@@ -99,10 +110,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { KButton, KCard } from '@kong/kongponents'
+import { KCard } from '@kong/kongponents'
 import dayjs from 'dayjs'
 import SupportText from '@/components/SupportText.vue'
 import PageHeader from '@/components/PageHeader.vue'
+import AuditLogPagination from '@/components/admin/AuditLogPagination.vue'
 import { useI18n } from '@/composables/useI18n'
 import { apiService } from '@/services/apiService'
 
@@ -122,12 +134,20 @@ const { t } = useI18n()
 
 const items = ref<AuditLogRow[]>([])
 const total = ref(0)
-const limit = 50
+const pageSize = ref(50)
 const offset = ref(0)
 const loading = ref(true)
 const errorMessage = ref('')
 
 const pageEnd = computed(() => Math.min(offset.value + items.value.length, total.value))
+const totalPages = computed(() => (total.value <= 0 ? 1 : Math.ceil(total.value / pageSize.value)))
+const currentPage = computed(() =>
+  total.value <= 0 ? 1 : Math.min(totalPages.value, Math.floor(offset.value / pageSize.value) + 1),
+)
+const showPager = computed(() => total.value > 0)
+const lastOffset = computed(() =>
+  total.value <= 0 ? 0 : Math.max(0, (totalPages.value - 1) * pageSize.value),
+)
 
 function formatAt(iso: string) {
   return dayjs(iso).format('MMM DD, YYYY, h:mm:ss A')
@@ -145,10 +165,17 @@ async function reload() {
   errorMessage.value = ''
   try {
     const { data } = await apiService.bffGet<{ items: AuditLogRow[], total: number }>(
-      `/api/admin/audit-logs?limit=${limit}&offset=${offset.value}`,
+      `/api/admin/audit-logs?limit=${pageSize.value}&offset=${offset.value}`,
     )
     items.value = Array.isArray(data.items) ? data.items : []
     total.value = typeof data.total === 'number' ? data.total : items.value.length
+    if (total.value > 0 && offset.value >= total.value) {
+      offset.value = lastOffset.value
+      const { data: data2 } = await apiService.bffGet<{ items: AuditLogRow[], total: number }>(
+        `/api/admin/audit-logs?limit=${pageSize.value}&offset=${offset.value}`,
+      )
+      items.value = Array.isArray(data2.items) ? data2.items : []
+    }
   } catch (e) {
     const err = e as AxiosError
     errorMessage.value = err.response?.status === 403
@@ -162,12 +189,38 @@ async function reload() {
 }
 
 function pageNext() {
-  offset.value += limit
+  if (offset.value + pageSize.value >= total.value) {
+    return
+  }
+  offset.value += pageSize.value
   void reload()
 }
 
 function pagePrev() {
-  offset.value = Math.max(0, offset.value - limit)
+  offset.value = Math.max(0, offset.value - pageSize.value)
+  void reload()
+}
+
+function goFirst() {
+  if (offset.value === 0) {
+    return
+  }
+  offset.value = 0
+  void reload()
+}
+
+function goLast() {
+  const lo = lastOffset.value
+  if (offset.value === lo) {
+    return
+  }
+  offset.value = lo
+  void reload()
+}
+
+function onPageSizeUpdate(n: number) {
+  pageSize.value = n
+  offset.value = 0
   void reload()
 }
 
@@ -223,16 +276,12 @@ onMounted(() => {
   margin: 0 0 0.5rem;
 }
 
-.admin-audit__pager {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
+.admin-audit__toolbar {
+  margin-bottom: 0.75rem;
 }
 
-.admin-audit__pager-meta {
-  font-size: 0.8125rem;
-  color: var(--kui-color-text-neutral, #525252);
+.admin-audit__toolbar--bottom {
+  margin-bottom: 0;
+  margin-top: 0.75rem;
 }
 </style>

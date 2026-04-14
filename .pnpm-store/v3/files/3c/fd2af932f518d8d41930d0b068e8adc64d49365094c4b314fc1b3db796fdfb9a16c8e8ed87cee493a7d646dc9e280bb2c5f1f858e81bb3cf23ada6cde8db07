@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const e=["div","p","span","a","legend","h1","h2","h3","h4","h5","h6"];exports.HeaderTags=e;

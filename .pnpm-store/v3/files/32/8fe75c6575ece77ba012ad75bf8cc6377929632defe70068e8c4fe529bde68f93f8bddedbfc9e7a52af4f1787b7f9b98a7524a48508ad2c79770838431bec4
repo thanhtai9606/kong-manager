@@ -1,0 +1,3 @@
+import type { Validators } from '../types/form-generator';
+export declare const validators: Validators;
+//# sourceMappingURL=validators.d.ts.map

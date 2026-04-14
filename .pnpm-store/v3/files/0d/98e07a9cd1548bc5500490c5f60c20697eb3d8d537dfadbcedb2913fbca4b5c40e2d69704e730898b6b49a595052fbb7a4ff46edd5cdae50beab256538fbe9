@@ -1,0 +1,29 @@
+import { __exports as t } from "./kongponents.es511.js";
+var n;
+function Y() {
+  if (n) return t;
+  n = 1, Object.defineProperty(t, "__esModule", {
+    value: !0
+  }), t.isProtectedDayOfYearToken = d, t.isProtectedWeekYearToken = c, t.throwProtectedError = i;
+  var s = ["D", "DD"], a = ["YY", "YYYY"];
+  function d(e) {
+    return s.indexOf(e) !== -1;
+  }
+  function c(e) {
+    return a.indexOf(e) !== -1;
+  }
+  function i(e, o, r) {
+    if (e === "YYYY")
+      throw new RangeError("Use `yyyy` instead of `YYYY` (in `".concat(o, "`) for formatting years to the input `").concat(r, "`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md"));
+    if (e === "YY")
+      throw new RangeError("Use `yy` instead of `YY` (in `".concat(o, "`) for formatting years to the input `").concat(r, "`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md"));
+    if (e === "D")
+      throw new RangeError("Use `d` instead of `D` (in `".concat(o, "`) for formatting days of the month to the input `").concat(r, "`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md"));
+    if (e === "DD")
+      throw new RangeError("Use `dd` instead of `DD` (in `".concat(o, "`) for formatting days of the month to the input `").concat(r, "`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md"));
+  }
+  return t;
+}
+export {
+  Y as __require
+};

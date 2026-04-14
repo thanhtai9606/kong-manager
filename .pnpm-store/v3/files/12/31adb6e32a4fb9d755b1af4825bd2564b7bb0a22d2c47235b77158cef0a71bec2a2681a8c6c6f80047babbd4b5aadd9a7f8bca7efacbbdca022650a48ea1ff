@@ -1,0 +1,330 @@
+import { getCurrentScope as K, ref as N, reactive as Q, onScopeDispose as U, watch as X, isReadonly as Y, toRefs as Z } from "vue";
+import _ from "./kongponents.es432.js";
+import T from "./kongponents.es260.js";
+var m = function() {
+  return m = Object.assign || function(o) {
+    for (var n, r = 1, i = arguments.length; r < i; r++) {
+      n = arguments[r];
+      for (var a in n) Object.prototype.hasOwnProperty.call(n, a) && (o[a] = n[a]);
+    }
+    return o;
+  }, m.apply(this, arguments);
+}, E = function(o, n, r, i) {
+  function a(e) {
+    return e instanceof r ? e : new r(function(f) {
+      f(e);
+    });
+  }
+  return new (r || (r = Promise))(function(e, f) {
+    function h(l) {
+      try {
+        t(i.next(l));
+      } catch (u) {
+        f(u);
+      }
+    }
+    function s(l) {
+      try {
+        t(i.throw(l));
+      } catch (u) {
+        f(u);
+      }
+    }
+    function t(l) {
+      l.done ? e(l.value) : a(l.value).then(h, s);
+    }
+    t((i = i.apply(o, n || [])).next());
+  });
+}, p = function(o, n) {
+  var r = { label: 0, sent: function() {
+    if (e[0] & 1) throw e[1];
+    return e[1];
+  }, trys: [], ops: [] }, i, a, e, f;
+  return f = { next: h(0), throw: h(1), return: h(2) }, typeof Symbol == "function" && (f[Symbol.iterator] = function() {
+    return this;
+  }), f;
+  function h(t) {
+    return function(l) {
+      return s([t, l]);
+    };
+  }
+  function s(t) {
+    if (i) throw new TypeError("Generator is already executing.");
+    for (; r; ) try {
+      if (i = 1, a && (e = t[0] & 2 ? a.return : t[0] ? a.throw || ((e = a.return) && e.call(a), 0) : a.next) && !(e = e.call(a, t[1])).done) return e;
+      switch (a = 0, e && (t = [t[0] & 2, e.value]), t[0]) {
+        case 0:
+        case 1:
+          e = t;
+          break;
+        case 4:
+          return r.label++, { value: t[1], done: !1 };
+        case 5:
+          r.label++, a = t[1], t = [0];
+          continue;
+        case 7:
+          t = r.ops.pop(), r.trys.pop();
+          continue;
+        default:
+          if (e = r.trys, !(e = e.length > 0 && e[e.length - 1]) && (t[0] === 6 || t[0] === 2)) {
+            r = 0;
+            continue;
+          }
+          if (t[0] === 3 && (!e || t[1] > e[0] && t[1] < e[3])) {
+            r.label = t[1];
+            break;
+          }
+          if (t[0] === 6 && r.label < e[1]) {
+            r.label = e[1], e = t;
+            break;
+          }
+          if (e && r.label < e[2]) {
+            r.label = e[2], r.ops.push(t);
+            break;
+          }
+          e[2] && r.ops.pop(), r.trys.pop();
+          continue;
+      }
+      t = n.call(o, r);
+    } catch (l) {
+      t = [6, l], a = 0;
+    } finally {
+      i = e = 0;
+    }
+    if (t[0] & 5) throw t[1];
+    return { value: t[0] ? t[1] : void 0, done: !0 };
+  }
+}, $ = function(o, n) {
+  var r = typeof Symbol == "function" && o[Symbol.iterator];
+  if (!r) return o;
+  var i = r.call(o), a, e = [], f;
+  try {
+    for (; (n === void 0 || n-- > 0) && !(a = i.next()).done; ) e.push(a.value);
+  } catch (h) {
+    f = { error: h };
+  } finally {
+    try {
+      a && !a.done && (r = i.return) && r.call(i);
+    } finally {
+      if (f) throw f.error;
+    }
+  }
+  return e;
+}, ee = function(o, n, r) {
+  if (r || arguments.length === 2) for (var i = 0, a = n.length, e; i < a; i++)
+    (e || !(i in n)) && (e || (e = Array.prototype.slice.call(n, 0, i)), e[i] = n[i]);
+  return o.concat(e || Array.prototype.slice.call(n));
+}, z = new T(), O = new T(), D = new T(), F = {
+  cache: z,
+  refreshInterval: 0,
+  ttl: 0,
+  serverTTL: 1e3,
+  dedupingInterval: 2e3,
+  revalidateOnFocus: !0,
+  revalidateDebounce: 0,
+  shouldRetryOnError: !0,
+  errorRetryInterval: 5e3,
+  errorRetryCount: 5,
+  fetcher: _.fetcher,
+  isOnline: _.isOnline,
+  isDocumentVisible: _.isDocumentVisible
+};
+function re(o, n, r) {
+  var i = O.get(o);
+  if (i)
+    i.data.push(n);
+  else {
+    var a = 5e3;
+    O.set(o, [n], r > 0 ? r + a : r);
+  }
+}
+function te(o, n, r) {
+  if (r.isDocumentVisible() && !(r.errorRetryCount !== void 0 && n > r.errorRetryCount)) {
+    var i = Math.min(n || 0, r.errorRetryCount), a = i * r.errorRetryInterval;
+    setTimeout(function() {
+      o(null, { errorRetryCount: i + 1, shouldRetryOnError: !0 });
+    }, a);
+  }
+}
+function G(o) {
+  var n = o.shouldRetry, r = n === void 0 ? void 0 : n, i = o.error;
+  return typeof r == "function" ? r(i) : typeof r == "boolean" ? r : F.shouldRetryOnError;
+}
+var q = function(o, n, r, i) {
+  return r === void 0 && (r = z), i === void 0 && (i = F.ttl), E(void 0, void 0, void 0, function() {
+    var a, e, f, h, s, t, l;
+    return p(this, function(u) {
+      switch (u.label) {
+        case 0:
+          if (!ne(n)) return [3, 5];
+          u.label = 1;
+        case 1:
+          return u.trys.push([1, 3, , 4]), [4, n];
+        case 2:
+          return a = u.sent(), [3, 4];
+        case 3:
+          return h = u.sent(), e = h, [3, 4];
+        case 4:
+          return [3, 6];
+        case 5:
+          a = n, u.label = 6;
+        case 6:
+          if (f = !1, s = { data: a, error: e, isValidating: f }, typeof a < "u")
+            try {
+              r.set(o, s, i);
+            } catch (v) {
+              console.error("swrv(mutate): failed to set cache", v);
+            }
+          return t = O.get(o), t && t.data.length && (l = t.data.filter(function(v) {
+            return v.key === o;
+          }), l.forEach(function(v, b) {
+            typeof s.data < "u" && (v.data = s.data), v.error = s.error, v.isValidating = s.isValidating, v.isLoading = s.isValidating;
+            var g = b === l.length - 1;
+            g || delete l[b];
+          }), l = l.filter(Boolean)), [2, s];
+      }
+    });
+  });
+};
+function oe() {
+  for (var o = this, n = [], r = 0; r < arguments.length; r++)
+    n[r] = arguments[r];
+  var i, a, e = m({}, F), f = !1, h = !1;
+  if (!K())
+    return console.error("useSWRV must be called inside setup() or an active effectScope()."), null;
+  var s = typeof window > "u" || typeof document > "u";
+  n.length >= 1 && (i = n[0]), n.length >= 2 && (a = n[1]), n.length > 2 && (e = m(m({}, e), n[2]));
+  var t = s ? e.serverTTL : e.ttl, l = typeof i == "function" ? i : N(i);
+  typeof a > "u" && (a = e.fetcher);
+  var u = null;
+  u || (u = Q({
+    data: void 0,
+    error: void 0,
+    isValidating: !0,
+    isLoading: !0,
+    key: null
+  }));
+  var v = function(c, d) {
+    return E(o, void 0, void 0, function() {
+      var x, y, V, R, A, H, I, j = this;
+      return p(this, function(S) {
+        switch (S.label) {
+          case 0:
+            return x = u.data === void 0, y = l.value, y ? (V = e.cache.get(y), R = V && V.data, u.isValidating = !0, u.isLoading = !R, R && (u.data = R.data, u.error = R.error), A = c || a, !A || !e.isDocumentVisible() && !x || (d == null ? void 0 : d.forceRevalidate) !== void 0 && !(d != null && d.forceRevalidate) ? (u.isValidating = !1, u.isLoading = !1, [
+              2
+              /*return*/
+            ]) : V && (H = !!(Date.now() - V.createdAt >= e.dedupingInterval || d != null && d.forceRevalidate), !H) ? (u.isValidating = !1, u.isLoading = !1, [
+              2
+              /*return*/
+            ]) : (I = function() {
+              return E(j, void 0, void 0, function() {
+                var w, B, L, P, W, M;
+                return p(this, function(C) {
+                  switch (C.label) {
+                    case 0:
+                      return w = D.get(y), w ? [3, 2] : (B = Array.isArray(y) ? y : [y], L = A.apply(void 0, ee([], $(B), !1)), D.set(y, L, e.dedupingInterval), [4, q(y, L, e.cache, t)]);
+                    case 1:
+                      return C.sent(), [3, 4];
+                    case 2:
+                      return [4, q(y, w.data, e.cache, t)];
+                    case 3:
+                      C.sent(), C.label = 4;
+                    case 4:
+                      return u.isValidating = !1, u.isLoading = !1, D.delete(y), u.error !== void 0 && (P = G({ shouldRetry: e.shouldRetryOnError, error: u.error }), W = G({
+                        shouldRetry: d ? d.shouldRetryOnError : !0,
+                        error: u.error
+                      }), M = !f && P && W, M && te(v, d ? d.errorRetryCount : 1, e)), [
+                        2
+                        /*return*/
+                      ];
+                  }
+                });
+              });
+            }, R && e.revalidateDebounce ? (setTimeout(function() {
+              return E(j, void 0, void 0, function() {
+                return p(this, function(w) {
+                  switch (w.label) {
+                    case 0:
+                      return f ? [3, 2] : [4, I()];
+                    case 1:
+                      w.sent(), w.label = 2;
+                    case 2:
+                      return [
+                        2
+                        /*return*/
+                      ];
+                  }
+                });
+              });
+            }, e.revalidateDebounce), [3, 3]) : [3, 1])) : [
+              2
+              /*return*/
+            ];
+          case 1:
+            return [4, I()];
+          case 2:
+            S.sent(), S.label = 3;
+          case 3:
+            return [
+              2
+              /*return*/
+            ];
+        }
+      });
+    });
+  }, b = function() {
+    return E(o, void 0, void 0, function() {
+      return p(this, function(c) {
+        return [2, v(null, { shouldRetryOnError: !1 })];
+      });
+    });
+  }, g = null;
+  if (!s) {
+    var k = function() {
+      return E(o, void 0, void 0, function() {
+        return p(this, function(c) {
+          switch (c.label) {
+            case 0:
+              return !u.error && e.isOnline() ? [4, v()] : [3, 2];
+            case 1:
+              return c.sent(), [3, 3];
+            case 2:
+              g && (clearTimeout(g), g = null), c.label = 3;
+            case 3:
+              return e.refreshInterval && !f && (g = setTimeout(k, e.refreshInterval)), [
+                2
+                /*return*/
+              ];
+          }
+        });
+      });
+    };
+    e.refreshInterval && (g = setTimeout(k, e.refreshInterval)), e.revalidateOnFocus && (document.addEventListener("visibilitychange", b, !1), window.addEventListener("focus", b, !1));
+  }
+  U(function() {
+    f = !0, g && (clearTimeout(g), g = null), !s && e.revalidateOnFocus && (document.removeEventListener("visibilitychange", b, !1), window.removeEventListener("focus", b, !1));
+    var c = O.get(l.value);
+    c && (c.data = c.data.filter(function(d) {
+      return d !== u;
+    }));
+  });
+  try {
+    X(l, function(c) {
+      Y(l) || (l.value = c), u.key = c, u.isValidating = !!c, re(l.value, u, t), !s && !h && l.value && v(), h = !1;
+    }, {
+      immediate: !0
+    });
+  } catch {
+  }
+  var J = m(m({}, Z(u)), { mutate: function(c, d) {
+    return v(c, m(m({}, d), { forceRevalidate: !0 }));
+  } });
+  return J;
+}
+function ne(o) {
+  return o !== null && typeof o == "object" && typeof o.then == "function";
+}
+export {
+  oe as default,
+  q as mutate
+};

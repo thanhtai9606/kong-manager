@@ -1,0 +1,173 @@
+import type { PropType } from 'vue';
+import type { UpstreamAlgorithm, UpstreamHash } from '../types';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    stickySessionsAvailable: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+    algorithm: {
+        type: PropType<UpstreamAlgorithm>;
+        required: true;
+    };
+    stickySessionsCookie: {
+        type: StringConstructor;
+        required: true;
+    };
+    stickySessionsCookiePath: {
+        type: StringConstructor;
+        required: true;
+    };
+    slots: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOn: {
+        type: PropType<UpstreamHash>;
+        required: true;
+    };
+    hashFallback: {
+        type: PropType<UpstreamHash>;
+        required: true;
+    };
+    hashOnHeader: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnCookie: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnCookiePath: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnQueryArgument: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnUriCapture: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashFallbackHeader: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashFallbackQueryArgument: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashFallbackUriCapture: {
+        type: StringConstructor;
+        required: true;
+    };
+    readonly: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    "update:algorithm": (val: UpstreamAlgorithm) => any;
+    "update:sticky-sessions-cookie": (val: string) => any;
+    "update:sticky-sessions-cookie-path": (val: string) => any;
+    "update:slots": (val: string) => any;
+    "update:hash-on": (val: UpstreamHash) => any;
+    "update:hash-fallback": (val: UpstreamHash) => any;
+    "update:hash-on-header": (val: string) => any;
+    "update:hash-on-cookie": (val: string) => any;
+    "update:hash-on-cookie-path": (val: string) => any;
+    "update:hash-on-query-argument": (val: string) => any;
+    "update:hash-on-uri-capture": (val: string) => any;
+    "update:hash-fallback-header": (val: string) => any;
+    "update:hash-fallback-query-argument": (val: string) => any;
+    "update:hash-fallback-uri-capture": (val: string) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    stickySessionsAvailable: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+    algorithm: {
+        type: PropType<UpstreamAlgorithm>;
+        required: true;
+    };
+    stickySessionsCookie: {
+        type: StringConstructor;
+        required: true;
+    };
+    stickySessionsCookiePath: {
+        type: StringConstructor;
+        required: true;
+    };
+    slots: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOn: {
+        type: PropType<UpstreamHash>;
+        required: true;
+    };
+    hashFallback: {
+        type: PropType<UpstreamHash>;
+        required: true;
+    };
+    hashOnHeader: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnCookie: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnCookiePath: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnQueryArgument: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashOnUriCapture: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashFallbackHeader: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashFallbackQueryArgument: {
+        type: StringConstructor;
+        required: true;
+    };
+    hashFallbackUriCapture: {
+        type: StringConstructor;
+        required: true;
+    };
+    readonly: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+}>> & Readonly<{
+    "onUpdate:algorithm"?: ((val: UpstreamAlgorithm) => any) | undefined;
+    "onUpdate:sticky-sessions-cookie"?: ((val: string) => any) | undefined;
+    "onUpdate:sticky-sessions-cookie-path"?: ((val: string) => any) | undefined;
+    "onUpdate:slots"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-on"?: ((val: UpstreamHash) => any) | undefined;
+    "onUpdate:hash-fallback"?: ((val: UpstreamHash) => any) | undefined;
+    "onUpdate:hash-on-header"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-on-cookie"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-on-cookie-path"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-on-query-argument"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-on-uri-capture"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-fallback-header"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-fallback-query-argument"?: ((val: string) => any) | undefined;
+    "onUpdate:hash-fallback-uri-capture"?: ((val: string) => any) | undefined;
+}>, {
+    stickySessionsAvailable: boolean;
+    readonly: boolean;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=UpstreamsFormLoadBalancing.vue.d.ts.map

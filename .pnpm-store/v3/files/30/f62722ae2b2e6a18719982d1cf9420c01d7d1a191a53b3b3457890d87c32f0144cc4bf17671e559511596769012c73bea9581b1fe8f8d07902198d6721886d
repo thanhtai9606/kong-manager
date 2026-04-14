@@ -1,0 +1,238 @@
+import { defineComponent as le, ref as v, computed as m, watch as A, onMounted as ie, onBeforeUnmount as ne, openBlock as r, createElementBlock as f, normalizeClass as W, Fragment as j, createElementVNode as c, toDisplayString as P, createTextVNode as L, createVNode as k, withCtx as J, unref as h, createCommentVNode as C, renderList as ue, createBlock as q, nextTick as oe } from "vue";
+import se from "./kongponents.es43.js";
+import T from "./kongponents.es32.js";
+import ve from "./kongponents.es206.js";
+import re from "./kongponents.es207.js";
+import ce from "./kongponents.es203.js";
+import de from "./kongponents.es208.js";
+import { ResizeObserverHelper as ge } from "./kongponents.es209.js";
+import { DEFAULT_PAGE_SIZE as fe } from "./kongponents.es173.js";
+const be = {
+  class: "pagination-text large-screen",
+  "data-testid": "visible-items"
+}, me = { class: "pagination-text-pages" }, pe = { class: "pagination-button-container" }, Pe = { key: 0 }, he = {
+  key: 1,
+  class: "pagination-button placeholder"
+}, ye = ["aria-current", "aria-label", "data-testid", "onClick"], ke = {
+  key: 2,
+  class: "pagination-button placeholder"
+}, Ce = { key: 3 }, ze = { class: "page-size-select" }, xe = {
+  key: 0,
+  class: "pagination-text small-screen",
+  "data-testid": "visible-items"
+}, Se = { class: "pagination-text-pages" }, Ie = /* @__PURE__ */ le({
+  __name: "KPagination",
+  props: {
+    items: { default: () => [] },
+    totalCount: { default: 0 },
+    pageSizes: { default: () => [15, 30, 50, 75, 100] },
+    initialPageSize: { default: null },
+    neighbors: { default: 1 },
+    currentPage: { default: null },
+    disablePageJump: { type: Boolean },
+    offset: { type: Boolean },
+    offsetPreviousButtonDisabled: { type: Boolean },
+    offsetNextButtonDisabled: { type: Boolean }
+  },
+  emits: ["pageChange", "pageSizeChange", "getNextOffset", "getPreviousOffset"],
+  setup(e, { emit: H }) {
+    const R = {
+      placement: "top"
+    }, B = H, y = v(null), N = v(), a = v(e.currentPage ? e.currentPage : 1), o = v(e.initialPageSize ? e.initialPageSize : e.pageSizes[0] ?? fe), i = m(() => Math.ceil(e.totalCount / o.value)), w = e.pageSizes.map((t, n) => ({
+      label: `${t}`,
+      key: `size-${n}`,
+      value: t,
+      selected: t === o.value
+    })), Z = m(() => `${o.value} ${o.value === 1 ? "item per page" : " items per page"}`), l = v(e.neighbors), s = v(3), Q = async () => (await oe(), y.value ? y.value.scrollWidth > y.value.clientWidth : !1), F = async () => {
+      await Q() && (l.value > 1 || s.value > 1) && (l.value > 1 ? l.value-- : s.value > 1 && s.value--, x.value = O(a.value, i.value, p.value, d.value));
+    }, O = (t, n, u, I) => {
+      if (e.disablePageJump)
+        return [];
+      let g = [...Array(n).keys()].map((b) => b + 1);
+      const ae = s.value + 2 + 2 * l.value;
+      return g.length <= ae || (u ? u && I ? g = g.filter(
+        (b) => b > t - l.value - 1 && b < t + l.value + 1
+      ) : u && !I && (g = g.filter((b) => b > n - l.value * 2 - s.value)) : g = g.filter((b) => b <= l.value * 2 + s.value)), g;
+    }, K = v(a.value === 1), D = v(a.value === i.value), $ = m(() => (a.value - 1) * o.value + 1), E = m(() => {
+      const t = $.value - 1 + o.value;
+      return t > e.totalCount ? e.totalCount : t;
+    }), M = m(() => `${$.value} to ${E.value}`), U = m(() => ` of ${e.totalCount}`), z = m(() => e.currentPage ? e.currentPage : a.value), V = m(() => 5 + 2 * l.value), p = v(z.value >= l.value + (s.value + 1) && i.value > V.value), d = v(i.value > s.value + 2 + 2 * l.value), x = v(O(
+      z.value,
+      i.value,
+      p.value,
+      d.value
+    )), X = () => {
+      a.value++, G();
+    }, Y = () => {
+      a.value--, G();
+    }, S = (t) => {
+      a.value = t, G();
+    }, G = () => {
+      const t = (a.value - 1) * o.value + o.value;
+      D.value = t >= e.totalCount, K.value = a.value === 1, i.value <= V.value ? (p.value = !1, d.value = !1) : (p.value = a.value >= l.value + (s.value + 1), d.value = a.value <= i.value - l.value - s.value), x.value = O(a.value, i.value, p.value, d.value), B("pageChange", {
+        page: a.value,
+        pageCount: i.value,
+        firstItem: $.value,
+        lastItem: E.value,
+        visibleItems: e.items.slice($.value - 1, E.value)
+      });
+    }, _ = (t) => {
+      o.value !== t.value && (o.value = t.value, B("pageSizeChange", {
+        pageSize: o.value,
+        pageCount: i.value
+      }), e.currentPage !== 1 && S(1));
+    }, ee = () => {
+      B("getNextOffset");
+    }, te = () => {
+      B("getPreviousOffset");
+    };
+    return A(() => e.currentPage, (t, n) => {
+      t !== n && t && S(t);
+    }), A(i, (t, n) => {
+      t !== n && (D.value = a.value === t, d.value = t > s.value + 2 + 2 * l.value, x.value = O(
+        z.value,
+        t,
+        !1,
+        d.value
+      ));
+    }), A(x, () => {
+      !e.disablePageJump && !e.offset && F();
+    }), ie(() => {
+      !e.disablePageJump && !e.offset && (N.value = ge.create(F), N.value.observe(y.value));
+    }), ne(() => {
+      var t;
+      !e.disablePageJump && !e.offset && ((t = N.value) == null || t.unobserve(y.value));
+    }), (t, n) => (r(), f("nav", {
+      ref_key: "kPaginationElement",
+      ref: y,
+      class: W(["k-pagination", { "page-jump": !e.disablePageJump && !e.offset }]),
+      "data-testid": "k-pagination"
+    }, [
+      e.offset ? (r(), q(ve, {
+        key: 1,
+        "next-button-disabled": e.offsetNextButtonDisabled,
+        "previous-button-disabled": e.offsetPreviousButtonDisabled,
+        onGetNextOffset: ee,
+        onGetPreviousOffset: te
+      }, null, 8, ["next-button-disabled", "previous-button-disabled"])) : (r(), f(j, { key: 0 }, [
+        c("span", be, [
+          c("span", me, P(M.value), 1),
+          L(" " + P(U.value), 1)
+        ]),
+        c("ul", pe, [
+          c("li", null, [
+            k(T, {
+              appearance: "tertiary",
+              "aria-label": "Go to the previous page",
+              class: "pagination-button arrow",
+              "data-testid": "previous-button",
+              disabled: K.value,
+              icon: "",
+              size: "small",
+              type: "button",
+              onClick: Y
+            }, {
+              default: J(() => [
+                k(h(re), {
+                  class: "pagination-arrow-icon",
+                  decorative: ""
+                })
+              ]),
+              _: 1
+            }, 8, ["disabled"])
+          ]),
+          !e.disablePageJump && p.value ? (r(), f("li", Pe, [
+            c("button", {
+              "aria-label": "Go to the first page",
+              class: "pagination-button",
+              "data-testid": "page-1-button",
+              type: "button",
+              onClick: n[0] || (n[0] = (u) => S(1))
+            }, " 1 ")
+          ])) : C("", !0),
+          !e.disablePageJump && p.value ? (r(), f("li", he, " ... ")) : C("", !0),
+          (r(!0), f(j, null, ue(x.value, (u) => (r(), f("li", { key: u }, [
+            c("button", {
+              "aria-current": u == z.value && "page" || void 0,
+              "aria-label": `Go to page ${u}`,
+              class: W(["pagination-button", { active: u == z.value }]),
+              "data-testid": `page-${u}-button`,
+              type: "button",
+              onClick: (I) => S(u)
+            }, P(u), 11, ye)
+          ]))), 128)),
+          !e.disablePageJump && d.value ? (r(), f("li", ke, " ... ")) : C("", !0),
+          !e.disablePageJump && d.value ? (r(), f("li", Ce, [
+            c("button", {
+              "aria-label": "Go to the last page",
+              class: "pagination-button",
+              "data-testid": "last-button",
+              type: "button",
+              onClick: n[1] || (n[1] = (u) => S(i.value))
+            }, P(i.value), 1)
+          ])) : C("", !0),
+          c("li", null, [
+            k(T, {
+              appearance: "tertiary",
+              "aria-label": "Go to the next page",
+              class: "pagination-button arrow",
+              "data-testid": "next-button",
+              disabled: D.value ? !0 : void 0,
+              icon: "",
+              size: "small",
+              type: "button",
+              onClick: X
+            }, {
+              default: J(() => [
+                k(h(de), {
+                  class: "pagination-arrow-icon",
+                  decorative: ""
+                })
+              ]),
+              _: 1
+            }, 8, ["disabled"])
+          ])
+        ])
+      ], 64)),
+      c("div", ze, [
+        !e.disablePageJump && !e.offset ? (r(), f("span", xe, [
+          c("span", Se, P(M.value), 1),
+          L(" " + P(U.value), 1)
+        ])) : C("", !0),
+        k(se, {
+          class: "page-size-dropdown",
+          "data-testid": "page-size-dropdown",
+          disabled: h(w).length <= 1,
+          items: h(w),
+          "kpop-attributes": R,
+          "selection-menu": "",
+          onChange: _
+        }, {
+          default: J(() => [
+            k(T, {
+              appearance: "tertiary",
+              class: "page-size-dropdown-trigger",
+              "data-testid": "page-size-dropdown-trigger",
+              disabled: h(w).length <= 1,
+              size: "small",
+              type: "button"
+            }, {
+              default: J(() => [
+                L(P(Z.value) + " ", 1),
+                h(w).length > 1 ? (r(), q(h(ce), {
+                  key: 0,
+                  decorative: ""
+                })) : C("", !0)
+              ]),
+              _: 1
+            }, 8, ["disabled"])
+          ]),
+          _: 1
+        }, 8, ["disabled", "items"])
+      ])
+    ], 2));
+  }
+});
+export {
+  Ie as default
+};

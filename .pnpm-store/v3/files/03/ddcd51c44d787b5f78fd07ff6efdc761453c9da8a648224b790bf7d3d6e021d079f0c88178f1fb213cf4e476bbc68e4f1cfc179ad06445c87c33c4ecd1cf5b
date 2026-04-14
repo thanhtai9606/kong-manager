@@ -1,0 +1,15 @@
+import type { Ref } from 'vue';
+import type { TableStateParams } from '../types';
+export default function useTableState(query?: Ref<string> | (() => string)): {
+    tableState: Ref<{
+        state: import("@kong/kongponents").TableState;
+        hasData: boolean;
+    } | null, TableStateParams | {
+        state: import("@kong/kongponents").TableState;
+        hasData: boolean;
+    } | null>;
+    hasRecords: Ref<boolean, boolean>;
+    hideTableToolbar: import("vue").ComputedRef<boolean>;
+    handleStateChange: (stateParams: TableStateParams) => void;
+};
+//# sourceMappingURL=useTableState.d.ts.map

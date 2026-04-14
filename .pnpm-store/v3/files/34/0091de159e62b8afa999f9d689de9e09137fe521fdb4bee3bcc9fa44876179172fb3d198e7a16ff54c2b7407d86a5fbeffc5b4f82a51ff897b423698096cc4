@@ -1,0 +1,16 @@
+declare const _default: {
+    getVault: {
+        konnect: string;
+    };
+    list: {
+        konnect: string;
+    };
+    form: {
+        konnect: {
+            create: string;
+            edit: string;
+        };
+    };
+};
+export default _default;
+//# sourceMappingURL=secrets-endpoints.d.ts.map

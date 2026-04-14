@@ -1,0 +1,3 @@
+import type { SAMLSchema } from '../../types/plugins/saml';
+export declare const samlSchema: SAMLSchema;
+//# sourceMappingURL=SAML.d.ts.map

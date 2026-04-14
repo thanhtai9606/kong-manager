@@ -1,0 +1,11 @@
+export default function useErrors(): {
+    getErrorFieldsFromError: (error: any) => {
+        messages: string[];
+        fields: Array<{
+            field: string;
+            message: string;
+        }>;
+    };
+    getMessageFromError: (error: any) => string;
+};
+//# sourceMappingURL=useErrors.d.ts.map

@@ -1,0 +1,6 @@
+import type { Toast } from '@kong/kongponents';
+/**
+ * Use the toaster instance from the host app.
+ */
+export declare function useToaster(): (options: Toast) => void;
+//# sourceMappingURL=useToaster.d.ts.map

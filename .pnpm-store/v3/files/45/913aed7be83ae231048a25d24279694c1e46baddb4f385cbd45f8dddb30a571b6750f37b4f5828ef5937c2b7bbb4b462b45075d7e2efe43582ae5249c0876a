@@ -1,0 +1,8 @@
+import type { PluginMetaData } from '../types';
+export declare const usePluginMetaData: () => {
+    pluginMetaData: Record<string, PluginMetaData>;
+    credentialMetaData: Record<string, any>;
+    credentialSchemas: Record<string, any>;
+    getDisplayName: (name: string) => string;
+};
+//# sourceMappingURL=usePluginMeta.d.ts.map

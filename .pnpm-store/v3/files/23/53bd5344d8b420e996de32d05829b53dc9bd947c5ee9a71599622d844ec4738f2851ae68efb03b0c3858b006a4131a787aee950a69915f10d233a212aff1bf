@@ -1,0 +1,5 @@
+const z = 15, g = (S, e) => S.pageSize ? S.pageSize : e.initialPageSize ? e.initialPageSize : e.pageSizes && Array.isArray(e.pageSizes) && e.pageSizes.length ? e.pageSizes[0] : 15;
+export {
+  z as DEFAULT_PAGE_SIZE,
+  g as getInitialPageSize
+};

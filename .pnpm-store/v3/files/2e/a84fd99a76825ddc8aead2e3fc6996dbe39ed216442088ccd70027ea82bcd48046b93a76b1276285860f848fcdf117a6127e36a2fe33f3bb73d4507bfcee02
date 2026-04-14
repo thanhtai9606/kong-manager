@@ -1,0 +1,59 @@
+import { defineComponent as m, computed as d, openBlock as l, createElementBlock as i, createElementVNode as a, normalizeClass as u, createBlock as r, unref as t, toDisplayString as s, createCommentVNode as f, normalizeStyle as b } from "vue";
+import p from "./kongponents.es273.js";
+import k from "./kongponents.es178.js";
+import z from "./kongponents.es198.js";
+import { KUI_ICON_SIZE_40 as o, KUI_COLOR_TEXT_INVERSE as c, KUI_COLOR_TEXT_PRIMARY as v } from "./kongponents.es182.js";
+import { normalizeSize as y } from "./kongponents.es175.js";
+const h = ["aria-current", "data-testid"], x = { class: "step-circle" }, E = {
+  key: 3,
+  class: "step-number"
+}, C = ["title"], K = /* @__PURE__ */ m({
+  __name: "KStep",
+  props: {
+    label: {},
+    state: { default: "default" },
+    maxLabelWidth: {},
+    stepNumber: {}
+  },
+  setup(e) {
+    const n = d(() => ({
+      maxWidth: y(e.maxLabelWidth)
+    }));
+    return (I, N) => (l(), i("li", {
+      "aria-current": e.state === "active" ? "step" : "false",
+      class: "step",
+      "data-testid": `step-${e.state}`
+    }, [
+      a("div", {
+        class: u(["step-container", `${e.state}`])
+      }, [
+        a("div", x, [
+          e.state === "completed" ? (l(), r(t(p), {
+            key: 0,
+            color: `var(--kui-color-text-inverse, ${t(c)})`,
+            size: t(o),
+            title: "Completed"
+          }, null, 8, ["color", "size"])) : e.state === "pending" ? (l(), r(t(z), {
+            key: 1,
+            color: `var(--kui-color-text-primary, ${t(v)})`,
+            size: t(o),
+            title: "Pending"
+          }, null, 8, ["color", "size"])) : e.state === "error" ? (l(), r(t(k), {
+            key: 2,
+            color: `var(--kui-color-text-inverse, ${t(c)})`,
+            size: t(o),
+            title: "Error"
+          }, null, 8, ["color", "size"])) : e.stepNumber ? (l(), i("span", E, s(e.stepNumber), 1)) : f("", !0)
+        ]),
+        a("span", {
+          class: "step-label",
+          style: b(n.value),
+          title: e.label
+        }, s(e.label), 13, C)
+      ], 2)
+    ], 8, h));
+  }
+});
+export {
+  K as default
+};

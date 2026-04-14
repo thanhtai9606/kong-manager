@@ -1,0 +1,17 @@
+declare const _default: typeof __VLS_export;
+export default _default;
+declare const __VLS_export: import("vue").DefineComponent<{}, {}, {}, {}, {
+    getFieldRowClasses(field: any): {
+        [x: number]: any;
+        disabled: any;
+        readonly: any;
+        featured: any;
+        required: any;
+    };
+    fieldErrors(field: any): any;
+    fieldDisabled(field: any): any;
+    fieldReadonly(field: any): any;
+    fieldFeatured(field: any): any;
+    fieldRequired(field: any): any;
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+//# sourceMappingURL=FormMixin.vue.d.ts.map

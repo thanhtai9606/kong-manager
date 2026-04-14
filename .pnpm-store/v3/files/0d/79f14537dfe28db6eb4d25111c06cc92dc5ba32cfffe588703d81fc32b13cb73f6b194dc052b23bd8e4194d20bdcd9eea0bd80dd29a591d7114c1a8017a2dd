@@ -1,0 +1,13 @@
+import type { FieldName } from '../../types';
+export declare function useVaultForm(): {
+    formData: import("vue").ComputedRef<{
+        vault: {
+            [x: string]: unknown;
+        };
+    }>;
+    addVault: (name: FieldName, value: string) => void;
+    removeVault: (name: FieldName) => void;
+    updateVault: (name: FieldName, value: string, commit?: boolean) => void;
+    renameVault: (oldName: FieldName, newName: FieldName, commit?: boolean) => void;
+};
+//# sourceMappingURL=useVaultForm.d.ts.map

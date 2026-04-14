@@ -1,0 +1,91 @@
+import { defineComponent as C, useCssVars as h, useTemplateRef as E, computed as b, watch as T, onUnmounted as O, openBlock as l, createElementBlock as s, createVNode as n, Transition as c, withCtx as f, normalizeClass as B, createCommentVNode as a, createElementVNode as d, renderSlot as m, createTextVNode as V, toDisplayString as $, withModifiers as g, unref as v } from "vue";
+import { onClickOutside as w } from "./kongponents.es201.js";
+import x from "./kongponents.es178.js";
+import { KUI_COLOR_TEXT_NEUTRAL as z } from "./kongponents.es182.js";
+import { normalizeSize as L } from "./kongponents.es175.js";
+const N = { class: "k-slideout" }, R = {
+  key: 0,
+  ref: "slideoutContainerElement",
+  class: "slideout-container",
+  "data-testid": "slideout-container"
+}, S = { class: "slideout-header" }, I = {
+  key: 0,
+  class: "slideout-title",
+  "data-testid": "slideout-title"
+}, U = { class: "slideout-content" }, X = /* @__PURE__ */ C({
+  __name: "KSlideout",
+  props: {
+    visible: { type: Boolean },
+    hasOverlay: { type: Boolean, default: !0 },
+    offsetTop: { default: 0 },
+    closeOnBlur: { type: Boolean, default: !0 },
+    closeOnEscape: { type: Boolean, default: !0 },
+    title: { default: "" },
+    maxWidth: { default: "500px" },
+    zIndex: { default: 9999 }
+  },
+  emits: ["close"],
+  setup(t, { emit: k }) {
+    h((e) => ({
+      fe411dca: p.value,
+      v097e7e0e: e.maxWidth,
+      v3afc0278: e.zIndex
+    }));
+    const r = k, y = E("slideoutContainerElement"), p = b(() => L(t.offsetTop));
+    w(y, (e) => {
+      e.isTrusted && t.closeOnBlur && r("close");
+    });
+    const u = (e, o = !1) => {
+      (t.visible && e.keyCode === 27 && t.closeOnEscape || o) && r("close");
+    }, i = (e) => {
+      typeof document < "u" && (e ? document == null || document.addEventListener("keydown", u) : document == null || document.removeEventListener("keydown", u));
+    };
+    return T(() => t.visible, async (e) => {
+      i(!!e);
+    }, { immediate: !0 }), O(() => {
+      i(!1);
+    }), (e, o) => (l(), s("div", N, [
+      n(c, { name: "kongponents-fade-transition" }, {
+        default: f(() => [
+          t.visible ? (l(), s("div", {
+            key: 0,
+            class: B(["slideout-backdrop", { "backdrop-transparent": !t.hasOverlay }])
+          }, null, 2)) : a("", !0)
+        ]),
+        _: 1
+      }),
+      n(c, { name: "kongponents-slide-in-transition" }, {
+        default: f(() => [
+          t.visible ? (l(), s("div", R, [
+            d("div", S, [
+              t.title || e.$slots.title ? (l(), s("div", I, [
+                m(e.$slots, "title", {}, () => [
+                  V($(t.title), 1)
+                ], !0)
+              ])) : a("", !0),
+              d("button", {
+                "aria-label": "Close",
+                class: "slideout-close-icon",
+                "data-testid": "slideout-close-icon",
+                type: "button",
+                onClick: o[0] || (o[0] = g((K) => e.$emit("close"), ["stop"]))
+              }, [
+                n(v(x), {
+                  color: `var(--kui-color-text-neutral, ${v(z)})`,
+                  decorative: ""
+                }, null, 8, ["color"])
+              ])
+            ]),
+            d("div", U, [
+              m(e.$slots, "default", {}, void 0, !0)
+            ])
+          ], 512)) : a("", !0)
+        ]),
+        _: 3
+      })
+    ]));
+  }
+});
+export {
+  X as default
+};

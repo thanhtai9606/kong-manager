@@ -1,0 +1,89 @@
+function c(n) {
+  let t = "";
+  for (let e = 0; e < n.length; e++) {
+    const o = n[e];
+    if (typeof o == "number")
+      t += `[${o}]`;
+    else if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(o))
+      e > 0 && (t += "."), t += o;
+    else {
+      const r = o.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+      t += `['${r}']`;
+    }
+  }
+  return t;
+}
+const l = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+function i() {
+  return { lenses: [], dispose: () => {
+  } };
+}
+function f(n, t) {
+  return t.length === 0 ? { lenses: n } : {
+    lenses: n,
+    dispose: () => {
+      const e = [];
+      if (t.forEach((o) => {
+        try {
+          o();
+        } catch (r) {
+          e.push(r);
+        }
+      }), e.length > 0)
+        throw new AggregateError(e);
+    }
+  };
+}
+function u(n, t, e) {
+  return {
+    range: t,
+    command: {
+      id: e.copyCommandId,
+      title: typeof e.title == "function" ? e.title(n) : e.title ?? `$(copy) Copy UUID ${n.substring(0, 8)}...`,
+      arguments: [
+        e.formatValue ? e.formatValue(n) : n
+      ]
+    }
+  };
+}
+function d(n, t, e, o, r) {
+  return {
+    range: o,
+    command: {
+      id: r.copyCommandId,
+      title: typeof r.title == "function" ? r.title(n, t, e) : r.title ?? `$(copy) Copy ${c(n)}`,
+      arguments: [
+        r.formatValue ? r.formatValue(t) : JSON.stringify(t)
+      ]
+    }
+  };
+}
+function m(n) {
+  return {
+    provideCodeLenses: async (t, e) => {
+      const o = [], r = [];
+      for (const a of n) {
+        const s = await a.provideCodeLenses(t, e);
+        s && (o.push(...s.lenses), r.push(s.dispose ?? (() => {
+        })));
+      }
+      return f(o, r);
+    },
+    resolveCodeLens: async (t, e, o) => {
+      var r;
+      for (const a of n) {
+        const s = await ((r = a.resolveCodeLens) == null ? void 0 : r.call(a, t, e, o));
+        if (s)
+          return s;
+      }
+    }
+  };
+}
+export {
+  f as a,
+  d as b,
+  u as c,
+  m as d,
+  i as e,
+  l as u
+};

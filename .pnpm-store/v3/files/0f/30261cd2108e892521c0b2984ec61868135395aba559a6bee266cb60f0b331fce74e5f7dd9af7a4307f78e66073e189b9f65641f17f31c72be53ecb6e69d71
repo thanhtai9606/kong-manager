@@ -1,0 +1,4 @@
+import type { JsonFieldSchema } from '../../../../../types/plugins/form-schema';
+import type { HandlerOption } from './types';
+export declare function fillJson(option: HandlerOption<JsonFieldSchema>): void;
+//# sourceMappingURL=json.d.ts.map

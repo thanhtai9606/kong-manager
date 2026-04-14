@@ -1,0 +1,183 @@
+import { defineComponent as I, useId as A, computed as o, useTemplateRef as D, useModel as E, watch as h, openBlock as s, createElementBlock as r, createBlock as F, mergeProps as L, unref as b, withCtx as $, createTextVNode as q, toDisplayString as S, createCommentVNode as U, createElementVNode as d, normalizeStyle as g, normalizeClass as P, createVNode as W, withDirectives as X, vModelText as G, Fragment as B, renderList as C, mergeModels as K } from "vue";
+import H from "./kongponents.es51.js";
+import J from "./kongponents.es56.js";
+const O = {
+  class: "k-slider",
+  "data-testid": "k-slider"
+}, Q = { class: "slider-container" }, Y = { class: "input-value" }, Z = ["id", "disabled", "list", "max", "min", "step"], p = ["id"], _ = ["data-testid", "label", "value"], ee = {
+  "aria-hidden": "true",
+  class: "slider-marks",
+  "data-testid": "slider-marks"
+}, te = ["data-testid", "onClick"], ne = /* @__PURE__ */ I({
+  __name: "KSlider",
+  props: /* @__PURE__ */ K({
+    label: { default: "" },
+    min: { default: 0 },
+    max: { default: 10 },
+    step: { default: 1 },
+    showMarks: { type: Boolean, default: !1 },
+    marks: { default: () => [] },
+    showValue: { type: Boolean, default: !0 },
+    disabled: { type: Boolean, default: !1 },
+    labelAttributes: { default: () => ({}) }
+  }, {
+    modelValue: {
+      required: !0,
+      type: Number
+    },
+    modelModifiers: {}
+  }),
+  emits: /* @__PURE__ */ K(["change", "update:modelValue"], ["update:modelValue"]),
+  setup(e, { emit: j }) {
+    const V = j, c = A(), N = o(() => ({ width: m(i.value) })), T = o(() => ({
+      left: m(i.value),
+      transform: `translateX(-${m(i.value)})`
+    })), R = () => {
+      V("change", i.value), x();
+    }, z = (t) => {
+      i.value = t, V("change", i.value), x();
+    }, M = D("thumbPopover"), x = () => {
+      var t;
+      (t = M.value) == null || t.showPopover();
+    }, k = () => {
+      var t;
+      (t = M.value) == null || t.hidePopover();
+    }, i = E(e, "modelValue"), n = o(() => {
+      const t = Math.max(
+        (String(e.step).split(".")[1] || "").length,
+        (String(e.min).split(".")[1] || "").length,
+        (String(e.max).split(".")[1] || "").length
+      );
+      return Math.pow(10, t);
+    }), v = o(() => {
+      if (e.max <= e.min || e.step <= 0)
+        return [];
+      const t = [], l = e.min * n.value, a = e.max * n.value, u = e.step * n.value;
+      for (let y = l; y <= a; y += u)
+        t.push(y / n.value);
+      return t;
+    }), f = (t) => t >= e.min && t <= e.max && v.value.includes(t), w = o(() => {
+      var t, l;
+      if (e.marks.length) {
+        if (typeof e.marks[0] == "object")
+          return e.marks.filter((a) => f(a.value));
+        {
+          const a = e.marks.filter((u) => f(u)).map((u) => ({
+            label: String(u),
+            value: u
+          }));
+          return ((t = a[0]) == null ? void 0 : t.value) !== e.min && a.unshift({ label: String(e.min), value: e.min }), ((l = a.at(-1)) == null ? void 0 : l.value) !== e.max && a.push({ label: String(e.max), value: e.max }), a;
+        }
+      }
+      return e.showMarks ? v.value.map((a) => ({
+        label: String(a),
+        value: a
+      })) : [
+        {
+          label: String(e.min),
+          value: e.min
+        },
+        {
+          label: String(e.max),
+          value: e.max
+        }
+      ];
+    }), m = (t) => `${(t - e.min) / (e.max - e.min) * 100}%`;
+    return h(() => e.max, (t) => {
+      t <= e.min && console.warn(`KSlider: max value ${t} must be greater than min value ${e.min}.`);
+    }, { immediate: !0 }), h(() => e.step, (t) => {
+      e.max > e.min && (t <= 0 || (e.max * n.value - e.min * n.value) % (t * n.value) !== 0) && console.warn(`KSlider: step value ${t} is invalid.`);
+    }, { immediate: !0 }), h(i, (t) => {
+      e.max > e.min && !f(t) && (console.warn(`KSlider: value ${t} is out of range [${v.value.join(", ")}]. Setting to min value ${e.min}.`), i.value = e.min);
+    }, { immediate: !0 }), h(() => e.marks, (t) => {
+      if (t.length) {
+        let l = [];
+        l = t.filter((a) => !f(typeof e.marks[0] == "object" ? a.value : a)), l.length && console.warn(`KSlider: marks [${l.map((a) => typeof l[0] == "object" ? a.value : a).join(", ")}] are out of range [${v.value.join(", ")}].`);
+      }
+    }, { immediate: !0 }), (t, l) => (s(), r("div", O, [
+      e.label ? (s(), F(H, L({ key: 0 }, e.labelAttributes, {
+        for: `${b(c)}-input`
+      }), {
+        default: $(() => [
+          q(S(e.label), 1)
+        ]),
+        _: 1
+      }, 16, ["for"])) : U("", !0),
+      d("div", Q, [
+        d("span", {
+          "aria-hidden": "true",
+          class: P(["lower-range-track", { "is-disabled": e.disabled }]),
+          style: g(N.value)
+        }, null, 6),
+        W(J, {
+          ref: "thumbPopover",
+          "aria-hidden": "true",
+          disabled: e.disabled || !e.showValue,
+          "hide-close-icon": "",
+          placement: "top",
+          "popover-timeout": 500,
+          trigger: "hover",
+          width: "auto"
+        }, {
+          content: $(() => [
+            d("span", Y, S(i.value), 1)
+          ]),
+          default: $(() => [
+            d("span", {
+              class: P(["thumb", { "is-disabled": e.disabled }]),
+              style: g(T.value)
+            }, null, 6)
+          ]),
+          _: 1
+        }, 8, ["disabled"]),
+        X(d("input", {
+          id: `${b(c)}-input`,
+          "onUpdate:modelValue": l[0] || (l[0] = (a) => i.value = a),
+          "data-testid": "slider-input",
+          disabled: e.disabled,
+          list: `${b(c)}-markers`,
+          max: e.max,
+          min: e.min,
+          step: e.step,
+          type: "range",
+          onBlur: k,
+          onFocus: x,
+          onInput: R,
+          onMouseup: k,
+          onTouchend: k
+        }, null, 40, Z), [
+          [
+            G,
+            i.value,
+            void 0,
+            { number: !0 }
+          ]
+        ]),
+        d("datalist", {
+          id: `${b(c)}-markers`,
+          "data-testid": "slider-datalist-marks"
+        }, [
+          (s(!0), r(B, null, C(w.value, (a) => (s(), r("option", {
+            key: `datalist-mark-${a.value}`,
+            "data-testid": `datalist-mark-${a.value}`,
+            label: a.label,
+            style: g({ left: m(a.value) }),
+            value: a.value
+          }, null, 12, _))), 128))
+        ], 8, p),
+        d("div", ee, [
+          (s(!0), r(B, null, C(w.value, (a) => (s(), r("span", {
+            key: `mark-${a.value}`,
+            "data-testid": `mark-${a.value}`,
+            role: "button",
+            style: g({ left: m(a.value) }),
+            onClick: (u) => z(a.value)
+          }, S(a.label || a.value), 13, te))), 128))
+        ])
+      ])
+    ]));
+  }
+});
+export {
+  ne as default
+};

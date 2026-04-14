@@ -1,0 +1,70 @@
+import type { KonnectConfig, KongManagerConfig } from '@kong-ui-public/entities-shared';
+import type { PropType } from 'vue';
+import type { RedisConfigurationLinkedPlugin } from '../types';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    config: {
+        type: PropType<KonnectConfig | KongManagerConfig>;
+        required: true;
+        validator: (config: KonnectConfig | KongManagerConfig) => boolean;
+    };
+    /**
+     * Only works when filterBarEnabled is true
+     */
+    isExactMatch: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    filterBarEnabled: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    partialId: {
+        type: StringConstructor;
+        required: true;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    "view-plugin": (param: {
+        id: string;
+        plugin: string;
+    }) => any;
+    load: (data: {
+        total: number;
+        data: RedisConfigurationLinkedPlugin[];
+    }) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    config: {
+        type: PropType<KonnectConfig | KongManagerConfig>;
+        required: true;
+        validator: (config: KonnectConfig | KongManagerConfig) => boolean;
+    };
+    /**
+     * Only works when filterBarEnabled is true
+     */
+    isExactMatch: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    filterBarEnabled: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    partialId: {
+        type: StringConstructor;
+        required: true;
+    };
+}>> & Readonly<{
+    "onView-plugin"?: ((param: {
+        id: string;
+        plugin: string;
+    }) => any) | undefined;
+    onLoad?: ((data: {
+        total: number;
+        data: RedisConfigurationLinkedPlugin[];
+    }) => any) | undefined;
+}>, {
+    isExactMatch: boolean;
+    filterBarEnabled: boolean;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=LinkedPluginList.vue.d.ts.map

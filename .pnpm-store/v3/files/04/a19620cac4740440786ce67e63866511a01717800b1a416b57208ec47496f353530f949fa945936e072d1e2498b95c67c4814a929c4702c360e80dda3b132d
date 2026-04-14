@@ -1,0 +1,121 @@
+import { defineComponent as S, computed as l, createBlock as h, openBlock as c, resolveDynamicComponent as y, normalizeStyle as b, withCtx as x, createElementBlock as z } from "vue";
+import { KUI_ICON_SIZE_50 as d } from "./kong-icons.es1592.js";
+const N = ["aria-hidden"], C = '<path d="M12 14C11.7167 14 11.4792 13.9042 11.2875 13.7125C11.0958 13.5208 11 13.2833 11 13C11 12.7167 11.0958 12.4792 11.2875 12.2875C11.4792 12.0958 11.7167 12 12 12C12.2833 12 12.5208 12.0958 12.7125 12.2875C12.9042 12.4792 13 12.7167 13 13C13 13.2833 12.9042 13.5208 12.7125 13.7125C12.5208 13.9042 12.2833 14 12 14ZM8 14C7.71667 14 7.47917 13.9042 7.2875 13.7125C7.09583 13.5208 7 13.2833 7 13C7 12.7167 7.09583 12.4792 7.2875 12.2875C7.47917 12.0958 7.71667 12 8 12C8.28333 12 8.52083 12.0958 8.7125 12.2875C8.90417 12.4792 9 12.7167 9 13C9 13.2833 8.90417 13.5208 8.7125 13.7125C8.52083 13.9042 8.28333 14 8 14ZM16 14C15.7167 14 15.4792 13.9042 15.2875 13.7125C15.0958 13.5208 15 13.2833 15 13C15 12.7167 15.0958 12.4792 15.2875 12.2875C15.4792 12.0958 15.7167 12 16 12C16.2833 12 16.5208 12.0958 16.7125 12.2875C16.9042 12.4792 17 12.7167 17 13C17 13.2833 16.9042 13.5208 16.7125 13.7125C16.5208 13.9042 16.2833 14 16 14ZM12 18C11.7167 18 11.4792 17.9042 11.2875 17.7125C11.0958 17.5208 11 17.2833 11 17C11 16.7167 11.0958 16.4792 11.2875 16.2875C11.4792 16.0958 11.7167 16 12 16C12.2833 16 12.5208 16.0958 12.7125 16.2875C12.9042 16.4792 13 16.7167 13 17C13 17.2833 12.9042 17.5208 12.7125 17.7125C12.5208 17.9042 12.2833 18 12 18ZM8 18C7.71667 18 7.47917 17.9042 7.2875 17.7125C7.09583 17.5208 7 17.2833 7 17C7 16.7167 7.09583 16.4792 7.2875 16.2875C7.47917 16.0958 7.71667 16 8 16C8.28333 16 8.52083 16.0958 8.7125 16.2875C8.90417 16.4792 9 16.7167 9 17C9 17.2833 8.90417 17.5208 8.7125 17.7125C8.52083 17.9042 8.28333 18 8 18ZM16 18C15.7167 18 15.4792 17.9042 15.2875 17.7125C15.0958 17.5208 15 17.2833 15 17C15 16.7167 15.0958 16.4792 15.2875 16.2875C15.4792 16.0958 15.7167 16 16 16C16.2833 16 16.5208 16.0958 16.7125 16.2875C16.9042 16.4792 17 16.7167 17 17C17 17.2833 16.9042 17.5208 16.7125 17.7125C16.5208 17.9042 16.2833 18 16 18ZM5 22C4.45 22 3.97917 21.8042 3.5875 21.4125C3.19583 21.0208 3 20.55 3 20V6C3 5.45 3.19583 4.97917 3.5875 4.5875C3.97917 4.19583 4.45 4 5 4H6V2H8V4H16V2H18V4H19C19.55 4 20.0208 4.19583 20.4125 4.5875C20.8042 4.97917 21 5.45 21 6V20C21 20.55 20.8042 21.0208 20.4125 21.4125C20.0208 21.8042 19.55 22 19 22H5ZM5 20H19V10H5V20Z" fill="currentColor"/>', Z = /* @__PURE__ */ S({
+  __name: "CalIcon",
+  props: {
+    /** The accessibility text provided to screen readers */
+    title: {
+      type: String,
+      required: !1,
+      default: ""
+    },
+    /** The icon color. Defaults to `currentColor` which inherits text color from the parent element */
+    color: {
+      type: String,
+      required: !1,
+      default: "currentColor"
+    },
+    /** The CSS display property for the icon. Defaults to `block` */
+    display: {
+      type: String,
+      required: !1,
+      default: "block"
+    },
+    /** Whether the icon is just eye-candy or is meaningful to the page (should screen-readers ignore the icon?) */
+    decorative: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    },
+    /** The icon size */
+    size: {
+      type: [Number, String],
+      required: !1,
+      default: d,
+      // if setting to the imported const fails, just pass a number of 24 as the default.
+      validator: (i) => {
+        if (typeof i == "number" && i > 0)
+          return !0;
+        if (typeof i == "string") {
+          const e = String(i).replace(/px/gi, ""), r = Number(e);
+          if (r && !isNaN(r) && Number.isInteger(r) && r > 0)
+            return !0;
+        }
+        return !1;
+      }
+    },
+    /** The HTML tag to utilize for the icon's wrapper element. Defaults to `span` */
+    as: {
+      type: String,
+      required: !1,
+      default: "span"
+    },
+    /**
+     * A boolean to disable prefixing any internal SVG ids with a unique string which is done to resolve the potential for multiple SVG instances on the same page and the SVG utilizing the same ids and references internally (e.g. in the `<defs>` tag).
+     * Typically only set to `true` during snapshot testing.
+     * Defaults to `false`.
+     */
+    staticIds: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  setup(i) {
+    const e = i, r = l(() => {
+      if (typeof e.size == "number" && e.size > 0)
+        return `${e.size}px`;
+      if (typeof e.size == "string") {
+        const n = String(e.size).replace(/px/gi, ""), t = Number(n);
+        if (t && !isNaN(t) && Number.isInteger(t) && t > 0)
+          return `${t}px`;
+      }
+      return d;
+    }), u = l(() => ({
+      boxSizing: "border-box",
+      color: e.color,
+      display: e.display,
+      flexShrink: "0",
+      height: r.value,
+      lineHeight: "0",
+      width: r.value,
+      pointerEvents: e.decorative ? "none" : void 0
+    })), g = (n) => {
+      const t = {}, v = Math.random().toString(36).substring(2, 12);
+      return n.replace(/id="([^"]+)"/g, (s, o) => {
+        const a = `${v}-${o}`;
+        return t[o] = a, `id="${a}"`;
+      }).replace(/#([^\s^")]+)/g, (s, o) => t[o] ? `#${t[o]}` : s);
+    }, p = {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "&": "&amp;"
+    }, f = (n) => n.replace(/[<>"'&]/g, (t) => p[t]), m = `${e.title ? `<title data-testid="kui-icon-svg-title">${f(e.title)}</title>` : ""}${e.staticIds ? C : g(C)}`;
+    return (n, t) => (c(), h(y(i.as), {
+      "aria-hidden": i.decorative ? "true" : void 0,
+      class: "kui-icon cal-icon",
+      "data-testid": "kui-icon-wrapper-cal-icon",
+      style: b(u.value),
+      tabindex: i.decorative ? "-1" : void 0
+    }, {
+      default: x(() => [
+        (c(), z("svg", {
+          "aria-hidden": i.decorative ? "true" : void 0,
+          "data-testid": "kui-icon-svg-cal-icon",
+          fill: "none",
+          height: "100%",
+          role: "img",
+          viewBox: "0 0 24 24",
+          width: "100%",
+          xmlns: "http://www.w3.org/2000/svg",
+          innerHTML: m
+        }, null, 8, N))
+      ]),
+      _: 1
+    }, 8, ["aria-hidden", "style", "tabindex"]));
+  }
+});
+export {
+  Z as default
+};

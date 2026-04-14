@@ -1,0 +1,1 @@
+"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const f=require("./kongponents591.cjs");function o(t){var e=f.default(t),i=t.offsetWidth,h=t.offsetHeight;return Math.abs(e.width-i)<=1&&(i=e.width),Math.abs(e.height-h)<=1&&(h=e.height),{x:t.offsetLeft,y:t.offsetTop,width:i,height:h}}exports.default=o;

@@ -1,0 +1,17 @@
+import type { TextAreaProps, TextAreaSlots } from '../../../types';
+declare const _default: typeof __VLS_export;
+export default _default;
+declare const __VLS_export: __VLS_WithSlots<import("vue").DefineComponent<TextAreaProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    input: (value: string) => any;
+    "update:modelValue": (value: string) => any;
+    "char-limit-exceeded": (data: import("../../../types").LimitExceededData) => any;
+}, string, import("vue").PublicProps, Readonly<TextAreaProps> & Readonly<{
+    onInput?: ((value: string) => any) | undefined;
+    "onUpdate:modelValue"?: ((value: string) => any) | undefined;
+    "onChar-limit-exceeded"?: ((data: import("../../../types").LimitExceededData) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>, TextAreaSlots>;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};

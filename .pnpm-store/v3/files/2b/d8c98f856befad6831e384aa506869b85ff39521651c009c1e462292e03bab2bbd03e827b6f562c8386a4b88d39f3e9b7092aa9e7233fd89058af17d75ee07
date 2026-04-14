@@ -1,0 +1,7 @@
+import { warn as a } from "vue";
+function i(r, o) {
+  a(`Invalid prop: validator check failed for prop "${r}". ${o}`);
+}
+export {
+  i as warnInvalidProp
+};

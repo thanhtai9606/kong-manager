@@ -1,0 +1,68 @@
+declare const _default: typeof __VLS_export;
+export default _default;
+declare const __VLS_export: import("vue").DefineComponent<{}, {
+    t: (translationKey: "general" | "post-function" | "exit-transformer" | "rla" | "validators" | "redis" | "fields" | "vfg" | "general.packageName" | "general.disable_global_radio" | "general.disable_source_scope_change" | "post-function.tags" | "post-function.enabled" | "post-function.selectionGroup" | "post-function.instance_name" | "post-function.name" | "post-function.config-certificate" | "post-function.config-access" | "post-function.config-body_filter" | "post-function.config-header_filter" | "post-function.config-functions" | "post-function.config-log" | "post-function.config-rewrite" | "post-function.config-ws_client_frame" | "post-function.config-ws_close" | "post-function.config-ws_handshake" | "post-function.config-ws_upstream_frame" | "post-function.tags.hint" | "post-function.tags.newElementButtonLabel" | "post-function.enabled.newElementButtonLabel" | "post-function.selectionGroup.newElementButtonLabel" | "post-function.instance_name.newElementButtonLabel" | "post-function.name.newElementButtonLabel" | "post-function.config-certificate.newElementButtonLabel" | "post-function.config-certificate.help" | "post-function.config-access.newElementButtonLabel" | "post-function.config-access.help" | "post-function.config-body_filter.newElementButtonLabel" | "post-function.config-body_filter.help" | "post-function.config-header_filter.newElementButtonLabel" | "post-function.config-header_filter.help" | "post-function.config-functions.newElementButtonLabel" | "post-function.config-log.newElementButtonLabel" | "post-function.config-rewrite.newElementButtonLabel" | "post-function.config-ws_client_frame.newElementButtonLabel" | "post-function.config-ws_close.newElementButtonLabel" | "post-function.config-ws_handshake.newElementButtonLabel" | "post-function.config-ws_upstream_frame.newElementButtonLabel" | "exit-transformer.config-functions" | "exit-transformer.config-functions.newElementButtonLabel" | "redis.title" | "rla.redis" | "rla.view_advanced" | "rla.window_type" | "rla.request_limits" | "rla.start_with_a_use_case" | "rla.use_case_index" | "rla.error_message" | "rla.identifiers" | "rla.redis.title" | "rla.redis.address_example" | "rla.window_type.options" | "rla.window_type.help" | "rla.window_type.label" | "rla.window_type.options.fixed" | "rla.window_type.options.sliding" | "rla.request_limits.title" | "rla.request_limits.label" | "rla.request_limits.subtitle" | "rla.request_limits.label_index" | "rla.request_limits.request_number" | "rla.request_limits.time_interval" | "rla.request_limits.interval_determiner" | "rla.request_limits.seconds" | "rla.error_message.help" | "rla.error_message.label" | "rla.error_message.code_placeholder" | "rla.error_message.message_placeholder" | "rla.identifiers.options" | "rla.identifiers.label" | "rla.identifiers.options.ip" | "rla.identifiers.options.credential" | "rla.identifiers.options.consumer" | "rla.identifiers.options.service" | "rla.identifiers.options.header" | "rla.identifiers.options.path" | "rla.identifiers.options.consumer-group" | "rla.identifiers.options.route" | "validators.field_is_required" | "validators.invalid_format" | "validators.number_too_small" | "validators.number_too_large" | "validators.invalid_number" | "validators.invalid_integer" | "validators.text_too_short" | "validators.text_too_long" | "validators.this_not_text" | "validators.this_not_array" | "validators.select_min_items" | "validators.select_max_items" | "validators.invalid_date" | "validators.date_is_early" | "validators.date_is_late" | "validators.invalid_email" | "validators.invalid_url" | "validators.invalid_card" | "validators.invalid_card_number" | "validators.invalid_text_contain_number" | "validators.invalid_tex_contain_spec" | "redis.managed_ui" | "redis.shared_configuration" | "redis.dedicated_configuration" | "redis.config_card" | "redis.custom_plugin" | "redis.shared_configuration.title" | "redis.shared_configuration.label" | "redis.shared_configuration.description" | "redis.shared_configuration.create_new_configuration" | "redis.shared_configuration.selector" | "redis.shared_configuration.selector.placeholder" | "redis.dedicated_configuration.label" | "redis.dedicated_configuration.description" | "redis.managed_ui.title" | "redis.managed_ui.shared_configuration" | "redis.managed_ui.dedicated_configuration" | "redis.managed_ui.groups" | "redis.managed_ui.shared_configuration.title" | "redis.managed_ui.shared_configuration.label" | "redis.managed_ui.shared_configuration.description" | "redis.managed_ui.shared_configuration.badge" | "redis.managed_ui.shared_configuration.create_new_configuration" | "redis.managed_ui.shared_configuration.selector" | "redis.managed_ui.shared_configuration.selector.placeholder" | "redis.managed_ui.dedicated_configuration.label" | "redis.managed_ui.dedicated_configuration.description" | "redis.managed_ui.groups.self_managed" | "redis.managed_ui.groups.konnect_managed" | "redis.shared_configuration.error" | "redis.shared_configuration.tooltip" | "redis.shared_configuration.configuration_selector_label" | "redis.shared_configuration.configuration_selector_placeholder" | "redis.shared_configuration.empty_state" | "redis.shared_configuration.selector.title" | "redis.shared_configuration.selector.description" | "redis.dedicated_configuration.title" | "redis.config_card.common_fields" | "redis.config_card.common_fields.created_at_label" | "redis.config_card.common_fields.updated_at_label" | "redis.config_card.common_fields.type_label" | "redis.custom_plugin.tooltip" | "redis.custom_plugin.alert" | "fields.auto_suggest" | "fields.auto_suggest.error" | "fields.auto_suggest.recently_created" | "fields.auto_suggest.items_count" | "fields.auto_suggest.no_results" | "fields.auto_suggest.loading" | "fields.auto_suggest.error.load_entity" | "vfg.labels" | "vfg.labels.on" | "vfg.labels.off", values?: Record<string, import("@kong-ui-public/i18n").MessageFormatPrimitiveValue> | undefined, opts?: import("@kong-ui-public/i18n").IntlMessageFormatOptions) => string;
+}, {
+    suggestions: never[];
+    idValue: string;
+    message: string;
+    items: never[];
+    initialItems: never[];
+    loading: boolean;
+}, {
+    fieldState(): string;
+    associatedEntity(): string | string[];
+    entity(): any;
+    scope(): any;
+    bypassSearch(): import("vue-router").LocationQueryValue | import("vue-router").LocationQueryValue[];
+}, {
+    onQueryChange(query: any): void;
+    search(query: any): Promise<void>;
+    getItem(data: any): any;
+    fetchUntilLimit(params: any): Promise<any[]>;
+    fetchSuggestions(query: any, field: any): Promise<any[]>;
+    fetchExact(id: any): Promise<any>;
+    getInputFields(): any;
+    getSuggestionLabel(item: any): any;
+    updateModel(value: any): void;
+    onSelected(item: any): void;
+    getReturnValue(item: any): any;
+}, {
+    name: string;
+    props: string[];
+    emits: string[];
+    data(): {
+        errors: never[];
+        debouncedValidateFunc: null;
+        debouncedFormatFunc: null;
+    };
+    directives: {
+        attributes: {
+            beforeMount: (el: any, binding: any, vnode: any) => void;
+            updated: (el: any, binding: any, vnode: any) => void;
+            componentUpdated: (el: any, binding: any, vnode: any) => void;
+        };
+    };
+    computed: {
+        value: {
+            cache: boolean;
+            get(): any;
+            set(newValue: any): void;
+        };
+    };
+    methods: {
+        validate(calledParent: any): any[] | Promise<any[]>;
+        debouncedValidate(): void;
+        updateModelValue(newValue: any, oldValue: any): void;
+        clearValidationErrors(): void;
+        setModelValueByPath(path: any, value: any): void;
+        getFieldID(schema: any, unique?: boolean): string;
+        getLabelId(schema: any): string;
+        getFieldClasses(): any;
+        formatValueToField(value: any): any;
+        formatValueToModel(value: any): any;
+    };
+}, import("vue").ComponentOptionsMixin, "model-updated"[], "model-updated", import("vue").PublicProps, Readonly<{}> & Readonly<{
+    "onModel-updated"?: ((...args: any[]) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+//# sourceMappingURL=FieldAutoSuggestLegacy.vue.d.ts.map

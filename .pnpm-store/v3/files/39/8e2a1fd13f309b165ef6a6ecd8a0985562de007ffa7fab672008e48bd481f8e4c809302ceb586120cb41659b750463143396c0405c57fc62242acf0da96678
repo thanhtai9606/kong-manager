@@ -1,0 +1,86 @@
+import { defineComponent as g, computed as w, openBlock as s, createElementBlock as n, normalizeClass as B, renderSlot as d, createBlock as u, resolveDynamicComponent as C, unref as l, createCommentVNode as r, createElementVNode as f, toDisplayString as p, withKeys as m, withModifiers as I } from "vue";
+import { AlertAppearances as o } from "./kongponents.es4.js";
+import "./kongponents.es5.js";
+import "./kongponents.es10.js";
+import z from "./kongponents.es176.js";
+import K from "./kongponents.es178.js";
+import A from "./kongponents.es187.js";
+import v from "./kongponents.es179.js";
+import b from "./kongponents.es188.js";
+import E from "./kongponents.es181.js";
+import { KUI_ICON_SIZE_40 as y } from "./kongponents.es182.js";
+const N = {
+  key: 0,
+  class: "alert-icon-container"
+}, S = { class: "alert-content" }, h = {
+  key: 0,
+  class: "alert-title"
+}, q = {
+  key: 1,
+  class: "alert-message"
+}, J = /* @__PURE__ */ g({
+  __name: "KAlert",
+  props: {
+    title: { default: "" },
+    message: { default: "" },
+    appearance: { default: () => o.info },
+    showIcon: { type: Boolean },
+    dismissible: { type: Boolean }
+  },
+  emits: ["dismiss"],
+  setup(e, { emit: k }) {
+    const a = k, $ = w(() => {
+      switch (e.appearance) {
+        case o.info:
+          return v;
+        case o.success:
+          return z;
+        case o.warning:
+          return E;
+        case o.danger:
+          return A;
+        case o.decorative:
+          return b;
+        default:
+          return v;
+      }
+    });
+    return (i, t) => (s(), n("div", {
+      class: B(["k-alert", [e.appearance]])
+    }, [
+      e.showIcon || i.$slots.icon ? (s(), n("div", N, [
+        d(i.$slots, "icon", {}, () => [
+          (s(), u(C($.value), {
+            class: "alert-icon",
+            decorative: "",
+            size: l(y)
+          }, null, 8, ["size"]))
+        ])
+      ])) : r("", !0),
+      f("div", S, [
+        e.title ? (s(), n("span", h, p(e.title), 1)) : r("", !0),
+        e.message || i.$slots.default ? (s(), n("div", q, [
+          d(i.$slots, "default", {}, () => [
+            f("p", null, p(e.message), 1)
+          ])
+        ])) : r("", !0)
+      ]),
+      e.dismissible ? (s(), u(l(K), {
+        key: 1,
+        class: "alert-dismiss-icon",
+        size: l(y),
+        tabindex: "0",
+        onClick: t[0] || (t[0] = (c) => a("dismiss")),
+        onKeydown: t[1] || (t[1] = m(I(() => {
+        }, ["prevent"]), ["space"])),
+        onKeyup: [
+          t[2] || (t[2] = m((c) => a("dismiss"), ["enter"])),
+          t[3] || (t[3] = m((c) => a("dismiss"), ["space"]))
+        ]
+      }, null, 8, ["size"])) : r("", !0)
+    ], 2));
+  }
+});
+export {
+  J as default
+};

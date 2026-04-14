@@ -1,0 +1,536 @@
+import { defineComponent as Y, computed as T, ref as C, watch as Z, onBeforeMount as ee, resolveComponent as D, openBlock as b, createElementBlock as te, createVNode as c, unref as r, withCtx as n, createTextVNode as p, toDisplayString as u, createBlock as k, createCommentVNode as I, createElementVNode as B, Teleport as ae } from "vue";
+import { AddIcon as ne } from "@kong/icons";
+import { createI18n as le, i18nTComponent as ie } from "@kong-ui-public/i18n";
+import { useAxios as ce, useFetcher as re, useDeleteUrlBuilder as se, EntityTypes as oe, FetcherStatus as de, EntityBaseTable as ue, PermissionsWrapper as j, TableTags as he, EntityDeleteModal as pe } from "@kong-ui-public/entities-shared";
+const ye = {
+  title: "Consumer Credentials",
+  list: {
+    toolbar_actions: {
+      acls: {
+        new: "New ACL Credential"
+      },
+      "basic-auth": {
+        new: "New Basic Auth Credential"
+      },
+      "key-auth": {
+        new: "New Key Auth Credential"
+      },
+      "key-auth-enc": {
+        new: "New Key Auth Encrypted Credential"
+      },
+      oauth2: {
+        new: "New OAuth 2.0 Credential"
+      },
+      "hmac-auth": {
+        new: "New HMAC Credential"
+      },
+      jwt: {
+        new: "New JWT Credential"
+      }
+    },
+    table_headers: {
+      acls: {
+        group: "Group",
+        created_at: "Created At",
+        tags: "Tags"
+      },
+      "basic-auth": {
+        password: "Credential",
+        username: "Username",
+        created_at: "Created at",
+        tags: "Tags"
+      },
+      "key-auth": {
+        key: "Key",
+        created_at: "Created at",
+        tags: "Tags"
+      },
+      "key-auth-enc": {
+        key: "Key",
+        created_at: "Created at",
+        tags: "Tags"
+      },
+      oauth2: {
+        name: "Name",
+        client_id: "Client ID",
+        client_secret: "Client secret",
+        created_at: "Created at",
+        tags: "Tags"
+      },
+      "hmac-auth": {
+        username: "Username",
+        secret: "Secret",
+        created_at: "Created at",
+        tags: "Tags"
+      },
+      jwt: {
+        key: "Key",
+        algorithm: "Algorithm",
+        created_at: "Created at",
+        tags: "Tags"
+      }
+    },
+    empty_state: {
+      acls: {
+        title: "Configure a New ACL Credential",
+        cta: "New ACL Credential"
+      },
+      "basic-auth": {
+        title: "Configure a New Basic Auth Credential",
+        cta: "New Basic Auth Credential"
+      },
+      "key-auth": {
+        title: "Configure a New Key Auth Credential",
+        cta: "New Key Auth Credential"
+      },
+      "key-auth-enc": {
+        title: "Configure a New Key Auth Encrypted Credential",
+        cta: "New Key Auth Encrypted Credential"
+      },
+      oauth2: {
+        title: "Configure a New OAuth 2.0 Credential",
+        cta: "New OAuth 2.0 Credential"
+      },
+      "hmac-auth": {
+        title: "Configure a New HMAC Credential",
+        cta: "New HMAC Credential"
+      },
+      jwt: {
+        title: "Configure a New JWT Credential",
+        cta: "New JWT Credential"
+      }
+    }
+  },
+  actions: {
+    copy_id: "Copy ID",
+    copy_credential: "Copy Credential",
+    copy_key: "Copy Key",
+    copy_secret: "Copy Secret",
+    copy_json: "Copy JSON",
+    edit: "Edit",
+    delete: "Delete"
+  },
+  delete: {
+    acls: {
+      title: "Delete an ACL Credential"
+    },
+    "basic-auth": {
+      title: "Delete a Basic Auth Credential"
+    },
+    "key-auth": {
+      title: "Delete a Key Auth Credential"
+    },
+    "key-auth-enc": {
+      title: "Delete a Key Auth Encrypted Credential"
+    },
+    oauth2: {
+      title: "Delete an OAuth 2.0 Credential"
+    },
+    "hmac-auth": {
+      title: "Delete an HMAC Credential"
+    },
+    jwt: {
+      title: "Delete a JWT Credential"
+    },
+    description: "This action cannot be reversed."
+  },
+  error: {
+    general: "Credentials could not be retrieved",
+    delete: "The credential could not be deleted at this time.",
+    copy: "Failed to copy to clipboard"
+  },
+  copy: {
+    success: "Copied {val} to clipboard",
+    success_brief: "Successfully copied to clipboard"
+  }
+}, ge = {
+  credentials: ye
+};
+function fe() {
+  const l = le("en-us", ge);
+  return {
+    i18n: l,
+    i18nT: ie(l)
+    // Translation component <i18n-t>
+  };
+}
+const me = {
+  useI18n: fe
+}, Ce = {
+  list: {
+    konnect: "/v2/control-planes/{controlPlaneId}/core-entities/consumers/{consumerId}/{plugin}",
+    kongManager: "/{workspace}/consumers/{consumerId}/{plugin}"
+  }
+}, be = { class: "kong-ui-entities-consumer-credentials-list" }, _e = /* @__PURE__ */ Y({
+  __name: "ConsumerCredentialList",
+  props: {
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+      type: Object,
+      required: !0,
+      validator: (l) => !(!l || !["konnect", "kongManager"].includes(l == null ? void 0 : l.app) || !l.createRoute || !l.getEditRoute)
+    },
+    // used to override the default identifier for the cache entry
+    cacheIdentifier: {
+      type: String,
+      default: ""
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
+    canCreate: {
+      type: Function,
+      required: !1,
+      default: async () => !0
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
+    canDelete: {
+      type: Function,
+      required: !1,
+      default: async () => !0
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
+    canEdit: {
+      type: Function,
+      required: !1,
+      default: async () => !0
+    },
+    /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+    useActionOutside: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  emits: ["error", "copy:success", "copy:error", "delete:success"],
+  setup(l, { emit: K }) {
+    var S;
+    const y = K, i = l, { i18n: { t: e, formatUnixTimeStamp: O } } = me.useI18n(), { axiosInstance: P } = ce((S = i.config) == null ? void 0 : S.axiosRequestConfig), F = {
+      acls: {
+        group: { label: e("credentials.list.table_headers.acls.group") },
+        created_at: { label: e("credentials.list.table_headers.acls.created_at") },
+        tags: { label: e("credentials.list.table_headers.acls.tags") }
+      },
+      "basic-auth": {
+        username: { label: e("credentials.list.table_headers.basic-auth.username") },
+        created_at: { label: e("credentials.list.table_headers.basic-auth.created_at") },
+        tags: { label: e("credentials.list.table_headers.basic-auth.tags") }
+      },
+      "key-auth": {
+        key: { label: e("credentials.list.table_headers.key-auth.key") },
+        created_at: { label: e("credentials.list.table_headers.key-auth.created_at") },
+        tags: { label: e("credentials.list.table_headers.key-auth.tags") }
+      },
+      "key-auth-enc": {
+        key: { label: e("credentials.list.table_headers.key-auth-enc.key") },
+        created_at: { label: e("credentials.list.table_headers.key-auth-enc.created_at") },
+        tags: { label: e("credentials.list.table_headers.key-auth-enc.tags") }
+      },
+      oauth2: {
+        name: { label: e("credentials.list.table_headers.oauth2.name") },
+        client_id: { label: e("credentials.list.table_headers.oauth2.client_id") },
+        client_secret: { label: e("credentials.list.table_headers.oauth2.client_secret") },
+        created_at: { label: e("credentials.list.table_headers.oauth2.created_at") },
+        tags: { label: e("credentials.list.table_headers.oauth2.tags") }
+      },
+      "hmac-auth": {
+        username: { label: e("credentials.list.table_headers.hmac-auth.username") },
+        secret: { label: e("credentials.list.table_headers.hmac-auth.secret") },
+        created_at: { label: e("credentials.list.table_headers.hmac-auth.created_at") },
+        tags: { label: e("credentials.list.table_headers.hmac-auth.tags") }
+      },
+      jwt: {
+        key: { label: e("credentials.list.table_headers.jwt.key") },
+        algorithm: { label: e("credentials.list.table_headers.jwt.algorithm") },
+        created_at: { label: e("credentials.list.table_headers.jwt.created_at") },
+        tags: { label: e("credentials.list.table_headers.jwt.tags") }
+      }
+    }, R = T(() => F[i.config.plugin]), M = T(() => {
+      let t = `${i.config.apiBaseUrl}${Ce.list[i.config.app]}`;
+      return i.config.app === "konnect" ? t = t.replace(/{controlPlaneId}/gi, i.config.controlPlaneId || "").replace(/{consumerId}/gi, i.config.consumerId || "").replace(/{plugin}/gi, i.config.plugin || "") : i.config.app === "kongManager" && (t = t.replace(/\/{workspace}/gi, i.config.workspace ? `/${i.config.workspace}` : "").replace(/{consumerId}/gi, i.config.consumerId || "").replace(/{plugin}/gi, i.config.plugin || "")), t;
+    }), {
+      fetcher: U,
+      fetcherState: J,
+      fetcherCacheKey: x
+    } = re(T(() => ({ ...i.config, cacheIdentifier: i.cacheIdentifier })), M), L = () => {
+      x.value++;
+    }, v = C(null), f = async (t, s, h) => {
+      const o = s ? t[s] : JSON.stringify(t);
+      if (!await h(o)) {
+        H(t, s);
+        return;
+      }
+      q(t, s);
+    }, q = (t, s) => {
+      y("copy:success", {
+        entity: t,
+        field: s,
+        message: s && !["password", "key", "client_secret", "secret"].includes(s) ? e("credentials.copy.success", { val: t[s] }) : e("credentials.copy.success_brief")
+      });
+    }, H = (t, s) => {
+      y("copy:error", {
+        entity: t,
+        field: s,
+        message: e("credentials.error.copy")
+      });
+    }, V = (t) => ({
+      label: e("credentials.actions.edit"),
+      to: i.config.getEditRoute(t)
+    }), w = C(void 0), A = C(!1), N = C(!1), $ = C(""), W = se(i.config, M.value), z = T(() => oe[i.config.plugin]), G = (t) => {
+      w.value = t, A.value = !0;
+    }, Q = () => {
+      A.value = !1;
+    }, X = async () => {
+      var t, s, h;
+      if ((t = w.value) != null && t.id) {
+        N.value = !0;
+        try {
+          await P.delete(W(w.value.id)), N.value = !1, A.value = !1, x.value++, y("delete:success", w.value);
+        } catch (o) {
+          $.value = ((h = (s = o.response) == null ? void 0 : s.data) == null ? void 0 : h.message) || o.message || e("credentials.error.delete"), y("error", o);
+        } finally {
+          N.value = !1;
+        }
+      }
+    };
+    Z(J, (t) => {
+      var s, h, o;
+      if (t.status === de.Error) {
+        v.value = {
+          title: e("credentials.error.general")
+        }, (o = (h = (s = t.error) == null ? void 0 : s.response) == null ? void 0 : h.data) != null && o.message && (v.value.message = t.error.response.data.message), y("error", t.error);
+        return;
+      }
+      v.value = null;
+    });
+    const E = C({
+      ctaPath: i.config.createRoute,
+      ctaText: void 0,
+      message: "",
+      title: e("credentials.title")
+    });
+    return ee(async () => {
+      await i.canCreate() && (E.value.title = e(`credentials.list.empty_state.${i.config.plugin}.title`), E.value.ctaText = e(`credentials.list.empty_state.${i.config.plugin}.cta`));
+    }), (t, s) => {
+      const h = D("KButton"), o = D("KCopy"), g = D("KDropdownItem"), m = D("KClipboardProvider");
+      return b(), te("div", be, [
+        c(r(ue), {
+          "cache-identifier": l.cacheIdentifier,
+          "disable-row-click": "",
+          "disable-sorting": "",
+          "empty-state-options": E.value,
+          "enable-entity-actions": "",
+          "error-message": v.value,
+          fetcher: r(U),
+          "fetcher-cache-key": r(x),
+          "pagination-type": "offset",
+          "preferences-storage-key": "kong-ui-entities-consumer-credentials-list",
+          "table-headers": R.value,
+          onSort: L
+        }, {
+          "toolbar-button": n(() => [
+            (b(), k(ae, {
+              disabled: !l.useActionOutside,
+              to: "#kong-ui-app-page-header-action-button"
+            }, [
+              c(r(j), {
+                "auth-function": () => l.canCreate()
+              }, {
+                default: n(() => [
+                  c(h, {
+                    appearance: "primary",
+                    "data-testid": "toolbar-add-credential",
+                    size: l.useActionOutside ? "medium" : "large",
+                    to: l.config.createRoute
+                  }, {
+                    default: n(() => [
+                      c(r(ne)),
+                      p(" " + u(r(e)(`credentials.list.toolbar_actions.${l.config.plugin}.new`)), 1)
+                    ]),
+                    _: 1
+                  }, 8, ["size", "to"])
+                ]),
+                _: 1
+              }, 8, ["auth-function"])
+            ], 8, ["disabled"]))
+          ]),
+          group: n(({ rowValue: a }) => [
+            B("b", null, u(a ?? "-"), 1)
+          ]),
+          name: n(({ rowValue: a }) => [
+            B("b", null, u(a ?? "-"), 1)
+          ]),
+          username: n(({ rowValue: a }) => [
+            B("span", null, u(a ?? "-"), 1)
+          ]),
+          password: n(({ rowValue: a }) => [
+            c(o, {
+              format: "redacted",
+              text: a,
+              truncate: ""
+            }, null, 8, ["text"])
+          ]),
+          key: n(({ rowValue: a }) => [
+            c(o, {
+              format: "redacted",
+              text: a,
+              truncate: ""
+            }, null, 8, ["text"])
+          ]),
+          client_secret: n(({ rowValue: a }) => [
+            c(o, {
+              format: "redacted",
+              text: a,
+              truncate: ""
+            }, null, 8, ["text"])
+          ]),
+          secret: n(({ rowValue: a }) => [
+            c(o, {
+              format: "redacted",
+              text: a,
+              truncate: ""
+            }, null, 8, ["text"])
+          ]),
+          created_at: n(({ rowValue: a }) => [
+            p(u(r(O)(a)), 1)
+          ]),
+          tags: n(({ rowValue: a }) => [
+            c(r(he), { tags: a }, null, 8, ["tags"])
+          ]),
+          actions: n(({ row: a }) => [
+            c(m, null, {
+              default: n(({ copyToClipboard: d }) => [
+                c(g, {
+                  "data-testid": "action-entity-copy-id",
+                  onClick: (_) => f(a, "id", d)
+                }, {
+                  default: n(() => [
+                    p(u(r(e)("credentials.actions.copy_id")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024),
+            l.config.plugin === "basic-auth" ? (b(), k(m, { key: 0 }, {
+              default: n(({ copyToClipboard: d }) => [
+                c(g, {
+                  "data-testid": "action-entity-copy-credential",
+                  onClick: (_) => f(a, "password", d)
+                }, {
+                  default: n(() => [
+                    p(u(r(e)("credentials.actions.copy_credential")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024)) : I("", !0),
+            ["key-auth", "key-auth-enc", "jwt"].includes(l.config.plugin) ? (b(), k(m, { key: 1 }, {
+              default: n(({ copyToClipboard: d }) => [
+                c(g, {
+                  "data-testid": "action-entity-copy-key",
+                  onClick: (_) => f(a, "key", d)
+                }, {
+                  default: n(() => [
+                    p(u(r(e)("credentials.actions.copy_key")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024)) : I("", !0),
+            l.config.plugin === "oauth2" ? (b(), k(m, { key: 2 }, {
+              default: n(({ copyToClipboard: d }) => [
+                c(g, {
+                  "data-testid": "action-entity-copy-secret",
+                  onClick: (_) => f(a, "client_secret", d)
+                }, {
+                  default: n(() => [
+                    p(u(r(e)("credentials.actions.copy_secret")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024)) : I("", !0),
+            l.config.plugin === "hmac-auth" ? (b(), k(m, { key: 3 }, {
+              default: n(({ copyToClipboard: d }) => [
+                c(g, {
+                  "data-testid": "action-entity-copy-secret",
+                  onClick: (_) => f(a, "secret", d)
+                }, {
+                  default: n(() => [
+                    p(u(r(e)("credentials.actions.copy_secret")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024)) : I("", !0),
+            c(m, null, {
+              default: n(({ copyToClipboard: d }) => [
+                c(g, {
+                  "data-testid": "action-entity-copy-json",
+                  onClick: (_) => f(a, void 0, d)
+                }, {
+                  default: n(() => [
+                    p(u(r(e)("credentials.actions.copy_json")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024),
+            c(r(j), {
+              "auth-function": () => l.canEdit(a)
+            }, {
+              default: n(() => [
+                c(g, {
+                  "data-testid": "action-entity-edit",
+                  "has-divider": "",
+                  item: V(a.id)
+                }, null, 8, ["item"])
+              ]),
+              _: 2
+            }, 1032, ["auth-function"]),
+            c(r(j), {
+              "auth-function": () => l.canDelete(a)
+            }, {
+              default: n(() => [
+                c(g, {
+                  danger: "",
+                  "data-testid": "action-entity-delete",
+                  "has-divider": "",
+                  onClick: (d) => G(a)
+                }, {
+                  default: n(() => [
+                    p(u(r(e)("credentials.actions.delete")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1032, ["auth-function"])
+          ]),
+          _: 1
+        }, 8, ["cache-identifier", "empty-state-options", "error-message", "fetcher", "fetcher-cache-key", "table-headers"]),
+        c(r(pe), {
+          "action-pending": N.value,
+          description: r(e)("credentials.delete.description"),
+          "entity-type": z.value,
+          error: $.value,
+          title: r(e)(`credentials.delete.${l.config.plugin}.title`),
+          visible: A.value,
+          onCancel: Q,
+          onProceed: X
+        }, null, 8, ["action-pending", "description", "entity-type", "error", "title", "visible"])
+      ]);
+    };
+  }
+}), ke = (l, K) => {
+  const y = l.__vccOpts || l;
+  for (const [i, e] of K)
+    y[i] = e;
+  return y;
+}, Te = /* @__PURE__ */ ke(_e, [["__scopeId", "data-v-7216927c"]]);
+export {
+  Te as ConsumerCredentialList
+};

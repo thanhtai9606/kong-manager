@@ -1,0 +1,40 @@
+import type { PropType } from 'vue';
+import type { KongManagerConsumerGroupListConfig, KonnectConsumerGroupListConfig } from '../types';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectConsumerGroupListConfig | KongManagerConsumerGroupListConfig>;
+        required: true;
+        validator: (config: KonnectConsumerGroupListConfig | KongManagerConsumerGroupListConfig) => boolean;
+    };
+    visible: {
+        type: BooleanConstructor;
+        required: true;
+        default: boolean;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    cancel: () => any;
+    "add:success": (consumers: string[]) => any;
+    "add:partial-success": (consumers: string[]) => any;
+    error: (msg: string) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectConsumerGroupListConfig | KongManagerConsumerGroupListConfig>;
+        required: true;
+        validator: (config: KonnectConsumerGroupListConfig | KongManagerConsumerGroupListConfig) => boolean;
+    };
+    visible: {
+        type: BooleanConstructor;
+        required: true;
+        default: boolean;
+    };
+}>> & Readonly<{
+    onCancel?: (() => any) | undefined;
+    "onAdd:success"?: ((consumers: string[]) => any) | undefined;
+    "onAdd:partial-success"?: ((consumers: string[]) => any) | undefined;
+    onError?: ((msg: string) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=AddToGroupModal.vue.d.ts.map

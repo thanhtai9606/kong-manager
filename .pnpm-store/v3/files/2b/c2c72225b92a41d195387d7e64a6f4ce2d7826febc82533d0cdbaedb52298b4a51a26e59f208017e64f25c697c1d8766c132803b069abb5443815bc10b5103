@@ -1,0 +1,20 @@
+import type { PropType } from 'vue';
+import type { RecordItem } from '../../types';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    item: {
+        type: PropType<RecordItem>;
+        required: true;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    "navigation-click": (record: RecordItem) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    item: {
+        type: PropType<RecordItem>;
+        required: true;
+    };
+}>> & Readonly<{
+    "onNavigation-click"?: ((record: RecordItem) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=InternalLinkItem.vue.d.ts.map

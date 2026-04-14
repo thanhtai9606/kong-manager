@@ -61,6 +61,11 @@
       "summary": "{count} total entries",
       "prev": "Previous",
       "next": "Next",
+      "first": "First",
+      "last": "Last",
+      "pageSize": "Rows per page",
+      "pageOf": "Page {current} of {total}",
+      "range": "{start}–{end} of {total}",
       "refresh": "Refresh",
       "headers": {
         "time": "Time",

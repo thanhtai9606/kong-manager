@@ -1,0 +1,54 @@
+import '@kong-ui-public/entities-shared/dist/style.css';
+import type { PropType } from 'vue';
+import type { SecretStateFields, KonnectSecretFormConfig } from '../types';
+import type { AxiosError } from 'axios';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectSecretFormConfig>;
+        required: true;
+        validator: (config: KonnectSecretFormConfig) => boolean;
+    };
+    /** Current config store ID */
+    configStoreId: {
+        type: StringConstructor;
+        required: true;
+    };
+    /** If a valid secretId is provided, it will put the form in Edit mode instead of Create */
+    secretId: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    error: (error: AxiosError<unknown, any>) => any;
+    loading: (isLoading: boolean) => any;
+    update: (data: SecretStateFields) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectSecretFormConfig>;
+        required: true;
+        validator: (config: KonnectSecretFormConfig) => boolean;
+    };
+    /** Current config store ID */
+    configStoreId: {
+        type: StringConstructor;
+        required: true;
+    };
+    /** If a valid secretId is provided, it will put the form in Edit mode instead of Create */
+    secretId: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+}>> & Readonly<{
+    onError?: ((error: AxiosError<unknown, any>) => any) | undefined;
+    onLoading?: ((isLoading: boolean) => any) | undefined;
+    onUpdate?: ((data: SecretStateFields) => any) | undefined;
+}>, {
+    secretId: string;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=SecretFormInner.vue.d.ts.map

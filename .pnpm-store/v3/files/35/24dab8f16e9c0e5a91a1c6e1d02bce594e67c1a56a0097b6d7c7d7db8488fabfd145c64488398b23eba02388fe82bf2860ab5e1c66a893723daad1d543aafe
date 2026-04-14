@@ -1,0 +1,104 @@
+import { defineComponent as r, ref as s, computed as v, onMounted as d, watch as f, onUnmounted as p, Comment as F, cloneVNode as O } from "vue";
+import { createFocusTrap as b } from "./kongponents.es263.js";
+/*!
+  * focus-trap-vue v4.0.3
+  * (c) 2025 Eduardo San Martin Morote
+  * @license MIT
+  */
+const D = {
+  escapeDeactivates: {
+    type: Boolean,
+    default: !0
+  },
+  returnFocusOnDeactivate: {
+    type: Boolean,
+    default: !0
+  },
+  allowOutsideClick: {
+    type: [Boolean, Function],
+    default: !0
+  },
+  clickOutsideDeactivates: [Boolean, Function],
+  initialFocus: [String, Function, Boolean],
+  fallbackFocus: [String, Function],
+  checkCanFocusTrap: Function,
+  checkCanReturnFocus: Function,
+  delayInitialFocus: {
+    type: Boolean,
+    default: !0
+  },
+  document: Object,
+  preventScroll: Boolean,
+  setReturnFocus: [Object, String, Boolean, Function],
+  tabbableOptions: Object
+}, T = r({
+  name: "FocusTrap",
+  props: Object.assign({
+    active: {
+      // TODO: could be options for activate but what about the options for deactivating?
+      type: Boolean,
+      default: !0
+    }
+  }, D),
+  emits: [
+    "update:active",
+    "activate",
+    "postActivate",
+    "deactivate",
+    "postDeactivate"
+  ],
+  render() {
+    return this.renderImpl();
+  },
+  setup(a, { slots: o, emit: n }) {
+    let t;
+    const i = s(null), c = v(() => {
+      const e = i.value;
+      return e && (e instanceof HTMLElement ? e : e.$el);
+    });
+    function u() {
+      return t || (t = b(c.value, {
+        escapeDeactivates: a.escapeDeactivates,
+        allowOutsideClick: a.allowOutsideClick,
+        returnFocusOnDeactivate: a.returnFocusOnDeactivate,
+        clickOutsideDeactivates: a.clickOutsideDeactivates,
+        onActivate: () => {
+          n("update:active", !0), n("activate");
+        },
+        onDeactivate: () => {
+          n("update:active", !1), n("deactivate");
+        },
+        onPostActivate: () => n("postActivate"),
+        onPostDeactivate: () => n("postDeactivate"),
+        initialFocus: a.initialFocus,
+        fallbackFocus: a.fallbackFocus,
+        tabbableOptions: a.tabbableOptions,
+        delayInitialFocus: a.delayInitialFocus,
+        preventScroll: a.preventScroll
+      }));
+    }
+    return d(() => {
+      f(() => a.active, (e) => {
+        e && c.value ? u().activate() : t && (t.deactivate(), (!c.value || c.value.nodeType === Node.COMMENT_NODE) && (t = null));
+      }, { immediate: !0, flush: "post" });
+    }), p(() => {
+      t && t.deactivate(), t = null;
+    }), {
+      activate() {
+        u().activate();
+      },
+      deactivate() {
+        t && t.deactivate();
+      },
+      renderImpl() {
+        if (!o.default)
+          return null;
+        const e = o.default().filter((l) => l.type !== F);
+        return !e || !e.length || e.length > 1 ? (console.error("[focus-trap-vue]: FocusTrap requires exactly one child."), e) : O(e[0], { ref: i });
+      }
+    };
+  }
+});
+export {
+  T as FocusTrap
+};

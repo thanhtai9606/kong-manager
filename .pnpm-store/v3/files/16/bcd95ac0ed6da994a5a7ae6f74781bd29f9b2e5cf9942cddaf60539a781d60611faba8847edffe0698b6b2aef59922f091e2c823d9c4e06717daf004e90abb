@@ -1,0 +1,51 @@
+import type { PropType } from 'vue';
+import type { DropdownItem } from '@kong/kongponents';
+declare var __VLS_9: {}, __VLS_19: {
+    option: DropdownItem<string | number>;
+};
+type __VLS_Slots = {} & {
+    default?: (props: typeof __VLS_9) => any;
+} & {
+    default?: (props: typeof __VLS_19) => any;
+};
+declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    options: {
+        type: PropType<DropdownItem[]>;
+        required: true;
+    };
+    width: {
+        type: StringConstructor;
+        default: string;
+    };
+    userInitials: {
+        type: StringConstructor;
+        required: true;
+        default: string;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    options: {
+        type: PropType<DropdownItem[]>;
+        required: true;
+    };
+    width: {
+        type: StringConstructor;
+        default: string;
+    };
+    userInitials: {
+        type: StringConstructor;
+        required: true;
+        default: string;
+    };
+}>> & Readonly<{}>, {
+    width: string;
+    userInitials: string;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
+declare const _default: typeof __VLS_export;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+//# sourceMappingURL=AccountDropdown.vue.d.ts.map

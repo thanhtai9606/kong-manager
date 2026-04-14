@@ -1,0 +1,5 @@
+import o from "./kong-icons.es632.js";
+/* empty css                 */
+export {
+  o as default
+};

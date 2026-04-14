@@ -1,0 +1,3 @@
+import type { AILLMAsJudgeSchema } from '../../types/plugins/ai-llm-as-judge';
+export declare const aiLlmAsJudgeSchema: AILLMAsJudgeSchema;
+//# sourceMappingURL=AILLMAsJudge.d.ts.map

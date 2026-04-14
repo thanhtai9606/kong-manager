@@ -1,0 +1,30 @@
+import { LogLevel } from '../types';
+import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
+import type { SelectItem } from '@kong/kongponents';
+export declare const supportedLevels: LogLevel[];
+export declare const useLogLevelCandidateSelectItems: (opt?: {
+    initialSelected?: LogLevel;
+    disabled?: MaybeRefOrGetter<LogLevel[]>;
+}) => ComputedRef<SelectItem[]>;
+export type LogLevelExplanation = {
+    explanation: string;
+    warning?: string;
+};
+export declare const useLogLevelExplanation: (level: MaybeRefOrGetter<LogLevel>) => ComputedRef<LogLevelExplanation>;
+export declare const useFriendlyRevertTime: (revertTime: MaybeRefOrGetter<number>) => ComputedRef<string>;
+export type DataPlaneLogLevel = {
+    currentLogLevel: Ref<LogLevel | null>;
+    updateStatus: Ref<'pending' | 'success' | 'error' | 'loading'>;
+    updateErrorMessage: Ref<string | null>;
+    updateLogLevel: (level: LogLevel, revertAfter: number) => Promise<void>;
+};
+export declare const useDataPlaneLogLevelChecker: (opt: {
+    getDataPlaneLogLevel: (dataPlaneId: string) => Promise<LogLevel>;
+    setDataPlaneLogLevel: (dataPlaneId: string, level: LogLevel, revertAfter: number) => Promise<void>;
+    requestExecutor?: <T>(fn: () => Promise<T>) => Promise<T>;
+}) => {
+    checkDataPlaneLogLevel: (dataPlaneId: string, opt?: {
+        currentLogLevelHint?: MaybeRefOrGetter<LogLevel | null>;
+    }) => DataPlaneLogLevel;
+};
+//# sourceMappingURL=useLogLevels.d.ts.map

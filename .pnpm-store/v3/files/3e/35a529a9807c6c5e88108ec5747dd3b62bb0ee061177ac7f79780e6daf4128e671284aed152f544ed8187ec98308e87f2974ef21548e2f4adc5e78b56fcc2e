@@ -1,0 +1,37 @@
+import type { BranchName, NodeId } from '../../types';
+import type { BaseFormData, InputOption } from './useNodeForm';
+/**
+ * Branch-specific form composable that extends useNodeForm with branch node functionality.
+ * This composable handles:
+ * - Branch member management (add/remove nodes from branches)
+ * - Branch option filtering (valid candidates for branch membership)
+ * - Branch conflict resolution
+ * - Branch cycle detection
+ */
+export declare function useBranchNodeForm<T extends BaseFormData = BaseFormData>(nodeId: NodeId): {
+    formData: import("vue").ComputedRef<T>;
+    branchOptions: import("vue").ComputedRef<InputOption[]>;
+    updateBranchMembers: (branch: BranchName, value: string | string[] | null) => Promise<boolean>;
+    inputOptions: import("vue").ComputedRef<InputOption[]>;
+    inputEdge: import("vue").ComputedRef<import("../../types").EdgeInstance | undefined>;
+    inputsEdges: import("vue").ComputedRef<{
+        id: import("../../types").EdgeId;
+        source: NodeId;
+        sourceField?: import("../../types").FieldId | undefined;
+        target: NodeId;
+        targetField?: import("../../types").FieldId | undefined;
+    }[]>;
+    inputsFieldNames: import("vue").ComputedRef<(string & import("zod").$brand<"FieldName">)[]>;
+    currentNode: import("vue").ComputedRef<import("../../types").NodeInstance>;
+    setName: (name: string | null) => void;
+    setConfig: (tag?: string, commitNow?: boolean) => void;
+    addField: (io: "input" | "output", name: import("../../types").FieldName, value?: import("../../types").IdConnection | null) => void;
+    renameFieldByName: (io: "input" | "output", oldFieldName: import("../../types").FieldName, newFieldName: import("../../types").FieldName) => void;
+    removeFieldByName: (io: "input" | "output", fieldName: import("../../types").FieldName) => void;
+    setInputs: (fieldName: import("../../types").FieldName, fieldValue: import("../../types").IdConnection | null) => Promise<void>;
+    setInput: (value: import("../../types").IdConnection | null) => Promise<void>;
+    nameValidator: import("./validation").ValidatorFn<string>;
+    fieldNameValidator: (io: "input" | "output", oldFieldName: import("../../types").FieldName, newFieldName: import("../../types").FieldName) => string | undefined;
+    toggleNodeValid: (isValid: boolean) => void;
+};
+//# sourceMappingURL=useBranchNodeForm.d.ts.map

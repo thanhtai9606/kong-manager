@@ -1,0 +1,34 @@
+import type { MaybeRefOrGetter } from 'vue';
+import type { KeyId } from './key-id-map';
+export declare function useMapField<T = unknown, K extends string = string>(name: MaybeRefOrGetter<string>, 
+/**
+ * @deprecated Forward compatibility, only triggered when the type of value is string
+ */
+onLegacyValueChange?: (newValue: Record<K, T> | null) => void): {
+    keys: import("vue").ComputedRef<(readonly [`kid:${number}`, K])[]>;
+    updateKey: (keyId: KeyId, newKey: K) => void;
+    addKey: () => `kid:${number}` | undefined;
+    removeKey: (keyId: KeyId) => void;
+    field: {
+        error: Error;
+        schema?: undefined;
+        path?: undefined;
+        renderer?: undefined;
+        ancestors?: undefined;
+        hide?: undefined;
+        emptyOrDefaultValue?: undefined;
+    } | {
+        schema: import("vue").ComputedRef<import("../../../../types/plugins/form-schema").UnionFieldSchema | undefined>;
+        path: import("vue").ComputedRef<string>;
+        renderer: import("vue").ComputedRef<import("vue").Slot<{
+            name: string;
+        }> | import("vue").Slot<any> | undefined>;
+        ancestors: import("vue").ComputedRef<import("./ancestors").Ancestor>;
+        hide: import("vue").ComputedRef<boolean>;
+        emptyOrDefaultValue: import("vue").ComputedRef<Record<`kid:${number}`, T> | null>;
+        error: null;
+    };
+    fieldDisplayName: import("vue").ComputedRef<string>;
+    getKeyName: (keyId: KeyId) => K | undefined;
+};
+//# sourceMappingURL=useMapField.d.ts.map

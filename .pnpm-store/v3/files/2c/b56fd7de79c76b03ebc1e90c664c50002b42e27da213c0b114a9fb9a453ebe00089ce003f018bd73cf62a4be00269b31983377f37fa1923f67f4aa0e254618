@@ -1,0 +1,10 @@
+import t from "./kongponents.es350.js";
+import e from "./kongponents.es357.js";
+import o from "./kongponents.es358.js";
+var i = "[object Null]", f = "[object Undefined]", r = t ? t.toStringTag : void 0;
+function m(n) {
+  return n == null ? n === void 0 ? f : i : r && r in Object(n) ? e(n) : o(n);
+}
+export {
+  m as default
+};

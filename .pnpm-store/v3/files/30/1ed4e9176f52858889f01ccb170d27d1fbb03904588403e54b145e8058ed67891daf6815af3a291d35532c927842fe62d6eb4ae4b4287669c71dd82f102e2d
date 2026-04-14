@@ -1,0 +1,131 @@
+import { defineComponent as S, computed as l, createBlock as C, openBlock as d, resolveDynamicComponent as y, normalizeStyle as b, withCtx as x, createElementBlock as w } from "vue";
+import { KUI_ICON_SIZE_50 as c } from "./kong-icons.es1592.js";
+const z = ["aria-hidden"], u = `<g clip-path="url(#clip0_247_6265)">
+<path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#F0F0F0"/>
+<path d="M23.2536 7.82611H0.746391C0.264 9.1261 0 10.5322 0 12C0 13.4678 0.264 14.8739 0.746391 16.1739H23.2537C23.736 14.8739 24 13.4678 24 12C24 10.5322 23.736 9.1261 23.2536 7.82611Z" fill="#0052B4"/>
+<path d="M11.9999 0C8.36285 0 5.10396 1.61831 2.90332 4.17389H21.0965C18.8959 1.61831 15.637 0 11.9999 0Z" fill="#D80027"/>
+<path d="M21.0965 19.8261H2.90332C5.10396 22.3817 8.36285 24 11.9999 24C15.637 24 18.8959 22.3817 21.0965 19.8261Z" fill="#D80027"/>
+</g>
+<defs>
+<clipPath id="clip0_247_6265">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>`, q = /* @__PURE__ */ S({
+  __name: "FlagThIcon",
+  props: {
+    /** The accessibility text provided to screen readers */
+    title: {
+      type: String,
+      required: !1,
+      default: ""
+    },
+    /** The icon color. Defaults to `currentColor` which inherits text color from the parent element */
+    color: {
+      type: String,
+      required: !1,
+      default: "currentColor"
+    },
+    /** The CSS display property for the icon. Defaults to `block` */
+    display: {
+      type: String,
+      required: !1,
+      default: "block"
+    },
+    /** Whether the icon is just eye-candy or is meaningful to the page (should screen-readers ignore the icon?) */
+    decorative: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    },
+    /** The icon size */
+    size: {
+      type: [Number, String],
+      required: !1,
+      default: c,
+      // if setting to the imported const fails, just pass a number of 24 as the default.
+      validator: (i) => {
+        if (typeof i == "number" && i > 0)
+          return !0;
+        if (typeof i == "string") {
+          const e = String(i).replace(/px/gi, ""), r = Number(e);
+          if (r && !isNaN(r) && Number.isInteger(r) && r > 0)
+            return !0;
+        }
+        return !1;
+      }
+    },
+    /** The HTML tag to utilize for the icon's wrapper element. Defaults to `span` */
+    as: {
+      type: String,
+      required: !1,
+      default: "span"
+    },
+    /**
+     * A boolean to disable prefixing any internal SVG ids with a unique string which is done to resolve the potential for multiple SVG instances on the same page and the SVG utilizing the same ids and references internally (e.g. in the `<defs>` tag).
+     * Typically only set to `true` during snapshot testing.
+     * Defaults to `false`.
+     */
+    staticIds: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  setup(i) {
+    const e = i, r = l(() => {
+      if (typeof e.size == "number" && e.size > 0)
+        return `${e.size}px`;
+      if (typeof e.size == "string") {
+        const n = String(e.size).replace(/px/gi, ""), t = Number(n);
+        if (t && !isNaN(t) && Number.isInteger(t) && t > 0)
+          return `${t}px`;
+      }
+      return c;
+    }), p = l(() => ({
+      boxSizing: "border-box",
+      color: e.color,
+      display: e.display,
+      flexShrink: "0",
+      height: r.value,
+      lineHeight: "0",
+      width: r.value,
+      pointerEvents: e.decorative ? "none" : void 0
+    })), g = (n) => {
+      const t = {}, v = Math.random().toString(36).substring(2, 12);
+      return n.replace(/id="([^"]+)"/g, (a, o) => {
+        const s = `${v}-${o}`;
+        return t[o] = s, `id="${s}"`;
+      }).replace(/#([^\s^")]+)/g, (a, o) => t[o] ? `#${t[o]}` : a);
+    }, f = {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "&": "&amp;"
+    }, h = (n) => n.replace(/[<>"'&]/g, (t) => f[t]), m = `${e.title ? `<title data-testid="kui-icon-svg-title">${h(e.title)}</title>` : ""}${e.staticIds ? u : g(u)}`;
+    return (n, t) => (d(), C(y(i.as), {
+      "aria-hidden": i.decorative ? "true" : void 0,
+      class: "kui-icon flag-th-icon",
+      "data-testid": "kui-icon-wrapper-flag-th-icon",
+      style: b(p.value),
+      tabindex: i.decorative ? "-1" : void 0
+    }, {
+      default: x(() => [
+        (d(), w("svg", {
+          "aria-hidden": i.decorative ? "true" : void 0,
+          "data-testid": "kui-icon-svg-flag-th-icon",
+          fill: "none",
+          height: "100%",
+          role: "img",
+          viewBox: "0 0 24 24",
+          width: "100%",
+          xmlns: "http://www.w3.org/2000/svg",
+          innerHTML: m
+        }, null, 8, z))
+      ]),
+      _: 1
+    }, 8, ["aria-hidden", "style", "tabindex"]));
+  }
+});
+export {
+  q as default
+};

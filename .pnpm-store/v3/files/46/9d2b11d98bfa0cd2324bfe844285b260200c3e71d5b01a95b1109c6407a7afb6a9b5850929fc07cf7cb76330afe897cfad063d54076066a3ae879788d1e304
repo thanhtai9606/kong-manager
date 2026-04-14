@@ -1,0 +1,4 @@
+import f from "./kongponents.es241.js";
+export {
+  f as default
+};

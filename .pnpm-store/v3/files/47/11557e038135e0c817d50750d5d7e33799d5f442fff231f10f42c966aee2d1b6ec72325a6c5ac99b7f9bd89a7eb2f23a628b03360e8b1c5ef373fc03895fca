@@ -1,0 +1,19 @@
+import { type KongManagerPluginSelectConfig, type KonnectPluginSelectConfig, type PluginCardList, type PluginType } from '../../types';
+type __VLS_Props = {
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig;
+    /**
+     * Plugins to display in the grid
+     */
+    pluginList?: PluginCardList;
+};
+declare const __VLS_export: import("vue").DefineComponent<__VLS_Props, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    "plugin-clicked": (plugin: PluginType) => any;
+    "delete:success": (pluginName: string) => any;
+}, string, import("vue").PublicProps, Readonly<__VLS_Props> & Readonly<{
+    "onPlugin-clicked"?: ((plugin: PluginType) => any) | undefined;
+    "onDelete:success"?: ((pluginName: string) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=PluginCatalogGrid.vue.d.ts.map

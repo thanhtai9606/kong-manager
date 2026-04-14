@@ -1,0 +1,121 @@
+import { defineComponent as h, computed as c, createBlock as y, openBlock as d, resolveDynamicComponent as b, normalizeStyle as x, withCtx as z, createElementBlock as N } from "vue";
+import { KUI_ICON_SIZE_50 as l } from "./kong-icons.es1592.js";
+const w = ["aria-hidden"], u = '<path d="M16.3231 5H13.2862L18.8215 19H21.8585L16.3231 5ZM7.53538 5L2 19H5.10154L6.24308 16.0708H12.0369L13.1569 19H16.2585L10.7231 5H7.53538ZM7.23385 13.4646L9.12923 8.55385L11.0246 13.4646H7.23385Z" fill="#181818"/>', $ = /* @__PURE__ */ h({
+  __name: "AnthropicIcon",
+  props: {
+    /** The accessibility text provided to screen readers */
+    title: {
+      type: String,
+      required: !1,
+      default: ""
+    },
+    /** The icon color. Defaults to `currentColor` which inherits text color from the parent element */
+    color: {
+      type: String,
+      required: !1,
+      default: "currentColor"
+    },
+    /** The CSS display property for the icon. Defaults to `block` */
+    display: {
+      type: String,
+      required: !1,
+      default: "block"
+    },
+    /** Whether the icon is just eye-candy or is meaningful to the page (should screen-readers ignore the icon?) */
+    decorative: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    },
+    /** The icon size */
+    size: {
+      type: [Number, String],
+      required: !1,
+      default: l,
+      // if setting to the imported const fails, just pass a number of 24 as the default.
+      validator: (i) => {
+        if (typeof i == "number" && i > 0)
+          return !0;
+        if (typeof i == "string") {
+          const e = String(i).replace(/px/gi, ""), n = Number(e);
+          if (n && !isNaN(n) && Number.isInteger(n) && n > 0)
+            return !0;
+        }
+        return !1;
+      }
+    },
+    /** The HTML tag to utilize for the icon's wrapper element. Defaults to `span` */
+    as: {
+      type: String,
+      required: !1,
+      default: "span"
+    },
+    /**
+     * A boolean to disable prefixing any internal SVG ids with a unique string which is done to resolve the potential for multiple SVG instances on the same page and the SVG utilizing the same ids and references internally (e.g. in the `<defs>` tag).
+     * Typically only set to `true` during snapshot testing.
+     * Defaults to `false`.
+     */
+    staticIds: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  setup(i) {
+    const e = i, n = c(() => {
+      if (typeof e.size == "number" && e.size > 0)
+        return `${e.size}px`;
+      if (typeof e.size == "string") {
+        const r = String(e.size).replace(/px/gi, ""), t = Number(r);
+        if (t && !isNaN(t) && Number.isInteger(t) && t > 0)
+          return `${t}px`;
+      }
+      return l;
+    }), p = c(() => ({
+      boxSizing: "border-box",
+      color: e.color,
+      display: e.display,
+      flexShrink: "0",
+      height: n.value,
+      lineHeight: "0",
+      width: n.value,
+      pointerEvents: e.decorative ? "none" : void 0
+    })), g = (r) => {
+      const t = {}, S = Math.random().toString(36).substring(2, 12);
+      return r.replace(/id="([^"]+)"/g, (s, o) => {
+        const a = `${S}-${o}`;
+        return t[o] = a, `id="${a}"`;
+      }).replace(/#([^\s^")]+)/g, (s, o) => t[o] ? `#${t[o]}` : s);
+    }, f = {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "&": "&amp;"
+    }, m = (r) => r.replace(/[<>"'&]/g, (t) => f[t]), v = `${e.title ? `<title data-testid="kui-icon-svg-title">${m(e.title)}</title>` : ""}${e.staticIds ? u : g(u)}`;
+    return (r, t) => (d(), y(b(i.as), {
+      "aria-hidden": i.decorative ? "true" : void 0,
+      class: "kui-icon anthropic-icon",
+      "data-testid": "kui-icon-wrapper-anthropic-icon",
+      style: x(p.value),
+      tabindex: i.decorative ? "-1" : void 0
+    }, {
+      default: z(() => [
+        (d(), N("svg", {
+          "aria-hidden": i.decorative ? "true" : void 0,
+          "data-testid": "kui-icon-svg-anthropic-icon",
+          fill: "none",
+          height: "100%",
+          role: "img",
+          viewBox: "0 0 24 24",
+          width: "100%",
+          xmlns: "http://www.w3.org/2000/svg",
+          innerHTML: v
+        }, null, 8, w))
+      ]),
+      _: 1
+    }, 8, ["aria-hidden", "style", "tabindex"]));
+  }
+});
+export {
+  $ as default
+};

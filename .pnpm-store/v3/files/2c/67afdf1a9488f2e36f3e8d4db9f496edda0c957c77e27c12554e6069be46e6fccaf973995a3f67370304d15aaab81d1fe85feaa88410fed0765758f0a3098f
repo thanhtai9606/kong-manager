@@ -1,0 +1,3 @@
+import type { KafkaUpstreamSchema } from '../../types/plugins/kafka-upstream';
+export declare const kafkaUpstreamSchema: KafkaUpstreamSchema;
+//# sourceMappingURL=KafkaUpstream.d.ts.map

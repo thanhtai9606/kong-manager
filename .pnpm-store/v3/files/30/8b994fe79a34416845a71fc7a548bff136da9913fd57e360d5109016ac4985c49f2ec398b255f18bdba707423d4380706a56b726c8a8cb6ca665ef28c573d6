@@ -1,0 +1,695 @@
+import { e as O, c as S, u as d, a as K, b as x } from "../code-lenses-Bs4VA93Z.js";
+import { getModelContext as H } from "../singletons.es.js";
+function C(e, i = !1) {
+  const l = e.length;
+  let n = 0, t = "", r = 0, p = 16, o = 0, u = 0, s = 0, k = 0, m = 0;
+  function y(f, T) {
+    let A = 0, a = 0;
+    for (; A < f; ) {
+      let c = e.charCodeAt(n);
+      if (c >= 48 && c <= 57)
+        a = a * 16 + c - 48;
+      else if (c >= 65 && c <= 70)
+        a = a * 16 + c - 65 + 10;
+      else if (c >= 97 && c <= 102)
+        a = a * 16 + c - 97 + 10;
+      else
+        break;
+      n++, A++;
+    }
+    return A < f && (a = -1), a;
+  }
+  function I(f) {
+    n = f, t = "", r = 0, p = 16, m = 0;
+  }
+  function V() {
+    let f = n;
+    if (e.charCodeAt(n) === 48)
+      n++;
+    else
+      for (n++; n < e.length && N(e.charCodeAt(n)); )
+        n++;
+    if (n < e.length && e.charCodeAt(n) === 46)
+      if (n++, n < e.length && N(e.charCodeAt(n)))
+        for (n++; n < e.length && N(e.charCodeAt(n)); )
+          n++;
+      else
+        return m = 3, e.substring(f, n);
+    let T = n;
+    if (n < e.length && (e.charCodeAt(n) === 69 || e.charCodeAt(n) === 101))
+      if (n++, (n < e.length && e.charCodeAt(n) === 43 || e.charCodeAt(n) === 45) && n++, n < e.length && N(e.charCodeAt(n))) {
+        for (n++; n < e.length && N(e.charCodeAt(n)); )
+          n++;
+        T = n;
+      } else
+        m = 3;
+    return e.substring(f, T);
+  }
+  function F() {
+    let f = "", T = n;
+    for (; ; ) {
+      if (n >= l) {
+        f += e.substring(T, n), m = 2;
+        break;
+      }
+      const A = e.charCodeAt(n);
+      if (A === 34) {
+        f += e.substring(T, n), n++;
+        break;
+      }
+      if (A === 92) {
+        if (f += e.substring(T, n), n++, n >= l) {
+          m = 2;
+          break;
+        }
+        switch (e.charCodeAt(n++)) {
+          case 34:
+            f += '"';
+            break;
+          case 92:
+            f += "\\";
+            break;
+          case 47:
+            f += "/";
+            break;
+          case 98:
+            f += "\b";
+            break;
+          case 102:
+            f += "\f";
+            break;
+          case 110:
+            f += `
+`;
+            break;
+          case 114:
+            f += "\r";
+            break;
+          case 116:
+            f += "	";
+            break;
+          case 117:
+            const c = y(4);
+            c >= 0 ? f += String.fromCharCode(c) : m = 4;
+            break;
+          default:
+            m = 5;
+        }
+        T = n;
+        continue;
+      }
+      if (A >= 0 && A <= 31)
+        if (B(A)) {
+          f += e.substring(T, n), m = 2;
+          break;
+        } else
+          m = 6;
+      n++;
+    }
+    return f;
+  }
+  function L() {
+    if (t = "", m = 0, r = n, u = o, k = s, n >= l)
+      return r = l, p = 17;
+    let f = e.charCodeAt(n);
+    if (R(f)) {
+      do
+        n++, t += String.fromCharCode(f), f = e.charCodeAt(n);
+      while (R(f));
+      return p = 15;
+    }
+    if (B(f))
+      return n++, t += String.fromCharCode(f), f === 13 && e.charCodeAt(n) === 10 && (n++, t += `
+`), o++, s = n, p = 14;
+    switch (f) {
+      case 123:
+        return n++, p = 1;
+      case 125:
+        return n++, p = 2;
+      case 91:
+        return n++, p = 3;
+      case 93:
+        return n++, p = 4;
+      case 58:
+        return n++, p = 6;
+      case 44:
+        return n++, p = 5;
+      case 34:
+        return n++, t = F(), p = 10;
+      case 47:
+        const T = n - 1;
+        if (e.charCodeAt(n + 1) === 47) {
+          for (n += 2; n < l && !B(e.charCodeAt(n)); )
+            n++;
+          return t = e.substring(T, n), p = 12;
+        }
+        if (e.charCodeAt(n + 1) === 42) {
+          n += 2;
+          const A = l - 1;
+          let a = !1;
+          for (; n < A; ) {
+            const c = e.charCodeAt(n);
+            if (c === 42 && e.charCodeAt(n + 1) === 47) {
+              n += 2, a = !0;
+              break;
+            }
+            n++, B(c) && (c === 13 && e.charCodeAt(n) === 10 && n++, o++, s = n);
+          }
+          return a || (n++, m = 1), t = e.substring(T, n), p = 13;
+        }
+        return t += String.fromCharCode(f), n++, p = 16;
+      case 45:
+        if (t += String.fromCharCode(f), n++, n === l || !N(e.charCodeAt(n)))
+          return p = 16;
+      case 48:
+      case 49:
+      case 50:
+      case 51:
+      case 52:
+      case 53:
+      case 54:
+      case 55:
+      case 56:
+      case 57:
+        return t += V(), p = 11;
+      default:
+        for (; n < l && v(f); )
+          n++, f = e.charCodeAt(n);
+        if (r !== n) {
+          switch (t = e.substring(r, n), t) {
+            case "true":
+              return p = 8;
+            case "false":
+              return p = 9;
+            case "null":
+              return p = 7;
+          }
+          return p = 16;
+        }
+        return t += String.fromCharCode(f), n++, p = 16;
+    }
+  }
+  function v(f) {
+    if (R(f) || B(f))
+      return !1;
+    switch (f) {
+      case 125:
+      case 93:
+      case 123:
+      case 91:
+      case 34:
+      case 58:
+      case 44:
+      case 47:
+        return !1;
+    }
+    return !0;
+  }
+  function E() {
+    let f;
+    do
+      f = L();
+    while (f >= 12 && f <= 15);
+    return f;
+  }
+  return {
+    setPosition: I,
+    getPosition: () => n,
+    scan: i ? E : L,
+    getToken: () => p,
+    getTokenValue: () => t,
+    getTokenOffset: () => r,
+    getTokenLength: () => n - r,
+    getTokenStartLine: () => u,
+    getTokenStartCharacter: () => r - k,
+    getTokenError: () => m
+  };
+}
+function R(e) {
+  return e === 32 || e === 9;
+}
+function B(e) {
+  return e === 10 || e === 13;
+}
+function N(e) {
+  return e >= 48 && e <= 57;
+}
+var P;
+(function(e) {
+  e[e.lineFeed = 10] = "lineFeed", e[e.carriageReturn = 13] = "carriageReturn", e[e.space = 32] = "space", e[e._0 = 48] = "_0", e[e._1 = 49] = "_1", e[e._2 = 50] = "_2", e[e._3 = 51] = "_3", e[e._4 = 52] = "_4", e[e._5 = 53] = "_5", e[e._6 = 54] = "_6", e[e._7 = 55] = "_7", e[e._8 = 56] = "_8", e[e._9 = 57] = "_9", e[e.a = 97] = "a", e[e.b = 98] = "b", e[e.c = 99] = "c", e[e.d = 100] = "d", e[e.e = 101] = "e", e[e.f = 102] = "f", e[e.g = 103] = "g", e[e.h = 104] = "h", e[e.i = 105] = "i", e[e.j = 106] = "j", e[e.k = 107] = "k", e[e.l = 108] = "l", e[e.m = 109] = "m", e[e.n = 110] = "n", e[e.o = 111] = "o", e[e.p = 112] = "p", e[e.q = 113] = "q", e[e.r = 114] = "r", e[e.s = 115] = "s", e[e.t = 116] = "t", e[e.u = 117] = "u", e[e.v = 118] = "v", e[e.w = 119] = "w", e[e.x = 120] = "x", e[e.y = 121] = "y", e[e.z = 122] = "z", e[e.A = 65] = "A", e[e.B = 66] = "B", e[e.C = 67] = "C", e[e.D = 68] = "D", e[e.E = 69] = "E", e[e.F = 70] = "F", e[e.G = 71] = "G", e[e.H = 72] = "H", e[e.I = 73] = "I", e[e.J = 74] = "J", e[e.K = 75] = "K", e[e.L = 76] = "L", e[e.M = 77] = "M", e[e.N = 78] = "N", e[e.O = 79] = "O", e[e.P = 80] = "P", e[e.Q = 81] = "Q", e[e.R = 82] = "R", e[e.S = 83] = "S", e[e.T = 84] = "T", e[e.U = 85] = "U", e[e.V = 86] = "V", e[e.W = 87] = "W", e[e.X = 88] = "X", e[e.Y = 89] = "Y", e[e.Z = 90] = "Z", e[e.asterisk = 42] = "asterisk", e[e.backslash = 92] = "backslash", e[e.closeBrace = 125] = "closeBrace", e[e.closeBracket = 93] = "closeBracket", e[e.colon = 58] = "colon", e[e.comma = 44] = "comma", e[e.dot = 46] = "dot", e[e.doubleQuote = 34] = "doubleQuote", e[e.minus = 45] = "minus", e[e.openBrace = 123] = "openBrace", e[e.openBracket = 91] = "openBracket", e[e.plus = 43] = "plus", e[e.slash = 47] = "slash", e[e.formFeed = 12] = "formFeed", e[e.tab = 9] = "tab";
+})(P || (P = {}));
+new Array(20).fill(0).map((e, i) => " ".repeat(i));
+const w = 200;
+new Array(w).fill(0).map((e, i) => `
+` + " ".repeat(i)), new Array(w).fill(0).map((e, i) => "\r" + " ".repeat(i)), new Array(w).fill(0).map((e, i) => `\r
+` + " ".repeat(i)), new Array(w).fill(0).map((e, i) => `
+` + "	".repeat(i)), new Array(w).fill(0).map((e, i) => "\r" + "	".repeat(i)), new Array(w).fill(0).map((e, i) => `\r
+` + "	".repeat(i));
+var j;
+(function(e) {
+  e.DEFAULT = {
+    allowTrailingComma: !1
+  };
+})(j || (j = {}));
+function ee(e, i = [], l = j.DEFAULT) {
+  let n = { type: "array", offset: -1, length: -1, children: [], parent: void 0 };
+  function t(u) {
+    n.type === "property" && (n.length = u - n.offset, n = n.parent);
+  }
+  function r(u) {
+    return n.children.push(u), u;
+  }
+  te(e, {
+    onObjectBegin: (u) => {
+      n = r({ type: "object", offset: u, length: -1, parent: n, children: [] });
+    },
+    onObjectProperty: (u, s, k) => {
+      n = r({ type: "property", offset: s, length: -1, parent: n, children: [] }), n.children.push({ type: "string", value: u, offset: s, length: k, parent: n });
+    },
+    onObjectEnd: (u, s) => {
+      t(u + s), n.length = u + s - n.offset, n = n.parent, t(u + s);
+    },
+    onArrayBegin: (u, s) => {
+      n = r({ type: "array", offset: u, length: -1, parent: n, children: [] });
+    },
+    onArrayEnd: (u, s) => {
+      n.length = u + s - n.offset, n = n.parent, t(u + s);
+    },
+    onLiteralValue: (u, s, k) => {
+      r({ type: ie(u), offset: s, length: k, parent: n, value: u }), t(s + k);
+    },
+    onSeparator: (u, s, k) => {
+      n.type === "property" && (u === ":" ? n.colonOffset = s : u === "," && t(s));
+    },
+    onError: (u, s, k) => {
+      i.push({ error: u, offset: s, length: k });
+    }
+  }, l);
+  const o = n.children[0];
+  return o && delete o.parent, o;
+}
+function ne(e, i) {
+  if (!e)
+    return;
+  let l = e;
+  for (let n of i)
+    if (typeof n == "string") {
+      if (l.type !== "object" || !Array.isArray(l.children))
+        return;
+      let t = !1;
+      for (const r of l.children)
+        if (Array.isArray(r.children) && r.children[0].value === n && r.children.length === 2) {
+          l = r.children[1], t = !0;
+          break;
+        }
+      if (!t)
+        return;
+    } else {
+      const t = n;
+      if (l.type !== "array" || t < 0 || !Array.isArray(l.children) || t >= l.children.length)
+        return;
+      l = l.children[t];
+    }
+  return l;
+}
+function M(e) {
+  if (!e.parent || !e.parent.children)
+    return [];
+  const i = M(e.parent);
+  if (e.parent.type === "property") {
+    const l = e.parent.children[0].value;
+    i.push(l);
+  } else if (e.parent.type === "array") {
+    const l = e.parent.children.indexOf(e);
+    l !== -1 && i.push(l);
+  }
+  return i;
+}
+function J(e) {
+  switch (e.type) {
+    case "array":
+      return e.children.map(J);
+    case "object":
+      const i = /* @__PURE__ */ Object.create(null);
+      for (let l of e.children) {
+        const n = l.children[1];
+        n && (i[l.children[0].value] = J(n));
+      }
+      return i;
+    case "null":
+    case "string":
+    case "number":
+    case "boolean":
+      return e.value;
+    default:
+      return;
+  }
+}
+function te(e, i, l = j.DEFAULT) {
+  const n = C(e, !1), t = [];
+  let r = 0;
+  function p(g) {
+    return g ? () => r === 0 && g(n.getTokenOffset(), n.getTokenLength(), n.getTokenStartLine(), n.getTokenStartCharacter()) : () => !0;
+  }
+  function o(g) {
+    return g ? (b) => r === 0 && g(b, n.getTokenOffset(), n.getTokenLength(), n.getTokenStartLine(), n.getTokenStartCharacter()) : () => !0;
+  }
+  function u(g) {
+    return g ? (b) => r === 0 && g(b, n.getTokenOffset(), n.getTokenLength(), n.getTokenStartLine(), n.getTokenStartCharacter(), () => t.slice()) : () => !0;
+  }
+  function s(g) {
+    return g ? () => {
+      r > 0 ? r++ : g(n.getTokenOffset(), n.getTokenLength(), n.getTokenStartLine(), n.getTokenStartCharacter(), () => t.slice()) === !1 && (r = 1);
+    } : () => !0;
+  }
+  function k(g) {
+    return g ? () => {
+      r > 0 && r--, r === 0 && g(n.getTokenOffset(), n.getTokenLength(), n.getTokenStartLine(), n.getTokenStartCharacter());
+    } : () => !0;
+  }
+  const m = s(i.onObjectBegin), y = u(i.onObjectProperty), I = k(i.onObjectEnd), V = s(i.onArrayBegin), F = k(i.onArrayEnd), L = u(i.onLiteralValue), v = o(i.onSeparator), E = p(i.onComment), f = o(i.onError), T = l && l.disallowComments, A = l && l.allowTrailingComma;
+  function a() {
+    for (; ; ) {
+      const g = n.scan();
+      switch (n.getTokenError()) {
+        case 4:
+          c(
+            14
+            /* ParseErrorCode.InvalidUnicode */
+          );
+          break;
+        case 5:
+          c(
+            15
+            /* ParseErrorCode.InvalidEscapeCharacter */
+          );
+          break;
+        case 3:
+          c(
+            13
+            /* ParseErrorCode.UnexpectedEndOfNumber */
+          );
+          break;
+        case 1:
+          T || c(
+            11
+            /* ParseErrorCode.UnexpectedEndOfComment */
+          );
+          break;
+        case 2:
+          c(
+            12
+            /* ParseErrorCode.UnexpectedEndOfString */
+          );
+          break;
+        case 6:
+          c(
+            16
+            /* ParseErrorCode.InvalidCharacter */
+          );
+          break;
+      }
+      switch (g) {
+        case 12:
+        case 13:
+          T ? c(
+            10
+            /* ParseErrorCode.InvalidCommentToken */
+          ) : E();
+          break;
+        case 16:
+          c(
+            1
+            /* ParseErrorCode.InvalidSymbol */
+          );
+          break;
+        case 15:
+        case 14:
+          break;
+        default:
+          return g;
+      }
+    }
+  }
+  function c(g, b = [], q = []) {
+    if (f(g), b.length + q.length > 0) {
+      let _ = n.getToken();
+      for (; _ !== 17; ) {
+        if (b.indexOf(_) !== -1) {
+          a();
+          break;
+        } else if (q.indexOf(_) !== -1)
+          break;
+        _ = a();
+      }
+    }
+  }
+  function h(g) {
+    const b = n.getTokenValue();
+    return g ? L(b) : (y(b), t.push(b)), a(), !0;
+  }
+  function G() {
+    switch (n.getToken()) {
+      case 11:
+        const g = n.getTokenValue();
+        let b = Number(g);
+        isNaN(b) && (c(
+          2
+          /* ParseErrorCode.InvalidNumberFormat */
+        ), b = 0), L(b);
+        break;
+      case 7:
+        L(null);
+        break;
+      case 8:
+        L(!0);
+        break;
+      case 9:
+        L(!1);
+        break;
+      default:
+        return !1;
+    }
+    return a(), !0;
+  }
+  function X() {
+    return n.getToken() !== 10 ? (c(3, [], [
+      2,
+      5
+      /* SyntaxKind.CommaToken */
+    ]), !1) : (h(!1), n.getToken() === 6 ? (v(":"), a(), D() || c(4, [], [
+      2,
+      5
+      /* SyntaxKind.CommaToken */
+    ])) : c(5, [], [
+      2,
+      5
+      /* SyntaxKind.CommaToken */
+    ]), t.pop(), !0);
+  }
+  function Y() {
+    m(), a();
+    let g = !1;
+    for (; n.getToken() !== 2 && n.getToken() !== 17; ) {
+      if (n.getToken() === 5) {
+        if (g || c(4, [], []), v(","), a(), n.getToken() === 2 && A)
+          break;
+      } else g && c(6, [], []);
+      X() || c(4, [], [
+        2,
+        5
+        /* SyntaxKind.CommaToken */
+      ]), g = !0;
+    }
+    return I(), n.getToken() !== 2 ? c(7, [
+      2
+      /* SyntaxKind.CloseBraceToken */
+    ], []) : a(), !0;
+  }
+  function Z() {
+    V(), a();
+    let g = !0, b = !1;
+    for (; n.getToken() !== 4 && n.getToken() !== 17; ) {
+      if (n.getToken() === 5) {
+        if (b || c(4, [], []), v(","), a(), n.getToken() === 4 && A)
+          break;
+      } else b && c(6, [], []);
+      g ? (t.push(0), g = !1) : t[t.length - 1]++, D() || c(4, [], [
+        4,
+        5
+        /* SyntaxKind.CommaToken */
+      ]), b = !0;
+    }
+    return F(), g || t.pop(), n.getToken() !== 4 ? c(8, [
+      4
+      /* SyntaxKind.CloseBracketToken */
+    ], []) : a(), !0;
+  }
+  function D() {
+    switch (n.getToken()) {
+      case 3:
+        return Z();
+      case 1:
+        return Y();
+      case 10:
+        return h(!0);
+      default:
+        return G();
+    }
+  }
+  return a(), n.getToken() === 17 ? l.allowEmptyContent ? !0 : (c(4, [], []), !1) : D() ? (n.getToken() !== 17 && c(9, [], []), !0) : (c(4, [], []), !1);
+}
+function ie(e) {
+  switch (typeof e) {
+    case "boolean":
+      return "boolean";
+    case "number":
+      return "number";
+    case "string":
+      return "string";
+    case "object": {
+      if (e) {
+        if (Array.isArray(e))
+          return "array";
+      } else return "null";
+      return "object";
+    }
+    default:
+      return "null";
+  }
+}
+var Q;
+(function(e) {
+  e[e.None = 0] = "None", e[e.UnexpectedEndOfComment = 1] = "UnexpectedEndOfComment", e[e.UnexpectedEndOfString = 2] = "UnexpectedEndOfString", e[e.UnexpectedEndOfNumber = 3] = "UnexpectedEndOfNumber", e[e.InvalidUnicode = 4] = "InvalidUnicode", e[e.InvalidEscapeCharacter = 5] = "InvalidEscapeCharacter", e[e.InvalidCharacter = 6] = "InvalidCharacter";
+})(Q || (Q = {}));
+var W;
+(function(e) {
+  e[e.OpenBraceToken = 1] = "OpenBraceToken", e[e.CloseBraceToken = 2] = "CloseBraceToken", e[e.OpenBracketToken = 3] = "OpenBracketToken", e[e.CloseBracketToken = 4] = "CloseBracketToken", e[e.CommaToken = 5] = "CommaToken", e[e.ColonToken = 6] = "ColonToken", e[e.NullKeyword = 7] = "NullKeyword", e[e.TrueKeyword = 8] = "TrueKeyword", e[e.FalseKeyword = 9] = "FalseKeyword", e[e.StringLiteral = 10] = "StringLiteral", e[e.NumericLiteral = 11] = "NumericLiteral", e[e.LineCommentTrivia = 12] = "LineCommentTrivia", e[e.BlockCommentTrivia = 13] = "BlockCommentTrivia", e[e.LineBreakTrivia = 14] = "LineBreakTrivia", e[e.Trivia = 15] = "Trivia", e[e.Unknown = 16] = "Unknown", e[e.EOF = 17] = "EOF";
+})(W || (W = {}));
+const le = ee, ue = ne, fe = M, U = J;
+var $;
+(function(e) {
+  e[e.InvalidSymbol = 1] = "InvalidSymbol", e[e.InvalidNumberFormat = 2] = "InvalidNumberFormat", e[e.PropertyNameExpected = 3] = "PropertyNameExpected", e[e.ValueExpected = 4] = "ValueExpected", e[e.ColonExpected = 5] = "ColonExpected", e[e.CommaExpected = 6] = "CommaExpected", e[e.CloseBraceExpected = 7] = "CloseBraceExpected", e[e.CloseBracketExpected = 8] = "CloseBracketExpected", e[e.EndOfFileExpected = 9] = "EndOfFileExpected", e[e.InvalidCommentToken = 10] = "InvalidCommentToken", e[e.UnexpectedEndOfComment = 11] = "UnexpectedEndOfComment", e[e.UnexpectedEndOfString = 12] = "UnexpectedEndOfString", e[e.UnexpectedEndOfNumber = 13] = "UnexpectedEndOfNumber", e[e.InvalidUnicode = 14] = "InvalidUnicode", e[e.InvalidEscapeCharacter = 15] = "InvalidEscapeCharacter", e[e.InvalidCharacter = 16] = "InvalidCharacter";
+})($ || ($ = {}));
+function z(e, i) {
+  return {
+    provideCodeLenses: async (l, n) => {
+      if (l.getLanguageId() !== "json")
+        return O();
+      const t = await (i ?? H)(l);
+      if (t.isDefault || t.language !== "json")
+        return O();
+      const r = t.root;
+      return r ? e(r, l, n) : O();
+    }
+  };
+}
+function se(e, i) {
+  return z(async (l, n, t) => {
+    let r = !1;
+    const p = [], o = [], u = [l];
+    for (; u.length > 0 && !r; ) {
+      if (t.isCancellationRequested)
+        return O();
+      const s = u.pop();
+      if (!s) continue;
+      const k = await e(s, () => {
+        r = !0;
+      }, n, t);
+      if (k && (p.push(...k.lenses), k.dispose && o.push(k.dispose)), Array.isArray(s.children))
+        for (let m = s.children.length - 1; m >= 0; m--)
+          u.push(s.children[m]);
+    }
+    return K(p, o);
+  }, i);
+}
+function pe(e, i) {
+  return z((l, n, t) => {
+    const r = [], p = [l];
+    for (; p.length > 0; ) {
+      if (t.isCancellationRequested)
+        return O();
+      const o = p.pop();
+      if (o) {
+        if (o.type === "string") {
+          const u = U(o);
+          typeof u == "string" && d.test(u) && r.push(o);
+        }
+        if (Array.isArray(o.children))
+          for (let u = o.children.length - 1; u >= 0; u--)
+            p.push(o.children[u]);
+      }
+    }
+    return typeof e == "function" ? e(
+      r.map((o) => {
+        const u = U(o), s = fe(o), k = n.getPositionAt(o.offset), m = n.getPositionAt(o.offset + o.length), y = {
+          startLineNumber: k.lineNumber,
+          startColumn: k.column,
+          endLineNumber: m.lineNumber,
+          endColumn: m.column
+        };
+        return { value: u, range: y, context: { keyPath: s, node: o } };
+      })
+    ) : {
+      lenses: r.map((o) => {
+        const u = U(o), s = n.getPositionAt(o.offset), k = n.getPositionAt(o.offset + o.length);
+        return S(u, {
+          startLineNumber: s.lineNumber,
+          startColumn: s.column,
+          endLineNumber: k.lineNumber,
+          endColumn: k.column
+        }, e);
+      })
+    };
+  }, i);
+}
+function re(e, i, l) {
+  return {
+    provideCodeLenses: async (n, t) => {
+      if (n.getLanguageId() !== "json")
+        return O();
+      const r = await (l ?? H)(n);
+      if (r.isDefault || r.language !== "json" || t.isCancellationRequested)
+        return O();
+      const p = r.root;
+      if (!p)
+        return O();
+      const o = ue(p, e);
+      if (!o)
+        return O();
+      const u = n.getPositionAt(o.offset), s = n.getPositionAt(o.offset + o.length), k = {
+        startLineNumber: u.lineNumber,
+        startColumn: u.column,
+        endLineNumber: s.lineNumber,
+        endColumn: s.column
+      };
+      return i(U(o), k, { keyPath: e, node: o });
+    }
+  };
+}
+function ge(e, i, l) {
+  return re(e, (n, t, r) => {
+    if (typeof i == "function")
+      return i(n, t, r);
+    const { node: p } = r;
+    return {
+      lenses: [x(e, n, p, t, i)]
+    };
+  }, l);
+}
+function ke(e, i) {
+  const l = le(e);
+  return {
+    language: "json",
+    altVersionId: i,
+    root: l
+  };
+}
+export {
+  z as createJSONCodeLensProvider,
+  pe as createJSONCopyUUIDCodeLensProvider,
+  ge as createJSONCopyValueCodeLensProvider,
+  se as createJSONNodeCodeLensProvider,
+  re as createJSONValueCodeLensProvider,
+  ke as parseIntoJSONContext
+};

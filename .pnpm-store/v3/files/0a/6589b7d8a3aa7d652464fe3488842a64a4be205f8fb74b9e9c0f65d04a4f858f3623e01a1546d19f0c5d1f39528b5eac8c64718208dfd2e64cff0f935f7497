@@ -1,0 +1,488 @@
+var ne = Object.defineProperty;
+var oe = (n, e, t) => e in n ? ne(n, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : n[e] = t;
+var I = (n, e, t) => oe(n, typeof e != "symbol" ? e + "" : e, t);
+import { computed as p, toValue as A, ref as L, watch as ae, defineComponent as O, resolveComponent as S, openBlock as g, createElementBlock as N, createElementVNode as i, toDisplayString as d, unref as l, createBlock as k, Fragment as j, createTextVNode as $, createCommentVNode as q, withCtx as w, createVNode as D, resolveDynamicComponent as Q, useModel as le, renderList as se, mergeModels as re } from "vue";
+import { createI18n as ie, i18nTComponent as ce } from "@kong-ui-public/i18n";
+import { useErrors as ue } from "@kong-ui-public/entities-shared";
+import { EqualIcon as de, ProgressIcon as ge, ClearIcon as ve, CheckCircleIcon as me } from "@kong/icons";
+const he = {
+  action_button: {
+    confirm: "Confirm",
+    submitting: "Submitting...",
+    ok: "OK"
+  },
+  change_log_level: {
+    title: "Change Log Level ({summary})",
+    summary_with_name: "Node {name}",
+    summary_with_number: "{number} Nodes"
+  },
+  dp_list: {
+    header: {
+      host: "Host",
+      action: "Action",
+      status: "Status"
+    },
+    status: {
+      failed: "Failure",
+      loading: "Loading",
+      pending: "Pending",
+      succeed: "Succeed",
+      not_supported: "Not Supported"
+    }
+  },
+  log_level_disk_space_warning: "If left on for extended periods of time, can result in excess disk space consumption.",
+  log_level_explanation: {
+    debug: "Provides debug information about the plugin’s run loop and each individual plugin or other components.",
+    info: "Provides messages that provide a record of the normal operation of the system.",
+    notice: "Provides messages that provide a record of the normal operation of the system, but also alerts conditions that may require monitoring. Kong does not make a large difference between info and notice.",
+    warn: "Is used to log any abnormal behavior that doesn’t result in dropped transactions but requires further investigation.",
+    error: "Is used for logging errors that result in a request being dropped.",
+    crit: "Is used when Kong is working under critical conditions and not working properly, thus affecting several clients."
+  },
+  revert_to_default_after: {
+    label: "Revert to default after",
+    hours: "hour",
+    minutes: "min",
+    seconds: "seconds"
+  },
+  select_log_level_title: "Select Log Level"
+}, _e = {
+  debug: "Debug",
+  info: "Info",
+  notice: "Notice",
+  warn: "Warn",
+  error: "Error",
+  crit: "Critical",
+  not_applicable: "N/A"
+}, pe = {
+  modal: he,
+  log_level: _e
+};
+function E() {
+  const n = ie("en-us", pe);
+  return {
+    i18n: n,
+    i18nT: ce(n)
+    // Translation component <i18n-t>
+  };
+}
+var b = /* @__PURE__ */ ((n) => (n.Debug = "debug", n.Info = "info", n.Notice = "notice", n.Warn = "warn", n.Error = "error", n.Critical = "crit", n))(b || {});
+class fe {
+  constructor(e) {
+    I(this, "concurrentTokenSet", /* @__PURE__ */ new Set());
+    I(this, "concurrentTokenBorrowQueue", []);
+    for (let t = 0; t < e; ++t)
+      this.concurrentTokenSet.add(Symbol(`token-${t}`));
+  }
+  hasAvailableConcurrentToken() {
+    return this.concurrentTokenSet.size > 0;
+  }
+  borrowConcurrentToken() {
+    if (this.concurrentTokenSet.size > 0) {
+      const e = this.concurrentTokenSet.values().next().value;
+      if (e)
+        return this.concurrentTokenSet.delete(e), () => {
+          this.returnConcurrentToken(e);
+        };
+    }
+    throw new Error("BUG: No available token to borrow");
+  }
+  returnConcurrentToken(e) {
+    if (this.concurrentTokenSet.has(e))
+      throw new Error("Token already returned");
+    const t = this.concurrentTokenBorrowQueue.shift();
+    t ? t[0](() => this.returnConcurrentToken(e)) : this.concurrentTokenSet.add(e);
+  }
+  async borrowToken() {
+    return this.hasAvailableConcurrentToken() ? this.borrowConcurrentToken() : new Promise((e, t) => {
+      this.concurrentTokenBorrowQueue.push([e, t]);
+    });
+  }
+  clearWaitingQueue(e) {
+    for (; this.concurrentTokenBorrowQueue.length > 0; ) {
+      const [, t] = this.concurrentTokenBorrowQueue.shift();
+      t(e);
+    }
+  }
+}
+class V extends Error {
+  constructor(e, t) {
+    super(e, t), this.name = "AsyncAbortException";
+  }
+}
+class B {
+  constructor(e) {
+    I(this, "tokenBucket", null);
+    I(this, "schedule", async (e) => {
+      let t;
+      this.tokenBucket && (t = await this.tokenBucket.borrowToken());
+      try {
+        const o = await e();
+        return t == null || t(), o;
+      } catch (o) {
+        throw t == null || t(), o;
+      }
+    });
+    I(this, "cancelAll", (e, t) => {
+      var o;
+      (o = this.tokenBucket) == null || o.clearWaitingQueue(new V(e, t));
+    });
+    e.maxConcurrentAsyncs > 0 && (this.tokenBucket = new fe(e.maxConcurrentAsyncs));
+  }
+}
+const be = (n) => n instanceof B ? n : n === null ? new B({ maxConcurrentAsyncs: 0 }) : new B(n), Le = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  AsyncAbortException: V,
+  AsyncScheduler: B,
+  useAsyncScheduler: be
+}, Symbol.toStringTag, { value: "Module" })), W = [
+  b.Debug,
+  b.Info,
+  b.Notice,
+  b.Warn,
+  b.Error,
+  b.Critical
+], ye = (n) => {
+  const { i18n: e } = E();
+  return p(() => {
+    const t = A(n == null ? void 0 : n.disabled) ?? [];
+    return W.map((o) => ({
+      label: e.t(`log_level.${o}`),
+      value: o,
+      selected: (n == null ? void 0 : n.initialSelected) === o,
+      disabled: t.includes(o)
+    }));
+  });
+}, ke = (n) => {
+  const e = [b.Debug], { i18n: t } = E();
+  return p(() => {
+    const o = A(n);
+    return {
+      explanation: t.t(`modal.log_level_explanation.${o}`),
+      warning: e.includes(o) ? t.t("modal.log_level_disk_space_warning") : void 0
+    };
+  });
+}, we = (n) => {
+  const { i18n: e } = E();
+  return p(() => {
+    const t = A(n);
+    if (isNaN(t) || t <= 0)
+      return "";
+    let o = "";
+    const a = t % 60;
+    a !== 0 && (o += `${a} ${e.t("modal.revert_to_default_after.seconds")}`);
+    const r = Math.floor(t / 60) % 60;
+    r !== 0 && (o = `${r} ${e.t("modal.revert_to_default_after.minutes")} ${o}`);
+    const s = Math.floor(t / 3600);
+    return s !== 0 && (o = `${s} ${e.t("modal.revert_to_default_after.hours")} ${o}`), o;
+  });
+}, Ce = (n) => {
+  const e = n.requestExecutor ?? ((s) => s()), { getDataPlaneLogLevel: t, setDataPlaneLogLevel: o } = n, { getMessageFromError: a } = ue();
+  return { checkDataPlaneLogLevel: (s, c) => {
+    const u = L(A(c == null ? void 0 : c.currentLogLevelHint) ?? null);
+    u.value === null && e(async () => {
+      u.value = await t(s);
+    }).catch((v) => {
+      v instanceof V || console.error("Failed to get data plane log level", v);
+    }), c != null && c.currentLogLevelHint && ae(() => A(c.currentLogLevelHint), (v) => {
+      v && (u.value = v);
+    });
+    const m = L("pending"), y = L(null);
+    return {
+      currentLogLevel: u,
+      updateStatus: m,
+      updateErrorMessage: y,
+      updateLogLevel: async (v, C) => {
+        m.value = "loading", y.value = null;
+        try {
+          await e(() => o(s, v, C)), u.value = v, m.value = "success";
+        } catch (T) {
+          y.value = a(T), m.value = "error";
+        }
+      }
+    };
+  } };
+}, xe = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  supportedLevels: W,
+  useDataPlaneLogLevelChecker: Ce,
+  useFriendlyRevertTime: we,
+  useLogLevelCandidateSelectItems: ye,
+  useLogLevelExplanation: ke
+}, Symbol.toStringTag, { value: "Module" })), x = {
+  useI18n: E,
+  ...xe,
+  ...Le
+}, Se = { "data-testid": "log-change-action" }, Te = { key: 0 }, Ie = { "data-testid": "log-change-action-current-level" }, Ne = { key: 0 }, $e = { "data-testid": "log-change-action-target-level" }, Ae = { "data-testid": "log-change-status" }, De = /* @__PURE__ */ O({
+  __name: "CLLModalNodeRow",
+  props: {
+    dataPlaneId: {},
+    hostname: {},
+    hasDllCapability: { type: Boolean },
+    targetLogLevel: {},
+    checkLogLevel: {},
+    logLevelHint: {}
+  },
+  setup(n, { expose: e }) {
+    const t = n, { i18n: o } = x.useI18n();
+    let a = L("not_supported"), r = L("not_supported"), s = L(null), c = async () => {
+    };
+    t.hasDllCapability && ({
+      currentLogLevel: a,
+      updateStatus: r,
+      updateErrorMessage: s,
+      updateLogLevel: c
+    } = t.checkLogLevel(t.dataPlaneId, {
+      currentLogLevelHint: () => t.logLevelHint ?? null
+    })), e({
+      updateLogLevel: c
+    });
+    const u = p(() => {
+      switch (r.value) {
+        case "success":
+          return "success";
+        case "error":
+          return "danger";
+        case "loading":
+        case "pending":
+          return "warning";
+        default:
+          return "neutral";
+      }
+    }), m = p(() => {
+      switch (r.value) {
+        case "success":
+          return o.t("modal.dp_list.status.succeed");
+        case "error":
+          return o.t("modal.dp_list.status.failed");
+        case "pending":
+          return o.t("modal.dp_list.status.pending");
+        case "loading":
+          return o.t("modal.dp_list.status.loading");
+        default:
+          return o.t("modal.dp_list.status.not_supported");
+      }
+    }), y = p(() => {
+      switch (r.value) {
+        case "success":
+          return me;
+        case "error":
+        case "not_supported":
+          return ve;
+        case "loading":
+          return ge;
+        default:
+          return de;
+      }
+    });
+    return (P, v) => {
+      const C = S("KSkeleton"), T = S("KBadge"), M = S("KTooltip");
+      return g(), N("tr", null, [
+        i("td", null, d(n.hostname), 1),
+        i("td", Se, [
+          l(a) === "not_supported" ? (g(), N("span", Te, d(l(o).t("log_level.not_applicable")), 1)) : l(a) ? (g(), N(j, { key: 2 }, [
+            i("span", Ie, d(l(o).t(`log_level.${l(a)}`)), 1),
+            l(a) !== n.targetLogLevel ? (g(), N("span", Ne, [
+              v[0] || (v[0] = $(" → ", -1)),
+              i("span", $e, d(l(o).t(`log_level.${n.targetLogLevel}`)), 1)
+            ])) : q("", !0)
+          ], 64)) : (g(), k(C, {
+            key: 1,
+            type: "spinner"
+          }))
+        ]),
+        i("td", Ae, [
+          l(s) ? (g(), k(M, {
+            key: 0,
+            text: l(s)
+          }, {
+            default: w(() => [
+              D(T, {
+                appearance: u.value,
+                class: "badge-cell"
+              }, {
+                icon: w(() => [
+                  (g(), k(Q(y.value)))
+                ]),
+                default: w(() => [
+                  $(" " + d(m.value), 1)
+                ]),
+                _: 1
+              }, 8, ["appearance"])
+            ]),
+            _: 1
+          }, 8, ["text"])) : (g(), k(T, {
+            key: 1,
+            appearance: u.value,
+            class: "badge-cell"
+          }, {
+            icon: w(() => [
+              (g(), k(Q(y.value)))
+            ]),
+            default: w(() => [
+              $(" " + d(m.value), 1)
+            ]),
+            _: 1
+          }, 8, ["appearance"]))
+        ])
+      ]);
+    };
+  }
+}), z = (n, e) => {
+  const t = n.__vccOpts || n;
+  for (const [o, a] of e)
+    t[o] = a;
+  return t;
+}, Be = /* @__PURE__ */ z(De, [["__scopeId", "data-v-a77ba884"]]), Ee = { class: "explanation-wrapper" }, Pe = {
+  key: 0,
+  class: "warning-message",
+  "data-testid": "log-level-warning-message"
+}, Me = { class: "revert-after-wrapper" }, Ke = { class: "time" }, qe = { class: "seconds" }, Ve = {
+  class: "formatted-time",
+  "data-testid": "log-level-timeout-formatted"
+}, He = {
+  class: "data-plane-node-list",
+  "data-testid": "data-plane-node-list"
+}, Re = { style: { width: "40%" } }, Fe = { style: { width: "40%" } }, Qe = /* @__PURE__ */ O({
+  name: "ChangeLogLevelModal",
+  __name: "ChangeLogLevelModal",
+  props: /* @__PURE__ */ re({
+    instanceList: {},
+    instanceLogLevel: {},
+    requests: {}
+  }, {
+    visible: { type: Boolean },
+    visibleModifiers: {}
+  }),
+  emits: ["update:visible"],
+  setup(n) {
+    const e = n, t = le(n, "visible"), o = b.Notice, { i18n: a } = x.useI18n(), r = L("edit"), s = L(o), c = L("60"), u = p(() => Math.floor(Number(c.value))), m = p(() => e.instanceList.filter((f) => f.hasDLLCapability !== !1)), y = p(() => {
+      const f = m.value.length === 1 ? a.t("modal.change_log_level.summary_with_name", { name: m.value[0].hostname }) : a.t("modal.change_log_level.summary_with_number", { number: `${m.value.length}` });
+      return a.t("modal.change_log_level.title", { summary: f });
+    }), P = p(() => r.value === "submitting" || isNaN(u.value) || u.value <= 0 || m.value.length === 0), v = x.useLogLevelCandidateSelectItems({
+      initialSelected: o
+    }), C = x.useLogLevelExplanation(s), T = x.useFriendlyRevertTime(u), M = x.useAsyncScheduler(
+      e.requests.scheduler === void 0 ? { maxConcurrentAsyncs: 10 } : e.requests.scheduler
+    ), { checkDataPlaneLogLevel: U } = x.useDataPlaneLogLevelChecker({
+      getDataPlaneLogLevel: e.requests.getDataPlaneLogLevel,
+      setDataPlaneLogLevel: e.requests.setDataPlaneLogLevel,
+      requestExecutor: M.schedule
+    }), K = /* @__PURE__ */ new Map(), G = (f, h) => {
+      h === null ? K.delete(f) : K.set(f, h);
+    }, J = async () => {
+      if (r.value !== "edit") {
+        H();
+        return;
+      }
+      r.value = "submitting";
+      const f = Array.from(K.values()).map((h) => h.updateLogLevel(s.value, u.value));
+      try {
+        await Promise.all(f);
+      } catch (h) {
+        console.error("Failed to update log level", h);
+      } finally {
+        r.value = "submitted";
+      }
+    }, H = () => {
+      t.value = !1, c.value = "60", r.value = "edit", s.value = o;
+    }, X = p(() => {
+      switch (r.value) {
+        case "submitting":
+          return a.t("modal.action_button.submitting");
+        case "submitted":
+          return a.t("modal.action_button.ok");
+        default:
+          return a.t("modal.action_button.confirm");
+      }
+    });
+    return (f, h) => {
+      const Y = S("KSelect"), R = S("KLabel"), Z = S("KInput"), ee = S("KModal");
+      return g(), k(ee, {
+        "action-button-disabled": P.value,
+        "action-button-text": X.value,
+        "data-testid": "change-log-level-modal",
+        "hide-cancel-button": !0,
+        "hide-close-icon": r.value === "submitting",
+        "max-width": "640px",
+        title: y.value,
+        visible: t.value,
+        onCancel: H,
+        onProceed: J
+      }, {
+        default: w(() => [
+          r.value === "edit" ? (g(), k(Y, {
+            key: 0,
+            modelValue: s.value,
+            "onUpdate:modelValue": h[0] || (h[0] = (_) => s.value = _),
+            class: "log-level-select",
+            "data-testid": "log-level-select",
+            items: l(v),
+            label: l(a).t("modal.select_log_level_title")
+          }, null, 8, ["modelValue", "items", "label"])) : q("", !0),
+          i("div", Ee, [
+            D(R, null, {
+              default: w(() => [
+                $(d(l(a).t(`log_level.${s.value}`)), 1)
+              ]),
+              _: 1
+            }),
+            i("div", null, d(l(C).explanation), 1),
+            l(C).warning ? (g(), N("div", Pe, d(l(C).warning), 1)) : q("", !0)
+          ]),
+          i("div", Me, [
+            D(R, null, {
+              default: w(() => [
+                $(d(l(a).t("modal.revert_to_default_after.label")), 1)
+              ]),
+              _: 1
+            }),
+            i("div", Ke, [
+              D(Z, {
+                modelValue: c.value,
+                "onUpdate:modelValue": h[1] || (h[1] = (_) => c.value = _),
+                class: "time-input",
+                "data-testid": "log-level-timeout",
+                disabled: r.value !== "edit",
+                error: u.value <= 0 || isNaN(u.value),
+                min: "1",
+                type: "number"
+              }, null, 8, ["modelValue", "disabled", "error"]),
+              i("span", qe, d(l(a).t("modal.revert_to_default_after.seconds")), 1),
+              i("span", Ve, d(l(T)), 1)
+            ])
+          ]),
+          i("table", He, [
+            i("thead", null, [
+              i("th", Re, d(l(a).t("modal.dp_list.header.host")), 1),
+              i("th", Fe, d(l(a).t("modal.dp_list.header.action")), 1),
+              i("th", null, d(l(a).t("modal.dp_list.header.status")), 1)
+            ]),
+            i("tbody", null, [
+              (g(!0), N(j, null, se(e.instanceList, (_) => {
+                var F;
+                return g(), k(Be, {
+                  key: _.id,
+                  ref_for: !0,
+                  ref: (te) => G(_.id, te),
+                  "check-log-level": l(U),
+                  "data-plane-id": _.id,
+                  "data-testid": `data-plane-node-list-row-${_.id}`,
+                  "has-dll-capability": _.hasDLLCapability ?? !0,
+                  hostname: _.hostname,
+                  "log-level-hint": (F = e.instanceLogLevel) == null ? void 0 : F.get(_.id),
+                  "target-log-level": s.value
+                }, null, 8, ["check-log-level", "data-plane-id", "data-testid", "has-dll-capability", "hostname", "log-level-hint", "target-log-level"]);
+              }), 128))
+            ])
+          ])
+        ]),
+        _: 1
+      }, 8, ["action-button-disabled", "action-button-text", "hide-close-icon", "title", "visible"]);
+    };
+  }
+}), Ge = /* @__PURE__ */ z(Qe, [["__scopeId", "data-v-f1206079"]]);
+export {
+  Ge as ChangeLogLevelModal,
+  b as LogLevel,
+  x as composables
+};

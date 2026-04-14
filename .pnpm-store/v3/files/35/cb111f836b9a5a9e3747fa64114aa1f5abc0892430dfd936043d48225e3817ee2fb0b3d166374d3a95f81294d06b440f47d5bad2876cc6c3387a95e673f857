@@ -1,0 +1,6 @@
+/**
+ * Warns about invalid prop validation.
+ * @param name prop name
+ * @param msg validation message
+ */
+export declare function warnInvalidProp(name: string, msg: string): void;

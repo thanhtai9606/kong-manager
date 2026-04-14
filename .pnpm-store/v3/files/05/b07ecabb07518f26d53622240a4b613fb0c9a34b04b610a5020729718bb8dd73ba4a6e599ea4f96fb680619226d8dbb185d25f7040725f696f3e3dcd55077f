@@ -1,0 +1,125 @@
+import type { PropType } from 'vue';
+import type { KonnectRedisConfigurationListConfig, KongManagerRedisConfigurationListConfig, EntityRow, CopyEventPayload } from '../types';
+import type { AxiosError } from 'axios';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectRedisConfigurationListConfig | KongManagerRedisConfigurationListConfig>;
+        required: true;
+        validator: (config: KonnectRedisConfigurationListConfig | KongManagerRedisConfigurationListConfig) => boolean;
+    };
+    cacheIdentifier: {
+        type: StringConstructor;
+        default: string;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
+    canCreate: {
+        type: PropType<() => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
+    canDelete: {
+        type: PropType<(row: EntityRow) => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
+    canEdit: {
+        type: PropType<(row: EntityRow) => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity */
+    canRetrieve: {
+        type: PropType<(row: EntityRow) => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+    useActionOutside: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /** default to false, setting to true will place create button on top right of list */
+    useToolbarCreationButton: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    error: (error: AxiosError<unknown, any>) => any;
+    "click:learn-more": () => any;
+    "click:plugin": (param: {
+        id: string;
+        plugin: string;
+    }) => any;
+    "copy:error": (payload: CopyEventPayload) => any;
+    "copy:success": (payload: CopyEventPayload) => any;
+    "delete:success": (key: EntityRow) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectRedisConfigurationListConfig | KongManagerRedisConfigurationListConfig>;
+        required: true;
+        validator: (config: KonnectRedisConfigurationListConfig | KongManagerRedisConfigurationListConfig) => boolean;
+    };
+    cacheIdentifier: {
+        type: StringConstructor;
+        default: string;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
+    canCreate: {
+        type: PropType<() => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
+    canDelete: {
+        type: PropType<(row: EntityRow) => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
+    canEdit: {
+        type: PropType<(row: EntityRow) => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity */
+    canRetrieve: {
+        type: PropType<(row: EntityRow) => boolean | Promise<boolean>>;
+        required: false;
+        default: () => Promise<boolean>;
+    };
+    /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+    useActionOutside: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /** default to false, setting to true will place create button on top right of list */
+    useToolbarCreationButton: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>> & Readonly<{
+    onError?: ((error: AxiosError<unknown, any>) => any) | undefined;
+    "onClick:learn-more"?: (() => any) | undefined;
+    "onClick:plugin"?: ((param: {
+        id: string;
+        plugin: string;
+    }) => any) | undefined;
+    "onCopy:error"?: ((payload: CopyEventPayload) => any) | undefined;
+    "onCopy:success"?: ((payload: CopyEventPayload) => any) | undefined;
+    "onDelete:success"?: ((key: EntityRow) => any) | undefined;
+}>, {
+    cacheIdentifier: string;
+    canCreate: () => boolean | Promise<boolean>;
+    canDelete: (row: EntityRow) => boolean | Promise<boolean>;
+    canEdit: (row: EntityRow) => boolean | Promise<boolean>;
+    canRetrieve: (row: EntityRow) => boolean | Promise<boolean>;
+    useActionOutside: boolean;
+    useToolbarCreationButton: boolean;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=RedisConfigurationList.vue.d.ts.map

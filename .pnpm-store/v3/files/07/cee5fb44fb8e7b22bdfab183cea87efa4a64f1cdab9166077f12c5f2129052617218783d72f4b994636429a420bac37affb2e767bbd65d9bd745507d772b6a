@@ -1,0 +1,40 @@
+import type { FieldName, IdConnection } from '../../types';
+import type { InputOption, useNodeForm } from '../composables/useNodeForm';
+interface Props {
+    name: string;
+    items: InputOption[];
+    fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator'];
+    keyOrder?: FieldName[];
+}
+declare var __VLS_32: {
+    [x: string]: any;
+    label: string;
+    value: IdConnection;
+    key?: string;
+    selected?: boolean;
+    disabled?: boolean;
+    group?: string;
+};
+type __VLS_Slots = {} & {
+    'item-label'?: (props: typeof __VLS_32) => any;
+};
+declare const __VLS_base: import("vue").DefineComponent<Props, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    "change:inputs": (name: string & import("zod").$brand<"FieldName">, value: IdConnection | null) => any;
+    "add:field": (name: string & import("zod").$brand<"FieldName">, value?: IdConnection | null | undefined) => any;
+    "remove:field": (name: string & import("zod").$brand<"FieldName">) => any;
+    "rename:field": (oldName: string & import("zod").$brand<"FieldName">, newName: string & import("zod").$brand<"FieldName">) => any;
+}, string, import("vue").PublicProps, Readonly<Props> & Readonly<{
+    "onChange:inputs"?: ((name: string & import("zod").$brand<"FieldName">, value: IdConnection | null) => any) | undefined;
+    "onAdd:field"?: ((name: string & import("zod").$brand<"FieldName">, value?: IdConnection | null | undefined) => any) | undefined;
+    "onRemove:field"?: ((name: string & import("zod").$brand<"FieldName">) => any) | undefined;
+    "onRename:field"?: ((oldName: string & import("zod").$brand<"FieldName">, newName: string & import("zod").$brand<"FieldName">) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
+declare const _default: typeof __VLS_export;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+//# sourceMappingURL=InputsMapField.vue.d.ts.map

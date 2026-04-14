@@ -1,0 +1,31 @@
+import type { TreeListProps, TreeListItem, TreeListChangeEvent, TreeListChildChangeEvent } from '../../../types';
+declare var __VLS_14: {
+    item: TreeListItem;
+}, __VLS_17: {
+    item: TreeListItem;
+};
+type __VLS_Slots = {} & {
+    'item-icon'?: (props: typeof __VLS_14) => any;
+} & {
+    'item-label'?: (props: typeof __VLS_17) => any;
+};
+declare const __VLS_base: import("vue").DefineComponent<TreeListProps, {
+    collapseAll: () => void;
+    expandAll: () => void;
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    selected: (item: TreeListItem) => any;
+    change: (event: TreeListChangeEvent) => any;
+    "child-change": (event: TreeListChildChangeEvent) => any;
+}, string, import("vue").PublicProps, Readonly<TreeListProps> & Readonly<{
+    onSelected?: ((item: TreeListItem) => any) | undefined;
+    onChange?: ((event: TreeListChangeEvent) => any) | undefined;
+    "onChild-change"?: ((event: TreeListChildChangeEvent) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
+declare const _default: typeof __VLS_export;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};

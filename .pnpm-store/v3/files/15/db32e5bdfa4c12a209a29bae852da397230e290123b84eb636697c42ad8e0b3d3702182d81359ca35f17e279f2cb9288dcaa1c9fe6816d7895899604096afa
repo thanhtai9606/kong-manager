@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const l=require("./kongponents262.cjs");let n=(e=21)=>{let t="",r=crypto.getRandomValues(new Uint8Array(e|=0));for(;e--;)t+=l.urlAlphabet[r[e]&63];return t};exports.urlAlphabet=l.urlAlphabet;exports.nanoid=n;

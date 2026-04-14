@@ -45,6 +45,7 @@
     "@kong/icons": "^1.48.0",
     "@kong/kongponents": "9.52.9",
     "@material-design-icons/font": "^0.14.13",
+    "@tanstack/vue-table": "^8.21.3",
     "axios": "^1.13.5",
     "dayjs": "^1.11.13",
     "monaco-editor": "0.52.2",

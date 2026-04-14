@@ -1,0 +1,9 @@
+import i from "./kongponents.es404.js";
+import u from "./kongponents.es399.js";
+function g(o, a, s) {
+  var r = u(o, s), n = i(a, r, !0), e = new Date(r.getTime() - n), t = /* @__PURE__ */ new Date(0);
+  return t.setFullYear(e.getUTCFullYear(), e.getUTCMonth(), e.getUTCDate()), t.setHours(e.getUTCHours(), e.getUTCMinutes(), e.getUTCSeconds(), e.getUTCMilliseconds()), t;
+}
+export {
+  g as default
+};

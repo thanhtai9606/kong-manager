@@ -1,0 +1,121 @@
+import { defineComponent as S, computed as l, createBlock as b, openBlock as d, resolveDynamicComponent as h, normalizeStyle as y, withCtx as x, createElementBlock as z } from "vue";
+import { KUI_ICON_SIZE_50 as c } from "./kong-icons.es1592.js";
+const N = ["aria-hidden"], u = '<path d="M12 20.5C12.2833 20.5 12.5208 20.4042 12.7125 20.2125C12.9042 20.0208 13 19.7833 13 19.5C13 19.2167 12.9042 18.9792 12.7125 18.7875C12.5208 18.5958 12.2833 18.5 12 18.5C11.7167 18.5 11.4792 18.5958 11.2875 18.7875C11.0958 18.9792 11 19.2167 11 19.5C11 19.7833 11.0958 20.0208 11.2875 20.2125C11.4792 20.4042 11.7167 20.5 12 20.5ZM5 23C4.45 23 3.97917 22.8042 3.5875 22.4125C3.19583 22.0208 3 21.55 3 21V3C3 2.45 3.19583 1.97917 3.5875 1.5875C3.97917 1.19583 4.45 1 5 1H19C19.55 1 20.0208 1.19583 20.4125 1.5875C20.8042 1.97917 21 2.45 21 3V21C21 21.55 20.8042 22.0208 20.4125 22.4125C20.0208 22.8042 19.55 23 19 23H5ZM5 18V21H19V18H5ZM5 16H19V6H5V16ZM5 4H19V3H5V4Z" fill="currentColor"/>', M = /* @__PURE__ */ S({
+  __name: "TabletIcon",
+  props: {
+    /** The accessibility text provided to screen readers */
+    title: {
+      type: String,
+      required: !1,
+      default: ""
+    },
+    /** The icon color. Defaults to `currentColor` which inherits text color from the parent element */
+    color: {
+      type: String,
+      required: !1,
+      default: "currentColor"
+    },
+    /** The CSS display property for the icon. Defaults to `block` */
+    display: {
+      type: String,
+      required: !1,
+      default: "block"
+    },
+    /** Whether the icon is just eye-candy or is meaningful to the page (should screen-readers ignore the icon?) */
+    decorative: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    },
+    /** The icon size */
+    size: {
+      type: [Number, String],
+      required: !1,
+      default: c,
+      // if setting to the imported const fails, just pass a number of 24 as the default.
+      validator: (i) => {
+        if (typeof i == "number" && i > 0)
+          return !0;
+        if (typeof i == "string") {
+          const e = String(i).replace(/px/gi, ""), r = Number(e);
+          if (r && !isNaN(r) && Number.isInteger(r) && r > 0)
+            return !0;
+        }
+        return !1;
+      }
+    },
+    /** The HTML tag to utilize for the icon's wrapper element. Defaults to `span` */
+    as: {
+      type: String,
+      required: !1,
+      default: "span"
+    },
+    /**
+     * A boolean to disable prefixing any internal SVG ids with a unique string which is done to resolve the potential for multiple SVG instances on the same page and the SVG utilizing the same ids and references internally (e.g. in the `<defs>` tag).
+     * Typically only set to `true` during snapshot testing.
+     * Defaults to `false`.
+     */
+    staticIds: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  setup(i) {
+    const e = i, r = l(() => {
+      if (typeof e.size == "number" && e.size > 0)
+        return `${e.size}px`;
+      if (typeof e.size == "string") {
+        const n = String(e.size).replace(/px/gi, ""), t = Number(n);
+        if (t && !isNaN(t) && Number.isInteger(t) && t > 0)
+          return `${t}px`;
+      }
+      return c;
+    }), g = l(() => ({
+      boxSizing: "border-box",
+      color: e.color,
+      display: e.display,
+      flexShrink: "0",
+      height: r.value,
+      lineHeight: "0",
+      width: r.value,
+      pointerEvents: e.decorative ? "none" : void 0
+    })), p = (n) => {
+      const t = {}, C = Math.random().toString(36).substring(2, 12);
+      return n.replace(/id="([^"]+)"/g, (s, o) => {
+        const a = `${C}-${o}`;
+        return t[o] = a, `id="${a}"`;
+      }).replace(/#([^\s^")]+)/g, (s, o) => t[o] ? `#${t[o]}` : s);
+    }, f = {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "&": "&amp;"
+    }, m = (n) => n.replace(/[<>"'&]/g, (t) => f[t]), v = `${e.title ? `<title data-testid="kui-icon-svg-title">${m(e.title)}</title>` : ""}${e.staticIds ? u : p(u)}`;
+    return (n, t) => (d(), b(h(i.as), {
+      "aria-hidden": i.decorative ? "true" : void 0,
+      class: "kui-icon tablet-icon",
+      "data-testid": "kui-icon-wrapper-tablet-icon",
+      style: y(g.value),
+      tabindex: i.decorative ? "-1" : void 0
+    }, {
+      default: x(() => [
+        (d(), z("svg", {
+          "aria-hidden": i.decorative ? "true" : void 0,
+          "data-testid": "kui-icon-svg-tablet-icon",
+          fill: "none",
+          height: "100%",
+          role: "img",
+          viewBox: "0 0 24 24",
+          width: "100%",
+          xmlns: "http://www.w3.org/2000/svg",
+          innerHTML: v
+        }, null, 8, N))
+      ]),
+      _: 1
+    }, 8, ["aria-hidden", "style", "tabindex"]));
+  }
+});
+export {
+  M as default
+};

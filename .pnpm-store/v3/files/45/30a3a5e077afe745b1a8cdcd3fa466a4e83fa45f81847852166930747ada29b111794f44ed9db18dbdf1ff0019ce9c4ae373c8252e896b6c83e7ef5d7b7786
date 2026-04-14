@@ -1,0 +1,121 @@
+import { defineComponent as h, computed as s, openBlock as d, createBlock as b, resolveDynamicComponent as S, normalizeStyle as x, withCtx as C, createElementBlock as H } from "vue";
+import { KUI_ICON_SIZE_50 as u } from "./kongponents.es272.js";
+const N = ["aria-hidden"], c = '<path d="M8 18H16V16H8V18ZM8 14H16V12H8V14ZM6 22C5.45 22 4.97917 21.8042 4.5875 21.4125C4.19583 21.0208 4 20.55 4 20V4C4 3.45 4.19583 2.97917 4.5875 2.5875C4.97917 2.19583 5.45 2 6 2H14L20 8V20C20 20.55 19.8042 21.0208 19.4125 21.4125C19.0208 21.8042 18.55 22 18 22H6ZM13 9V4H6V20H18V9H13Z" fill="currentColor"/>', I = /* @__PURE__ */ h({
+  __name: "ServiceDocumentIcon",
+  props: {
+    /** The accessibility text provided to screen readers */
+    title: {
+      type: String,
+      required: !1,
+      default: ""
+    },
+    /** The icon color. Defaults to `currentColor` which inherits text color from the parent element */
+    color: {
+      type: String,
+      required: !1,
+      default: "currentColor"
+    },
+    /** The CSS display property for the icon. Defaults to `block` */
+    display: {
+      type: String,
+      required: !1,
+      default: "block"
+    },
+    /** Whether the icon is just eye-candy or is meaningful to the page (should screen-readers ignore the icon?) */
+    decorative: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    },
+    /** The icon size */
+    size: {
+      type: [Number, String],
+      required: !1,
+      default: u,
+      // if setting to the imported const fails, just pass a number of 24 as the default.
+      validator: (r) => {
+        if (typeof r == "number" && r > 0)
+          return !0;
+        if (typeof r == "string") {
+          const e = String(r).replace(/px/gi, ""), i = Number(e);
+          if (i && !isNaN(i) && Number.isInteger(i) && i > 0)
+            return !0;
+        }
+        return !1;
+      }
+    },
+    /** The HTML tag to utilize for the icon's wrapper element. Defaults to `span` */
+    as: {
+      type: String,
+      required: !1,
+      default: "span"
+    },
+    /**
+     * A boolean to disable prefixing any internal SVG ids with a unique string which is done to resolve the potential for multiple SVG instances on the same page and the SVG utilizing the same ids and references internally (e.g. in the `<defs>` tag).
+     * Typically only set to `true` during snapshot testing.
+     * Defaults to `false`.
+     */
+    staticIds: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  setup(r) {
+    const e = r, i = s(() => {
+      if (typeof e.size == "number" && e.size > 0)
+        return `${e.size}px`;
+      if (typeof e.size == "string") {
+        const n = String(e.size).replace(/px/gi, ""), t = Number(n);
+        if (t && !isNaN(t) && Number.isInteger(t) && t > 0)
+          return `${t}px`;
+      }
+      return u;
+    }), p = s(() => ({
+      boxSizing: "border-box",
+      color: e.color,
+      display: e.display,
+      flexShrink: "0",
+      height: i.value,
+      lineHeight: "0",
+      width: i.value,
+      pointerEvents: e.decorative ? "none" : void 0
+    })), f = (n) => {
+      const t = {}, y = Math.random().toString(36).substring(2, 12);
+      return n.replace(/id="([^"]+)"/g, (o, a) => {
+        const l = `${y}-${a}`;
+        return t[a] = l, `id="${l}"`;
+      }).replace(/#([^\s^")]+)/g, (o, a) => t[a] ? `#${t[a]}` : o);
+    }, g = {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "&": "&amp;"
+    }, m = (n) => n.replace(/[<>"'&]/g, (t) => g[t]), v = `${e.title ? `<title data-testid="kui-icon-svg-title">${m(e.title)}</title>` : ""}${e.staticIds ? c : f(c)}`;
+    return (n, t) => (d(), b(S(r.as), {
+      "aria-hidden": r.decorative ? "true" : void 0,
+      class: "kui-icon service-document-icon",
+      "data-testid": "kui-icon-wrapper-service-document-icon",
+      style: x(p.value),
+      tabindex: r.decorative ? "-1" : void 0
+    }, {
+      default: C(() => [
+        (d(), H("svg", {
+          "aria-hidden": r.decorative ? "true" : void 0,
+          "data-testid": "kui-icon-svg-service-document-icon",
+          fill: "none",
+          height: "100%",
+          role: "img",
+          viewBox: "0 0 24 24",
+          width: "100%",
+          xmlns: "http://www.w3.org/2000/svg",
+          innerHTML: v
+        }, null, 8, N))
+      ]),
+      _: 1
+    }, 8, ["aria-hidden", "style", "tabindex"]));
+  }
+});
+export {
+  I as default
+};

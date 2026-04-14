@@ -1,0 +1,8 @@
+import type { ToasterProps } from '../../../types';
+declare const __VLS_export: import("vue").DefineComponent<ToasterProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    close: (val: string) => any;
+}, string, import("vue").PublicProps, Readonly<ToasterProps> & Readonly<{
+    onClose?: ((val: string) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;

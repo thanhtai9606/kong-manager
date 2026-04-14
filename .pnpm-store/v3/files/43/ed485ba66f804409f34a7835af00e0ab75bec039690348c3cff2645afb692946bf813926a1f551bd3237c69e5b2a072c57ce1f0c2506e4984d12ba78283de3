@@ -1,0 +1,36 @@
+declare const _default: {
+    list: {
+        konnect: {
+            all: string;
+            forModal: string;
+            forConsumer: string;
+            oneForConsumer: string;
+        };
+        kongManager: {
+            all: string;
+            forModal: string;
+            forConsumer: string;
+            oneForConsumer: string;
+        };
+    };
+    form: {
+        konnect: {
+            consumersList: string;
+            create: string;
+            edit: string;
+            addConsumer: string;
+            removeConsumer: string;
+            getConsumers: string;
+        };
+        kongManager: {
+            consumersList: string;
+            create: string;
+            edit: string;
+            addConsumer: string;
+            removeConsumer: string;
+            getConsumers: string;
+        };
+    };
+};
+export default _default;
+//# sourceMappingURL=consumer-groups-endpoints.d.ts.map

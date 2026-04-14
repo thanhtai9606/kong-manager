@@ -1,0 +1,152 @@
+import { bundledLanguagesInfo, bundledThemesInfo } from 'shiki/bundle/full';
+
+async function codegen(options) {
+  const {
+    header = "/* Generate by @shikijs/codegen */",
+    typescript = true,
+    precompiled = false,
+    format: _format = true,
+    shorthands = true
+  } = options;
+  const ts = (code2) => typescript ? code2 : "";
+  if (precompiled && options.engine !== "javascript" && options.engine !== "javascript-raw")
+    throw new Error("Precompiled grammars are only available when using the JavaScript engine");
+  const langs = options.langs.map((lang) => {
+    const info = bundledLanguagesInfo.find((i) => i.id === lang || i.aliases?.includes(lang));
+    if (!info)
+      throw new Error(`Language ${lang} not found`);
+    return info;
+  });
+  const themes = options.themes.map((theme) => {
+    const info = bundledThemesInfo.find((i) => i.id === theme);
+    if (!info)
+      throw new Error(`Theme ${theme} not found`);
+    return info;
+  });
+  const langsCode = `{
+${langs.flatMap((lang) => {
+    const ids = [lang.id, ...lang.aliases || []];
+    return ids.map((id) => {
+      return `${JSON.stringify(id)}: () => import('@shikijs/${precompiled ? "langs-precompiled" : "langs"}/${lang.id}'),
+`;
+    });
+  }).join("")}}`;
+  const themesCode = `{
+${themes.map((theme) => {
+    return `${JSON.stringify(theme.id)}: () => import('@shikijs/themes/${theme.id}'),
+`;
+  }).join("")}}`;
+  const typeImports = {
+    "@shikijs/types": ["HighlighterGeneric", "DynamicImportThemeRegistration", "DynamicImportLanguageRegistration"]
+  };
+  const imports = {
+    "@shikijs/core": ["createBundledHighlighter"]
+  };
+  const lines = [
+    ""
+  ];
+  const exports$1 = [];
+  const typeExports = [];
+  if (typescript) {
+    lines.push(
+      "",
+      `type BundledLanguage = ${langs.flatMap((lang) => [lang.id, ...lang.aliases || []]).map((lang) => `'${lang}'`).join(" | ")}`,
+      `type BundledTheme = ${themes.map((theme) => `'${theme.id}'`).join(" | ")}`,
+      `type Highlighter = HighlighterGeneric<BundledLanguage, BundledTheme>`,
+      ""
+    );
+    typeExports.push("BundledLanguage", "BundledTheme", "Highlighter");
+  }
+  lines.push(
+    "",
+    `const bundledLanguages = ${langsCode}${ts(" as Record<BundledLanguage, DynamicImportLanguageRegistration>")}`,
+    "",
+    `const bundledThemes = ${themesCode}${ts(" as Record<BundledTheme, DynamicImportThemeRegistration>")}`,
+    ""
+  );
+  exports$1.push("bundledLanguages", "bundledThemes");
+  let engine;
+  if (options.engine === "javascript") {
+    imports["@shikijs/engine-javascript"] = ["createJavaScriptRegexEngine"];
+    engine = "createJavaScriptRegexEngine()";
+  } else if (options.engine === "javascript-raw") {
+    imports["@shikijs/engine-javascript/raw"] = ["createJavaScriptRawEngine"];
+    engine = "createJavaScriptRawEngine()";
+  } else {
+    imports["@shikijs/engine-oniguruma"] = ["createOnigurumaEngine"];
+    engine = "createOnigurumaEngine(import('shiki/wasm'))";
+  }
+  lines.push(
+    "",
+    `const createHighlighter = /* @__PURE__ */ createBundledHighlighter${ts("<BundledLanguage, BundledTheme>")}({`,
+    `  langs: bundledLanguages,`,
+    `  themes: bundledThemes,`,
+    `  engine: () => ${engine}`,
+    `})`
+  );
+  exports$1.push("createHighlighter");
+  if (shorthands) {
+    imports["@shikijs/core"].push("createSingletonShorthands");
+    const shorthandFunctions = [
+      "codeToHtml",
+      "codeToHast",
+      "codeToTokensBase",
+      "codeToTokens",
+      "codeToTokensWithThemes",
+      "getSingletonHighlighter",
+      "getLastGrammarState"
+    ];
+    lines.push(
+      "",
+      `const { ${shorthandFunctions.join(", ")} } = /* @__PURE__ */ createSingletonShorthands${ts("<BundledLanguage,BundledTheme>")}(createHighlighter)`
+    );
+    exports$1.push(
+      ...shorthandFunctions
+    );
+  }
+  lines.unshift(
+    Object.entries(imports).map(
+      ([module, imports2]) => {
+        return `import { ${imports2.sort().join(", ")} } from '${module}'`;
+      }
+    ).join("\n")
+  );
+  if (typescript) {
+    lines.unshift(
+      Object.entries(typeImports).map(
+        ([module, types]) => {
+          return `import type { ${types.sort().join(", ")} } from '${module}'`;
+        }
+      ).join("\n")
+    );
+  }
+  lines.push(
+    "",
+    `export { ${exports$1.sort().join(", ")} }`
+  );
+  if (typescript) {
+    lines.push(
+      `export type { ${typeExports.sort().join(", ")} }`
+    );
+  }
+  lines.unshift(header);
+  let code = lines.join("\n");
+  if (_format) {
+    const { format } = await import('prettier');
+    const prettierOptions = {
+      parser: typescript ? "typescript" : "babel",
+      semi: false,
+      tabWidth: 2,
+      useTabs: false,
+      singleQuote: true,
+      trailingComma: "all",
+      ..._format === true ? {} : _format
+    };
+    code = await format(code, prettierOptions);
+  }
+  return {
+    code
+  };
+}
+
+export { codegen };

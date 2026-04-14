@@ -1,0 +1,3 @@
+import type { RecordFieldSchema } from 'src/types/plugins/form-schema';
+export declare function useResourcesSchema(): import("vue").ComputedRef<RecordFieldSchema>;
+//# sourceMappingURL=useResourcesSchema.d.ts.map

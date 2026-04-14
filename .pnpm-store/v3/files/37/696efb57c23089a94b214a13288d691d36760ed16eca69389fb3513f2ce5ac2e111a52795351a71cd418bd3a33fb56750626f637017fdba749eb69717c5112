@@ -1,0 +1,11 @@
+import type { EdgeInstance, GroupInstance, NodeId } from '../../types';
+export type SimpleEdge = {
+    source: NodeId;
+    target: NodeId;
+};
+export declare function getDataEdges(edges: readonly EdgeInstance[]): SimpleEdge[];
+export declare function getBranchMembershipEdges(groups: readonly GroupInstance[]): SimpleEdge[];
+export declare function getCombinedEdges(edges: readonly EdgeInstance[], groups: readonly GroupInstance[]): SimpleEdge[];
+export declare function buildAdjacency(edges: readonly SimpleEdge[], extra?: SimpleEdge | null): Map<`node:${number}`, `node:${number}`[]>;
+export declare function hasCycle(graph: ReadonlyMap<NodeId, readonly NodeId[]>): boolean;
+//# sourceMappingURL=graph.d.ts.map

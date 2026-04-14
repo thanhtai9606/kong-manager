@@ -1,0 +1,5 @@
+import e from "./kongponents.es356.js";
+var t = typeof self == "object" && self && self.Object === Object && self, r = e || t || Function("return this")();
+export {
+  r as default
+};

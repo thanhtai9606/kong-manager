@@ -1,0 +1,3 @@
+import type { ArrayCardContainerFieldSchema } from '../../types/plugins/array-card-container-field';
+export declare const arrayCardContainerFieldSchema: ArrayCardContainerFieldSchema;
+//# sourceMappingURL=ArrayCardContainerFields.d.ts.map

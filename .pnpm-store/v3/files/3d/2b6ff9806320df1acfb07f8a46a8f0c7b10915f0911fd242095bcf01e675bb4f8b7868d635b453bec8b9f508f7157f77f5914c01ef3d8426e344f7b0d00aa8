@@ -1,0 +1,51 @@
+import { defineComponent as g, watch as y, computed as h, openBlock as n, createElementBlock as o, Fragment as k, renderList as V, normalizeClass as C, renderSlot as z, createTextVNode as q, toDisplayString as w } from "vue";
+import { warnInvalidProp as S } from "./kongponents.es199.js";
+const I = { class: "k-segmented-control" }, $ = ["data-testid", "disabled", "onClick"], x = /* @__PURE__ */ g({
+  __name: "KSegmentedControl",
+  props: {
+    modelValue: {},
+    options: {},
+    size: { default: "small" },
+    disabled: { type: Boolean }
+  },
+  emits: ["click", "update:modelValue"],
+  setup(l, { emit: i }) {
+    const d = (t) => t.every((e) => e.value !== void 0), c = (t) => {
+      const e = [];
+      return t.forEach((a) => e.push(a.value + "")), e;
+    }, m = (t) => {
+      const e = c(t), a = new Set(e);
+      return e.length === a.size;
+    }, r = (t) => t.map((e) => ({
+      label: typeof e == "string" ? e : e.label || e.value + "",
+      value: typeof e == "string" ? e.toLocaleLowerCase().replace(" ", "-") : e.value,
+      disabled: typeof e == "string" ? !1 : e.disabled
+    })), p = (t) => {
+      const e = typeof t[0] == "string", a = r(t), s = m(a);
+      return e ? s && d(a) : s;
+    };
+    y(() => l.options, (t) => {
+      p(t) || S("options", "The options prop must be an array of unique strings or objects with a unique value property.");
+    }, { immediate: !0 });
+    const u = i, v = h(() => r(l.options)), b = (t) => !!t.disabled || l.disabled, f = (t) => {
+      u("click", t.value), u("update:modelValue", t.value);
+    };
+    return (t, e) => (n(), o("div", I, [
+      (n(!0), o(k, null, V(v.value, (a) => (n(), o("button", {
+        key: `${a.value}-option`,
+        class: C(["segmented-control-button", [l.size, { selected: l.modelValue === a.value }]]),
+        "data-testid": `${a.value}-option`,
+        disabled: b(a),
+        type: "button",
+        onClick: (s) => f(a)
+      }, [
+        z(t.$slots, "option-label", { option: a }, () => [
+          q(w(a.label), 1)
+        ], !0)
+      ], 10, $))), 128))
+    ]));
+  }
+});
+export {
+  x as default
+};

@@ -1,0 +1,1791 @@
+import { defineComponent as Me, computed as S, ref as U, watch as xe, onBeforeMount as He, resolveComponent as T, openBlock as V, createElementBlock as F, createVNode as n, unref as o, createSlots as Ve, withCtx as c, createTextVNode as A, toDisplayString as k, createBlock as Q, createCommentVNode as R, createElementVNode as I, withModifiers as $e, Teleport as Ze, Fragment as Ge, reactive as De, onMounted as Je, Transition as Re, renderList as Qe, renderSlot as Xe } from "vue";
+import { useRouter as Ne } from "vue-router";
+import { BookIcon as Be, AddIcon as Ke, ServicesIcon as Ye } from "@kong/icons";
+import { createI18n as et, i18nTComponent as tt } from "@kong-ui-public/i18n";
+import { useAxios as We, useTableState as ot, useFetcher as rt, useDeleteUrlBuilder as it, FetcherStatus as lt, EntityBaseTable as st, PermissionsWrapper as le, TableTags as at, EntityFilter as nt, EntityToggleModal as ct, EntityDeleteModal as dt, EntityTypes as ut, useHelpers as Oe, ConfigurationSchemaType as ft, ConfigurationSchemaSection as ke, EntityBaseConfigCard as pt, SupportedEntityType as je, useErrors as mt, useValidators as vt, EntityBaseFormType as Le, useGatewayFeatureSupported as gt, EntityBaseForm as yt, EntityFormSection as qe } from "@kong-ui-public/entities-shared";
+const _t = {
+  create: "New gateway service",
+  debugger: "Start debugging",
+  serverless_create: "Add a Service",
+  copy_id: "Copy ID",
+  copy_json: "Copy JSON",
+  edit: "Edit",
+  clear: "Clear",
+  view: "View Details",
+  delete: {
+    title: "Delete a Gateway Service",
+    description: "Deleting this Gateway Service will also remove any associated plugins. This action cannot be reversed.",
+    menu_label: "Delete"
+  }
+}, ht = {
+  placeholder: {
+    konnect: "Filter by name",
+    kongManager: "Filter by exact name or ID"
+  }
+}, bt = {
+  title: "Gateway Services",
+  list: {
+    toolbar_actions: {
+      new_gateway_service: "New gateway service"
+    },
+    table_headers: {
+      name: "Name",
+      control_plane: "Control Plane",
+      protocol: "Protocol",
+      host: "Host",
+      port: "Port",
+      path: "Path",
+      enabled: "Enabled",
+      tags: "Tags",
+      id: "ID",
+      created_at: "Created At",
+      updated_at: "Last Modified"
+    },
+    empty_state: {
+      title: "Configure a New Gateway Service",
+      description: "Gateway services are used to proxy traffic.",
+      serverless_title: "Configure your first Gateway Service"
+    }
+  },
+  empty_state_v2: {
+    create: "New gateway service",
+    create_new: "Create new",
+    import_spec: "Import via Open API spec",
+    title: "Configure your first gateway service",
+    group: "Services created in gateways within this group will automatically appear here.",
+    description: "Gateway services represent backend APIs or microservices that receive traffic routed through the gateway.",
+    learn_more: "Learn more"
+  },
+  form: {
+    buttons: {
+      try_sample: "Try sample API"
+    },
+    errors: {
+      host: {
+        empty: "Host cannot be empty",
+        invalid: "Invalid host"
+      },
+      port: {
+        type: "Port must be a number",
+        invalid: "Port must be between 0 and 65535"
+      },
+      path: {
+        prefix: "Path must begin with /",
+        invalid: "Path should not include characters outside of the reserved list of RFC 3986"
+      },
+      protocol: {
+        empty: "Protocol cannot be empty",
+        invalid: "Protocol - value must be one of http, https, grpc, grpcs, tcp, udp, tls, tls_passthrough, ws, wss"
+      },
+      url: {
+        invalid: "The URL must follow a valid format. Example: https://api.kong-air.com/flights"
+      }
+    },
+    sections: {
+      general: {
+        title: "General Information",
+        description: "Provide a name and tags to help identify and manage this service."
+      },
+      keys: {
+        title: "Service endpoint",
+        description: "Define where this service should send requests.",
+        checkedGroupLabel: "Choose how and where to send traffic",
+        urlLabel: "Full URL",
+        checkedGroupAltLabel: "Protocol, host, port and path",
+        url: {
+          label: "Full URL",
+          description: "Define the service using a single, complete API URL for simple setup."
+        },
+        protocol: {
+          label: "Protocol, host, port, and path",
+          description: "Manually specify each component of the API’s URL for advanced configurations."
+        },
+        viewAdvancedFields: "View advanced fields"
+      }
+    },
+    fields: {
+      upstream_url: {
+        label: "Full URL",
+        placeholder: "e.g. https://api.kong-air.com/flights",
+        tooltip_for_konnect: "This is the URL of the API you will manage in Konnect.",
+        tooltip_for_km: "This is the URL of the API you will manage in Kong Gateway."
+      },
+      name: {
+        label: "Name",
+        placeholder: "Enter a unique name",
+        tooltip: "The Service name."
+      },
+      protocol: {
+        label: "Protocol",
+        tooltip: "The protocol used to communicate with the upstream.",
+        options: {
+          http: "http",
+          https: "https",
+          tcp: "tcp",
+          tls: "tls",
+          tls_passthrough: "tls_passthrough",
+          grpc: "grpc",
+          grpcs: "grpcs",
+          ws: "ws",
+          wss: "wss",
+          udp: "udp"
+        }
+      },
+      host: {
+        label: "Host",
+        placeholder: "e.g. api.kong-air.com",
+        tooltip: "The host of the upstream server. Note that the host value is case sensitive."
+      },
+      path: {
+        label: "Path",
+        placeholder: "e.g. /sample",
+        tooltip: "The path to be used in request to the upstream server."
+      },
+      port: {
+        label: "Port",
+        tooltip: "The upstream server port."
+      },
+      retries: {
+        label: "Retries",
+        tooltip: "The number of retries to execute upon failure to proxy."
+      },
+      connect_timeout: {
+        label: "Connection timeout",
+        tooltip: "The timeout in milliseconds for establishing a connection to the upstream server."
+      },
+      write_timeout: {
+        label: "Write timeout",
+        tooltip: "The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server."
+      },
+      read_timeout: {
+        label: "Read timeout",
+        tooltip: "The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server."
+      },
+      client_certificate: {
+        label: "Client certificate",
+        placeholder: "Enter a Certificate ID",
+        tooltip: "Certificate to be used as client certificate while TLS handshaking to the upstream server."
+      },
+      ca_certificates: {
+        label: "CA certificates",
+        placeholder: "Enter a comma separated list of CA Certificate IDs",
+        tooltip: "Array of {code1} object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to {code2} when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).",
+        code1: "CA Certificate",
+        code2: "null"
+      },
+      tls_verify_enabled: {
+        label: "TLS verify",
+        help: "If unchecked, use default system setting",
+        tooltip: "Whether to enable verification of upstream server TLS certificate. If set to {code1}, then the Nginx default is respected.",
+        code1: "null"
+      },
+      tls_verify_option: {
+        unset: {
+          display: "Use default system setting"
+        },
+        true: {
+          label: "True",
+          display: "On"
+        },
+        false: {
+          label: "False",
+          display: "Off"
+        }
+      },
+      tags: {
+        label: "Tags",
+        tooltip: "An optional set of strings associated with the Service for grouping and filtering.",
+        placeholder: "Enter a list of tags separated by comma",
+        help: "e.g. tag1, tag2, tag3",
+        collapse: "Add tags"
+      },
+      enabled: {
+        label: "Enabled",
+        tooltip: "Whether the Service is active. If set to {false}, the proxy behavior will be as if any routes attached to it do not exist (404). Default: {true}.",
+        false: "false",
+        true: "true"
+      }
+    }
+  }
+}, wt = {
+  general: "Gateway Services could not be retrieved",
+  delete: "The gateway service could not be deleted at this time.",
+  copy: "Failed to copy to clipboard",
+  urlErrorMessage: "Error: invalid URL"
+}, kt = {
+  success: "Copied {val} to clipboard",
+  success_brief: "Successfully copied to clipboard"
+}, Vt = {
+  gateway_services: "gateway services"
+}, Ct = {
+  actions: _t,
+  search: ht,
+  gateway_services: bt,
+  errors: wt,
+  copy: kt,
+  glossary: Vt
+};
+function St() {
+  const l = et("en-us", Ct);
+  return {
+    i18n: l,
+    i18nT: tt(l)
+    // Translation component <i18n-t>
+  };
+}
+function Et() {
+  return {
+    getPortFromProtocol: (L, m) => {
+      const d = [80, 443], a = Number(m);
+      if ((a || a === 0) && !d.includes(a))
+        return a;
+      switch (L) {
+        case "grpcs":
+        case "tls":
+        case "https":
+        case "wss":
+          return 443;
+        case "grpc":
+        case "tcp":
+        case "http":
+        case "ws":
+        default:
+          return 80;
+      }
+    }
+  };
+}
+const It = /^[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?)*(\.)?$/, Pt = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/, Ft = (l) => /^[0-9A-Fa-f:.]+$/.test(l) && l.includes(":");
+function At() {
+  const { i18n: { t: l } } = X.useI18n();
+  return {
+    validateHost: (g) => {
+      if (!g || g.trim() === "") return l("gateway_services.form.errors.host.empty");
+      try {
+        if (Ft(g))
+          return new URL("/", `https://[${g}]`), "";
+        if (It.test(g) || Pt.test(g))
+          return new URL("/", `https://${g}`), "";
+      } catch {
+      }
+      return l("gateway_services.form.errors.host.invalid");
+    },
+    validateProtocol: (g, $) => !g || g.trim() === "" ? l("gateway_services.form.errors.protocol.empty") : (g = g.slice(0, -1), $.find((s) => {
+      if (s.value === g) return s;
+    }) === void 0 ? l("gateway_services.form.errors.protocol.invalid") : ""),
+    validatePath: (g) => !g || g === "" ? "" : g.startsWith("/") ? /[^A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%]/.test(g) ? l("gateway_services.form.errors.path.invalid") : "" : l("gateway_services.form.errors.path.prefix"),
+    validatePort: (g) => {
+      if (g == null || g === "")
+        return "";
+      const $ = typeof g == "string" ? parseInt(g, 10) : g;
+      return isNaN($) ? l("gateway_services.form.errors.port.type") : $ < 0 || $ > 65535 ? l("gateway_services.form.errors.port.invalid") : "";
+    }
+  };
+}
+const X = {
+  useI18n: St,
+  usePortFromProtocol: Et,
+  useUrlValidators: At
+}, Ue = "/v2/control-planes/{controlPlaneId}/core-entities", Te = "/{workspace}", Ce = {
+  list: {
+    konnect: {
+      all: `${Ue}/services`
+    },
+    kongManager: {
+      all: `${Te}/services`
+    }
+  },
+  form: {
+    konnect: {
+      create: `${Ue}/services`,
+      edit: `${Ue}/services/{id}`
+    },
+    kongManager: {
+      create: `${Te}/services`,
+      edit: `${Te}/services/{id}`
+    }
+  }
+}, $t = { class: "kong-ui-entities-gateway-services-list" }, Rt = { class: "button-row" }, Ut = { key: 1 }, Tt = /* @__PURE__ */ Me({
+  __name: "GatewayServiceList",
+  props: {
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+      type: Object,
+      required: !0,
+      validator: (l) => !(!l || !["konnect", "kongManager"].includes(l == null ? void 0 : l.app) || !l.createRoute || !l.getViewRoute || !l.getEditRoute || l.app === "kongManager" && !l.isExactMatch && !l.filterSchema)
+    },
+    // used to override the default identifier for the cache entry
+    cacheIdentifier: {
+      type: String,
+      default: ""
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
+    canCreate: {
+      type: Function,
+      required: !1,
+      default: async () => !0
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete a given entity */
+    canDelete: {
+      type: Function,
+      required: !1,
+      default: async () => !0
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity */
+    canEdit: {
+      type: Function,
+      required: !1,
+      default: async () => !0
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity */
+    canRetrieve: {
+      type: Function,
+      required: !1,
+      default: async () => !0
+    },
+    /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can start debugger session on a given entity */
+    canDebug: {
+      type: Function,
+      required: !1,
+      default: async () => !1
+    },
+    /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+    useActionOutside: {
+      type: Boolean,
+      default: !1
+    },
+    /** user is onboarding, use onboarding text */
+    isServerless: {
+      type: Boolean,
+      default: !1
+    },
+    canImportSpecs: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  emits: ["error", "click:learn-more", "copy:success", "copy:error", "delete:success", "toggle:success", "click:import"],
+  setup(l, { emit: L }) {
+    var re;
+    const m = L, d = l, { i18n: { t: a, formatUnixTimeStamp: g } } = X.useI18n(), $ = Ne(), { axiosInstance: q } = We((re = d.config) == null ? void 0 : re.axiosRequestConfig), { hasRecords: s, handleStateChange: D } = ot(() => W.value), P = S(() => s.value && d.config.app === "konnect"), Se = S(() => d.config.app !== "kongManager" || !!d.config.disableSorting), se = {
+      // the Name column is non-hidable
+      name: { label: a("gateway_services.list.table_headers.name"), searchable: !0, sortable: !0, hidable: !1 },
+      ...d.config.showControlPlaneColumn ? { control_plane: { label: a("gateway_services.list.table_headers.control_plane") } } : {},
+      protocol: { label: a("gateway_services.list.table_headers.protocol"), searchable: !0, sortable: !0 },
+      host: { label: a("gateway_services.list.table_headers.host"), searchable: !0, sortable: !0 },
+      port: { label: a("gateway_services.list.table_headers.port"), searchable: !0, sortable: !0 },
+      path: { label: a("gateway_services.list.table_headers.path"), searchable: !0, sortable: !0 },
+      enabled: { label: a("gateway_services.list.table_headers.enabled"), searchable: !0, sortable: !0 },
+      tags: { label: a("gateway_services.list.table_headers.tags"), sortable: !1 },
+      updated_at: { label: a("gateway_services.list.table_headers.updated_at"), sortable: !0 },
+      created_at: { label: a("gateway_services.list.table_headers.created_at"), sortable: !0 }
+    }, de = {
+      columnVisibility: {
+        created_at: !1
+      }
+    }, ue = se, Y = S(() => {
+      var y, _;
+      let f = `${d.config.apiBaseUrl}${Ce.list[d.config.app].all}`;
+      return d.config.app === "konnect" ? f = f.replace(/{controlPlaneId}/gi, ((y = d.config) == null ? void 0 : y.controlPlaneId) || "") : d.config.app === "kongManager" && (f = f.replace(/\/{workspace}/gi, (_ = d.config) != null && _.workspace ? `/${d.config.workspace}` : "")), f;
+    }), Ee = S(() => d.config.apiBaseUrl.startsWith("/") ? new URL(`${window.location.origin}${Y.value}`) : new URL(Y.value)), W = U(""), O = S(() => {
+      const f = d.config.app === "konnect" || d.config.isExactMatch;
+      if (f)
+        return {
+          isExactMatch: f,
+          placeholder: a(`search.placeholder.${d.config.app}`)
+        };
+      const { name: y, enabled: _, protocol: h, host: N, port: B, path: t } = se;
+      return {
+        isExactMatch: f,
+        fields: { name: y, enabled: _, protocol: h, host: N, port: B, path: t },
+        schema: d.config.filterSchema
+      };
+    }), {
+      fetcher: Ie,
+      fetcherState: j,
+      fetcherCacheKey: E
+    } = rt(S(() => ({ ...d.config, cacheIdentifier: d.cacheIdentifier })), Y), ae = () => {
+      W.value = "";
+    }, ne = () => {
+      E.value++;
+    }, ee = U(null), e = S(() => ({
+      ctaPath: d.config.createRoute,
+      ctaText: oe.value ? d.isServerless ? a("actions.serverless_create") : a("actions.create") : void 0,
+      message: `${a("gateway_services.list.empty_state.description")}${d.config.additionMessageForEmptyState ? ` ${d.config.additionMessageForEmptyState}` : ""}`,
+      title: oe.value ? d.isServerless ? a("gateway_services.list.empty_state.serverless_title") : a("gateway_services.list.empty_state.title") : a("gateway_services.title")
+    })), C = U(!1), x = U(null), te = S(() => {
+      const f = {
+        action: "disable",
+        id: "",
+        name: ""
+      };
+      if (x.value) {
+        const { enabled: y, id: _, name: h } = x.value;
+        f.action = y ? "disable" : "enable", f.id = _, f.name = h || _;
+      }
+      return f;
+    }), fe = (f) => {
+      C.value = !0, x.value = f;
+    }, pe = () => {
+      C.value = !1, x.value = null;
+    }, z = async () => {
+      var h, N;
+      if (!await ((h = d.canEdit) == null ? void 0 : h.call(d, x.value)) || !x.value)
+        return;
+      const y = `${Ee.value.href}/${x.value.id}`, _ = !x.value.enabled;
+      try {
+        const B = (N = d.config) == null ? void 0 : N.app;
+        let t;
+        W.value && B === "konnect" && (t = await q.get(y));
+        const { data: r } = B === "konnect" ? await q.put(y, { ...(t == null ? void 0 : t.data) || x.value, enabled: _ }) : await q.patch(y, { ...x.value, enabled: _ });
+        m("toggle:success", r), x.value.enabled = _;
+      } catch (B) {
+        m("error", B);
+      }
+    }, me = (f) => {
+      d.config.getControlPlaneRoute && $.push(d.config.getControlPlaneRoute(f));
+    }, ve = async (f, y) => {
+      const _ = f.id;
+      if (!await y(_)) {
+        m("copy:error", {
+          entity: f,
+          field: "id",
+          message: a("errors.copy")
+        });
+        return;
+      }
+      m("copy:success", {
+        entity: f,
+        field: "id",
+        message: a("copy.success", { val: _ })
+      });
+    }, ge = async (f, y) => {
+      const _ = JSON.stringify(f);
+      if (!await y(_)) {
+        m("copy:error", {
+          entity: f,
+          message: a("errors.copy")
+        });
+        return;
+      }
+      m("copy:success", {
+        entity: f,
+        message: a("copy.success_brief")
+      });
+    }, ye = async (f) => {
+      var _;
+      await ((_ = d.canRetrieve) == null ? void 0 : _.call(d, f)) && $.push(d.config.getViewRoute(f.id));
+    }, _e = (f) => ({
+      label: a("actions.view"),
+      to: d.config.getViewRoute(f)
+    }), Pe = (f) => ({
+      label: a("actions.edit"),
+      to: d.config.getEditRoute(f)
+    }), H = (f) => {
+      if (d.config.getDebugRoute)
+        return {
+          label: a("actions.debugger"),
+          to: d.config.getDebugRoute(f)
+        };
+    }, M = U(void 0), G = U(!1), Z = U(!1), ce = U(""), Fe = it(d.config, Y.value), he = (f) => {
+      M.value = f, G.value = !0, ce.value = "";
+    }, be = () => {
+      G.value = !1, M.value = void 0;
+    }, Ae = async () => {
+      var f, y, _;
+      if ((f = M.value) != null && f.id) {
+        Z.value = !0;
+        try {
+          await q.delete(Fe(M.value.id)), m("delete:success", M.value), be(), E.value++;
+        } catch (h) {
+          ce.value = ((_ = (y = h.response) == null ? void 0 : y.data) == null ? void 0 : _.message) || h.message || a("errors.delete"), m("error", h);
+        } finally {
+          Z.value = !1;
+        }
+      }
+    }, we = () => {
+      $.push(d.config.createRoute);
+    };
+    xe(j, (f) => {
+      var y, _, h;
+      if (f.status === lt.Error) {
+        ee.value = {
+          title: a("errors.general")
+        }, (h = (_ = (y = f.error) == null ? void 0 : y.response) == null ? void 0 : _.data) != null && h.message && (ee.value.message = f.error.response.data.message), m("error", f.error);
+        return;
+      }
+      ee.value = null;
+    });
+    const oe = U(!1);
+    return He(async () => {
+      oe.value = await d.canCreate();
+    }), (f, y) => {
+      const _ = T("KButton"), h = T("KDropdownItem"), N = T("KDropdown"), B = T("KEmptyState"), t = T("KBadge"), r = T("KInputSwitch"), w = T("KClipboardProvider");
+      return V(), F("div", $t, [
+        n(o(st), {
+          "cache-identifier": l.cacheIdentifier,
+          "default-table-preferences": de,
+          "disable-sorting": Se.value,
+          "empty-state-options": e.value,
+          "enable-entity-actions": "",
+          "error-message": ee.value,
+          fetcher: o(Ie),
+          "fetcher-cache-key": o(E),
+          "pagination-type": "offset",
+          "preferences-storage-key": "kong-ui-entities-gateway-services-list",
+          query: W.value,
+          "table-headers": o(ue),
+          onClearSearchInput: ae,
+          "onClick:row": y[5] || (y[5] = (u) => ye(u)),
+          onSort: ne,
+          onState: o(D)
+        }, Ve({
+          "toolbar-filter": c(() => [
+            n(o(nt), {
+              modelValue: W.value,
+              "onUpdate:modelValue": y[0] || (y[0] = (u) => W.value = u),
+              config: O.value
+            }, null, 8, ["modelValue", "config"])
+          ]),
+          "toolbar-button": c(() => [
+            (V(), Q(Ze, {
+              disabled: !l.useActionOutside,
+              to: "#kong-ui-app-page-header-action-button"
+            }, [
+              I("div", Rt, [
+                P.value ? (V(), Q(_, {
+                  key: 0,
+                  appearance: "secondary",
+                  class: "open-learning-hub",
+                  "data-testid": "gateway-services-learn-more-button",
+                  icon: "",
+                  onClick: y[1] || (y[1] = (u) => f.$emit("click:learn-more"))
+                }, {
+                  default: c(() => [
+                    n(o(Be), { decorative: "" })
+                  ]),
+                  _: 1
+                })) : R("", !0),
+                n(o(le), { "auth-function": l.canCreate }, {
+                  default: c(() => [
+                    n(_, {
+                      appearance: "primary",
+                      "data-testid": "toolbar-add-gateway-service",
+                      size: l.useActionOutside ? "medium" : "large",
+                      to: l.config.createRoute
+                    }, {
+                      default: c(() => [
+                        n(o(Ke)),
+                        A(" " + k(o(a)("gateway_services.list.toolbar_actions.new_gateway_service")), 1)
+                      ]),
+                      _: 1
+                    }, 8, ["size", "to"])
+                  ]),
+                  _: 1
+                }, 8, ["auth-function"])
+              ])
+            ], 8, ["disabled"]))
+          ]),
+          name: c(({ rowValue: u }) => [
+            I("b", null, k(u ?? "-"), 1)
+          ]),
+          control_plane: c(({ row: u }) => {
+            var v;
+            return [
+              (v = u.x_meta) != null && v.cluster_id ? (V(), Q(t, {
+                key: 0,
+                tooltip: u.x_meta.cluster_id,
+                "truncation-tooltip": "",
+                onClick: $e((b) => me(u.x_meta.cluster_id), ["stop"])
+              }, {
+                default: c(() => [
+                  A(k(u.x_meta.cluster_id), 1)
+                ]),
+                _: 2
+              }, 1032, ["tooltip", "onClick"])) : (V(), F("b", Ut, "-"))
+            ];
+          }),
+          enabled: c(({ row: u }) => [
+            n(o(le), {
+              "auth-function": () => l.canEdit(u),
+              "force-show": ""
+            }, {
+              default: c(({ isAllowed: v }) => [
+                I("div", {
+                  onClick: y[4] || (y[4] = $e(() => {
+                  }, ["stop"]))
+                }, [
+                  n(r, {
+                    modelValue: u.enabled,
+                    "onUpdate:modelValue": (b) => u.enabled = b,
+                    "data-testid": `row-${u.id}-toggle-input`,
+                    disabled: !v,
+                    onClick: $e((b) => fe(u), ["prevent"])
+                  }, null, 8, ["modelValue", "onUpdate:modelValue", "data-testid", "disabled", "onClick"])
+                ])
+              ]),
+              _: 2
+            }, 1032, ["auth-function"])
+          ]),
+          tags: c(({ rowValue: u }) => [
+            n(o(at), { tags: u }, null, 8, ["tags"])
+          ]),
+          created_at: c(({ rowValue: u }) => [
+            A(k(o(g)(u)), 1)
+          ]),
+          updated_at: c(({ row: u, rowValue: v }) => [
+            A(k(o(g)(v ?? u.created_at)), 1)
+          ]),
+          actions: c(({ row: u }) => [
+            n(w, null, {
+              default: c(({ copyToClipboard: v }) => [
+                n(h, {
+                  "data-testid": "action-entity-copy-id",
+                  onClick: (b) => ve(u, v)
+                }, {
+                  default: c(() => [
+                    A(k(o(a)("actions.copy_id")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024),
+            n(w, null, {
+              default: c(({ copyToClipboard: v }) => [
+                n(h, {
+                  "data-testid": "action-entity-copy-json",
+                  onClick: (b) => ge(u, v)
+                }, {
+                  default: c(() => [
+                    A(k(o(a)("actions.copy_json")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1024),
+            n(o(le), {
+              "auth-function": () => l.canRetrieve(u)
+            }, {
+              default: c(() => [
+                n(h, {
+                  "data-testid": "action-entity-view",
+                  "has-divider": "",
+                  item: _e(u.id)
+                }, null, 8, ["item"])
+              ]),
+              _: 2
+            }, 1032, ["auth-function"]),
+            n(o(le), {
+              "auth-function": () => l.canDebug(u)
+            }, {
+              default: c(() => [
+                l.config.getDebugRoute ? (V(), Q(h, {
+                  key: 0,
+                  "data-testid": "action-entity-debug",
+                  item: H(u.id)
+                }, null, 8, ["item"])) : R("", !0)
+              ]),
+              _: 2
+            }, 1032, ["auth-function"]),
+            n(o(le), {
+              "auth-function": () => l.canEdit(u)
+            }, {
+              default: c(() => [
+                n(h, {
+                  "data-testid": "action-entity-edit",
+                  item: Pe(u.id)
+                }, null, 8, ["item"])
+              ]),
+              _: 2
+            }, 1032, ["auth-function"]),
+            n(o(le), {
+              "auth-function": () => l.canDelete(u)
+            }, {
+              default: c(() => [
+                n(h, {
+                  danger: "",
+                  "data-testid": "action-entity-delete",
+                  "has-divider": "",
+                  onClick: (v) => he(u)
+                }, {
+                  default: c(() => [
+                    A(k(o(a)("actions.delete.menu_label")), 1)
+                  ]),
+                  _: 1
+                }, 8, ["onClick"])
+              ]),
+              _: 2
+            }, 1032, ["auth-function"])
+          ]),
+          _: 2
+        }, [
+          !W.value && l.config.app === "konnect" ? {
+            name: "empty-state",
+            fn: c(() => {
+              var u;
+              return [
+                n(B, {
+                  "data-testid": "gateway-services-entity-empty-state",
+                  "icon-background": "",
+                  message: o(a)("gateway_services.empty_state_v2.description"),
+                  title: o(a)("gateway_services.empty_state_v2.title")
+                }, Ve({
+                  icon: c(() => [
+                    n(o(Ye), { decorative: "" })
+                  ]),
+                  action: c(() => [
+                    oe.value ? (V(), F(Ge, { key: 0 }, [
+                      l.canImportSpecs ? (V(), Q(N, {
+                        key: 0,
+                        "data-testid": "entity-create-dropdown",
+                        "show-caret": "",
+                        "trigger-text": o(a)("gateway_services.empty_state_v2.create"),
+                        width: "220"
+                      }, {
+                        items: c(() => [
+                          n(h, {
+                            "data-testid": "entity-create-dropdown-item",
+                            onClick: we
+                          }, {
+                            default: c(() => [
+                              A(k(o(a)("gateway_services.empty_state_v2.create_new")), 1)
+                            ]),
+                            _: 1
+                          }),
+                          n(h, {
+                            "data-testid": "entity-import-dropdown-item",
+                            onClick: y[2] || (y[2] = (v) => f.$emit("click:import"))
+                          }, {
+                            default: c(() => [
+                              A(k(o(a)("gateway_services.empty_state_v2.import_spec")), 1)
+                            ]),
+                            _: 1
+                          })
+                        ]),
+                        _: 1
+                      }, 8, ["trigger-text"])) : (V(), Q(_, {
+                        key: 1,
+                        "data-testid": "entity-create-button",
+                        onClick: we
+                      }, {
+                        default: c(() => [
+                          n(o(Ke), { decorative: "" }),
+                          A(" " + k(o(a)("gateway_services.empty_state_v2.create")), 1)
+                        ]),
+                        _: 1
+                      }))
+                    ], 64)) : R("", !0),
+                    n(_, {
+                      appearance: "secondary",
+                      "data-testid": "entity-learn-more-button",
+                      onClick: y[3] || (y[3] = (v) => f.$emit("click:learn-more"))
+                    }, {
+                      default: c(() => [
+                        n(o(Be), { decorative: "" }),
+                        A(" " + k(o(a)("gateway_services.empty_state_v2.learn_more")), 1)
+                      ]),
+                      _: 1
+                    })
+                  ]),
+                  _: 2
+                }, [
+                  (u = l.config) != null && u.isControlPlaneGroup ? {
+                    name: "default",
+                    fn: c(() => [
+                      A(k(o(a)("gateway_services.empty_state_v2.group")), 1)
+                    ]),
+                    key: "0"
+                  } : void 0
+                ]), 1032, ["message", "title"])
+              ];
+            }),
+            key: "0"
+          } : void 0
+        ]), 1032, ["cache-identifier", "disable-sorting", "empty-state-options", "error-message", "fetcher", "fetcher-cache-key", "query", "table-headers", "onState"]),
+        n(o(ct), {
+          action: te.value.action,
+          "entity-id": te.value.id,
+          "entity-name": te.value.name,
+          "entity-type": o(a)("glossary.gateway_services"),
+          "on-confirm": z,
+          visible: C.value,
+          onCancel: pe,
+          onProceed: pe
+        }, null, 8, ["action", "entity-id", "entity-name", "entity-type", "visible"]),
+        n(o(dt), {
+          "action-pending": Z.value,
+          description: o(a)("actions.delete.description"),
+          "entity-name": M.value && (M.value.name || M.value.id),
+          "entity-type": o(ut).GatewayService,
+          error: ce.value,
+          title: o(a)("actions.delete.title"),
+          visible: G.value,
+          onCancel: be,
+          onProceed: Ae
+        }, null, 8, ["action-pending", "description", "entity-name", "entity-type", "error", "title", "visible"])
+      ]);
+    };
+  }
+}), ze = (l, L) => {
+  const m = l.__vccOpts || l;
+  for (const [d, a] of L)
+    m[d] = a;
+  return m;
+}, uo = /* @__PURE__ */ ze(Tt, [["__scopeId", "data-v-fb0f3023"]]), xt = { class: "kong-ui-gateway-service-entity-config-card" }, fo = /* @__PURE__ */ Me({
+  __name: "GatewayServiceConfigCard",
+  props: {
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+      type: Object,
+      required: !0,
+      validator: (l) => !(!l || !["konnect", "kongManager"].includes(l == null ? void 0 : l.app) || l.app === "konnect" && !l.controlPlaneId || l.app === "kongManager" && typeof l.workspace != "string" || !l.entityId)
+    },
+    /**
+     * External link for documentation that determines visibility of Documentation button
+     */
+    configCardDoc: {
+      type: String,
+      default: "",
+      required: !1
+    },
+    /**
+     * Control visibility of card title content
+     */
+    hideTitle: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  emits: ["loading", "fetch:error", "fetch:success"],
+  setup(l) {
+    const L = l, { i18n: { t: m }, i18nT: d } = X.useI18n(), a = S(() => Ce.form[L.config.app].edit), { getPropValue: g } = Oe(), $ = (s, D) => g(s, D) === !0 ? m("gateway_services.form.fields.tls_verify_option.true.display") : m("gateway_services.form.fields.tls_verify_option.false.display"), q = U({
+      id: {},
+      name: {
+        tooltip: m("gateway_services.form.fields.name.tooltip")
+      },
+      enabled: {},
+      updated_at: {},
+      created_at: {},
+      protocol: {
+        section: ke.Basic,
+        tooltip: m("gateway_services.form.fields.protocol.tooltip")
+      },
+      host: {
+        section: ke.Basic,
+        tooltip: m("gateway_services.form.fields.host.tooltip")
+      },
+      path: {
+        section: ke.Basic,
+        tooltip: m("gateway_services.form.fields.path.tooltip")
+      },
+      port: {
+        section: ke.Basic,
+        tooltip: m("gateway_services.form.fields.port.tooltip")
+      },
+      tags: {
+        tooltip: m("gateway_services.form.fields.tags.tooltip")
+      },
+      // advanced fields
+      retries: {
+        order: 1,
+        tooltip: m("gateway_services.form.fields.retries.tooltip")
+      },
+      connect_timeout: {
+        order: 2,
+        tooltip: m("gateway_services.form.fields.connect_timeout.tooltip")
+      },
+      write_timeout: {
+        order: 3,
+        tooltip: m("gateway_services.form.fields.write_timeout.tooltip")
+      },
+      read_timeout: {
+        order: 4,
+        tooltip: m("gateway_services.form.fields.read_timeout.tooltip")
+      },
+      client_certificate: {
+        order: 5,
+        tooltip: m("gateway_services.form.fields.client_certificate.tooltip")
+      },
+      ca_certificates: {
+        type: ft.BadgeTag,
+        label: m("gateway_services.form.fields.ca_certificates.label"),
+        order: 6
+      },
+      tls_verify: {
+        label: m("gateway_services.form.fields.tls_verify_enabled.label")
+      },
+      tls_verify_depth: {
+        hidden: !0
+      }
+    });
+    return (s, D) => (V(), F("div", xt, [
+      n(o(pt), {
+        config: l.config,
+        "config-card-doc": l.configCardDoc,
+        "config-schema": q.value,
+        "entity-type": o(je).GatewayService,
+        "fetch-url": a.value,
+        "hide-title": l.hideTitle,
+        "onFetch:error": D[0] || (D[0] = (P) => s.$emit("fetch:error", P)),
+        "onFetch:success": D[1] || (D[1] = (P) => s.$emit("fetch:success", P)),
+        onLoading: D[2] || (D[2] = (P) => s.$emit("loading", P))
+      }, {
+        "enabled-label-tooltip": c(() => [
+          n(o(d), {
+            keypath: "gateway_services.form.fields.enabled.tooltip",
+            scope: "global"
+          }, {
+            false: c(() => [
+              I("code", null, k(o(m)("gateway_services.form.fields.enabled.false")), 1)
+            ]),
+            true: c(() => [
+              I("code", null, k(o(m)("gateway_services.form.fields.enabled.true")), 1)
+            ]),
+            _: 1
+          })
+        ]),
+        "ca_certificates-label-tooltip": c(() => [
+          n(o(d), {
+            keypath: "gateway_services.form.fields.ca_certificates.tooltip",
+            scope: "global"
+          }, {
+            code1: c(() => [
+              I("code", null, k(o(m)("gateway_services.form.fields.ca_certificates.code1")), 1)
+            ]),
+            code2: c(() => [
+              I("code", null, k(o(m)("gateway_services.form.fields.ca_certificates.code2")), 1)
+            ]),
+            _: 1
+          })
+        ]),
+        "tls_verify-label-tooltip": c(() => [
+          n(o(d), {
+            keypath: "gateway_services.form.fields.tls_verify_enabled.tooltip",
+            scope: "global"
+          }, {
+            code1: c(() => [
+              I("code", null, k(o(m)("gateway_services.form.fields.tls_verify_enabled.code1")), 1)
+            ]),
+            _: 1
+          })
+        ]),
+        tls_verify: c((P) => [
+          A(k(typeof o(g)("rowValue", P) == "boolean" ? $("rowValue", P) : o(m)("gateway_services.form.fields.tls_verify_option.unset.display")), 1)
+        ]),
+        client_certificate: c((P) => [
+          A(k(o(g)("rowValue", P) ? o(g)("rowValue", P).id : "–"), 1)
+        ]),
+        _: 1
+      }, 8, ["config", "config-card-doc", "config-schema", "entity-type", "fetch-url", "hide-title"])
+    ]));
+  }
+}), K = {
+  name: "Kong-Air-Flights-API",
+  protocol: "https",
+  path: "/flights",
+  host: "api.kong-air.com",
+  port: 443
+}, Mt = { class: "kong-ui-entities-gateway-service-form" }, Dt = {
+  key: 0,
+  class: "gateway-service-form-general-info"
+}, Bt = { class: "gateway-service-form-group-selection-wrapper" }, Kt = {
+  key: 0,
+  class: "gateway-service-form-group-fields"
+}, Lt = {
+  key: 0,
+  class: "gateway-service-form-group-fields"
+}, qt = { key: 0 }, Gt = {
+  key: 0,
+  class: "gateway-service-form-advanced-fields"
+}, Nt = { class: "gateway-service-form-margin-bottom" }, Wt = { class: "gateway-service-form-margin-bottom" }, Ot = { class: "gateway-service-form-margin-bottom" }, jt = { class: "gateway-service-form-margin-bottom" }, zt = {
+  key: 0,
+  class: "gateway-service-form-margin-bottom"
+}, Ht = {
+  key: 1,
+  class: "gateway-service-form-margin-bottom"
+}, Zt = {
+  key: 2,
+  class: "gateway-service-form-margin-bottom"
+}, Jt = {
+  key: 0,
+  class: "checkbox-aligned-radio"
+}, Qt = {
+  key: 1,
+  class: "checkbox-aligned-radio"
+}, Xt = { class: "gateway-service-form-tags" }, Yt = { class: "form-error-list" }, eo = /* @__PURE__ */ Me({
+  __name: "GatewayServiceForm",
+  props: {
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+      type: Object,
+      required: !0,
+      validator: (l) => !(!l || !["konnect", "kongManager"].includes(l == null ? void 0 : l.app) || l.app === "konnect" && !l.controlPlaneId || l.app === "kongManager" && typeof l.workspace != "string" || !l.cancelRoute)
+    },
+    /** If a valid Gateway Service ID is provided, it will put the form in Edit mode instead of Create */
+    gatewayServiceId: {
+      type: String,
+      required: !1,
+      default: ""
+    },
+    /** Whether show or hide EntityFormSection info column */
+    hideSectionsInfo: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    },
+    /** Whether show or hide Try sample API button */
+    hideTrySampleApiButton: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    }
+  },
+  emits: ["update", "error", "url-valid:success", "url-valid:error", "loading", "model-updated", "try-sample-api"],
+  setup(l, { expose: L, emit: m }) {
+    var B;
+    const d = m, a = l, g = U(!0), $ = Ne(), { i18nT: q, i18n: { t: s } } = X.useI18n(), { getErrorFieldsFromError: D } = mt(), { axiosInstance: P } = We((B = a.config) == null ? void 0 : B.axiosRequestConfig), Se = vt(), { validateHost: se, validatePath: de, validatePort: ue, validateProtocol: Y } = X.useUrlValidators(), { objectsAreEqual: Ee } = Oe(), W = S(() => Ce.form[a.config.app].edit), O = S(() => a.gatewayServiceId ? Le.Edit : Le.Create), Ie = U(!1), j = S(() => !!a.gatewayServiceId), E = U(j.value ? "protocol" : "url"), ae = X.usePortFromProtocol(), ne = U(""), ee = S(() => !!ne.value || !!H("name")), e = De({
+      fields: {
+        name: "",
+        protocol: "http",
+        host: "",
+        path: "",
+        port: 80,
+        url: "",
+        retries: 5,
+        connect_timeout: 6e4,
+        write_timeout: 6e4,
+        read_timeout: 6e4,
+        client_certificate: "",
+        ca_certificates: "",
+        tls_verify_enabled: !1,
+        tls_verify_value: !1,
+        tags: "",
+        enabled: !0
+      },
+      isReadonly: !1,
+      errorMessages: [],
+      formFieldErrors: {
+        host: "",
+        port: "",
+        path: "",
+        name: "",
+        url: "",
+        tags: "",
+        retries: "",
+        connect_timeout: "",
+        write_timeout: "",
+        read_timeout: "",
+        client_certificate: "",
+        ca_certificates: "",
+        tls_verify_enabled: "",
+        tls_verify_value: ""
+      }
+    }), C = De({
+      name: "",
+      protocol: "http",
+      host: "",
+      path: "",
+      port: 80,
+      url: "",
+      retries: 5,
+      connect_timeout: 6e4,
+      write_timeout: 6e4,
+      read_timeout: 6e4,
+      client_certificate: "",
+      ca_certificates: "",
+      tls_verify_enabled: !1,
+      tls_verify_value: !1,
+      tags: "",
+      enabled: !0
+    }), x = a.config.app === "konnect" || gt({
+      gatewayInfo: a.config.gatewayInfo,
+      // 'ws' and 'wss' are not valid values for the protocol field in Gateway Community Edition or before Gateway Enterprise Edition 3.0
+      supportedRange: {
+        enterprise: ["3.0"]
+      }
+    }), te = [
+      {
+        label: s("gateway_services.form.fields.protocol.options.http"),
+        value: "http",
+        group: "http"
+      },
+      {
+        label: s("gateway_services.form.fields.protocol.options.https"),
+        value: "https",
+        group: "http"
+      },
+      {
+        label: s("gateway_services.form.fields.protocol.options.tcp"),
+        value: "tcp",
+        group: "tcp"
+      },
+      {
+        label: s("gateway_services.form.fields.protocol.options.tls"),
+        value: "tls",
+        group: "tcp"
+      },
+      {
+        label: s("gateway_services.form.fields.protocol.options.tls_passthrough"),
+        value: "tls_passthrough",
+        group: "tcp"
+      },
+      {
+        label: s("gateway_services.form.fields.protocol.options.grpc"),
+        value: "grpc",
+        group: "grpc"
+      },
+      {
+        label: s("gateway_services.form.fields.protocol.options.grpcs"),
+        value: "grpcs",
+        group: "grpc"
+      },
+      ...x ? [
+        {
+          label: s("gateway_services.form.fields.protocol.options.ws"),
+          value: "ws",
+          group: "websocket"
+        },
+        {
+          label: s("gateway_services.form.fields.protocol.options.wss"),
+          value: "wss",
+          group: "websocket"
+        }
+      ] : [],
+      {
+        label: s("gateway_services.form.fields.protocol.options.udp"),
+        value: "udp",
+        group: "udp"
+      }
+    ], fe = { url: "url", protocol: "protocol" }, pe = (t) => {
+      e.fields.protocol = t.value, e.fields.port = ae.getPortFromProtocol(e.fields.protocol, String(e.fields.port));
+    }, z = (t) => t ? parseFloat(t) : 0, me = () => {
+      e.fields.host = C.host, e.fields.path = C.path, e.fields.port = C.port, e.fields.protocol = C.protocol, e.fields.url = C.url, e.fields.retries = C.retries, e.fields.connect_timeout = C.connect_timeout, e.fields.write_timeout = C.write_timeout, e.fields.read_timeout = C.read_timeout, e.fields.client_certificate = C.client_certificate, e.fields.ca_certificates = C.ca_certificates, e.fields.tls_verify_enabled = C.tls_verify_enabled, e.fields.tls_verify_value = C.tls_verify_value, e.fields.enabled = C.enabled;
+    }, ve = () => {
+      g.value = !0, G(), e.errorMessages = [], me();
+    }, ge = () => {
+      switch (me(), e.fields.name = `${K.name}-${(/* @__PURE__ */ new Date()).toISOString().replace(/\D/g, "").slice(0, 17)}`, E.value) {
+        case "url":
+          e.fields.url = `${K.protocol}://${K.host}${K.path}`;
+          break;
+        case "protocol":
+          e.fields.host = K.host, e.fields.path = K.path, e.fields.protocol = K.protocol, e.fields.port = K.port;
+          break;
+        default:
+          e.fields.url = `${K.protocol}://${K.host}${K.path}`;
+      }
+    }, ye = () => {
+      if (G(), e.fields.url.length)
+        try {
+          const t = new URL(e.fields.url), r = Y(t.protocol, te);
+          if (r) throw new Error(r);
+          e.fields.protocol = t.protocol.slice(0, -1);
+          const w = se(t.hostname);
+          if (w) throw new Error(w);
+          e.fields.host = t.hostname;
+          const u = de(t.pathname);
+          if (u) throw new Error(u);
+          e.fields.path = t.pathname;
+          const v = ue(t.port);
+          if (v) throw new Error(v);
+          const b = Number(t.port);
+          Ie.value = !!b, e.fields.port = b || ae.getPortFromProtocol(e.fields.protocol), d("url-valid:success");
+        } catch {
+          d("url-valid:error", s("gateway_services.form.errors.url.invalid")), e.formFieldErrors.url = s("gateway_services.form.errors.url.invalid");
+        }
+    }, _e = (t) => {
+      G(t);
+    }, Pe = S(() => !!e.formFieldErrors.url || !!e.formFieldErrors.host || !!e.formFieldErrors.port), H = (t) => {
+      if (e.errorMessages.length) return "";
+      const r = e.formFieldErrors;
+      return r[t] ? r[t] : "";
+    }, M = (t) => {
+      G(t ?? void 0);
+      const r = se(e.fields.host);
+      r && (e.formFieldErrors.host = r);
+      const w = de(e.fields.path);
+      w && (e.formFieldErrors.path = w);
+      const u = ue(e.fields.port);
+      u && (e.formFieldErrors.port = u), Z.value ? d("url-valid:success") : d("url-valid:error", e.errorMessages.join(",") || s("gateway_services.form.errors.url.invalid"));
+    }, G = (t) => {
+      if (t)
+        e.formFieldErrors[t] = "";
+      else
+        for (let r in e.formFieldErrors)
+          e.formFieldErrors[r] = "";
+      e.errorMessages = [];
+    }, Z = S(() => {
+      for (let t in e.formFieldErrors)
+        if (e.formFieldErrors[t].length)
+          return !1;
+      return !0;
+    }), ce = () => {
+      e.fields.url && E.value === "url" ? ye() : M();
+    }, Fe = () => `new-service-${(/* @__PURE__ */ new Date()).toISOString().replace(/\D/g, "").slice(0, 17)}`, he = S(() => !["tcp", "tls", "tls_passthrough", "grpc", "grpcs", "udp"].includes(e.fields.protocol)), be = S(() => {
+      if (E.value === "url")
+        return !0;
+      const t = ["https", "wss", "tls"].includes(e.fields.protocol);
+      return E.value === "protocol" && t;
+    }), Ae = S(() => {
+      if (E.value === "url")
+        return !0;
+      const t = ["https", "tls"].includes(e.fields.protocol);
+      return E.value === "protocol" && t;
+    }), we = S(() => {
+      if (E.value === "url")
+        return !0;
+      const t = ["https", "wss", "tls"].includes(e.fields.protocol);
+      return E.value === "protocol" && t;
+    }), oe = (t) => {
+      G("name"), ne.value = Se.utf8Name(t);
+    }, re = S(() => {
+      const t = !j.value || !Ee(e.fields, C), r = E.value === "url" && !!e.fields.url && Z.value, w = E.value === "protocol" && !!e.fields.host && Z.value;
+      return t && (r || w);
+    }), f = (t) => {
+      var r, w, u;
+      e.fields.name = (t == null ? void 0 : t.name) || "", e.fields.tags = ((r = t == null ? void 0 : t.tags) == null ? void 0 : r.join(", ")) || "", e.fields.protocol = (t == null ? void 0 : t.protocol) || "http", e.fields.path = (t == null ? void 0 : t.path) || "", e.fields.read_timeout = t != null && t.read_timeout || (t == null ? void 0 : t.read_timeout) === 0 ? t == null ? void 0 : t.read_timeout : 6e4, e.fields.retries = t != null && t.retries || (t == null ? void 0 : t.retries) === 0 ? t == null ? void 0 : t.retries : 5, e.fields.host = (t == null ? void 0 : t.host) || "", e.fields.connect_timeout = t != null && t.connect_timeout || (t == null ? void 0 : t.connect_timeout) === 0 ? t == null ? void 0 : t.connect_timeout : 6e4, e.fields.tls_verify_enabled = (t == null ? void 0 : t.tls_verify) !== "" && (t == null ? void 0 : t.tls_verify) !== null && (t == null ? void 0 : t.tls_verify) !== void 0, e.fields.tls_verify_value = t != null && t.tls_verify ? t == null ? void 0 : t.tls_verify : !1, e.fields.ca_certificates = ((w = t == null ? void 0 : t.ca_certificates) == null ? void 0 : w.join(",")) || "", e.fields.client_certificate = ((u = t == null ? void 0 : t.client_certificate) == null ? void 0 : u.id) || "", e.fields.write_timeout = t != null && t.write_timeout || (t == null ? void 0 : t.write_timeout) === 0 ? t == null ? void 0 : t.write_timeout : 6e4, e.fields.port = t != null && t.port || (t == null ? void 0 : t.port) === 0 ? t == null ? void 0 : t.port : 80, e.fields.enabled = (t == null ? void 0 : t.enabled) ?? !0, Object.assign(C, e.fields);
+    }, y = () => {
+      $.push(a.config.cancelRoute);
+    }, _ = S(() => {
+      var r, w;
+      let t = `${a.config.apiBaseUrl}${Ce.form[a.config.app][O.value]}`;
+      return a.config.app === "konnect" ? t = t.replace(/{controlPlaneId}/gi, ((r = a.config) == null ? void 0 : r.controlPlaneId) || "") : a.config.app === "kongManager" && (t = t.replace(/\/{workspace}/gi, (w = a.config) != null && w.workspace ? `/${a.config.workspace}` : "")), t = t.replace(/{id}/gi, a.gatewayServiceId), t;
+    }), h = S(() => {
+      var r, w, u, v;
+      const t = {
+        name: e.fields.name || null,
+        tags: e.fields.tags ? (u = (w = (r = e.fields.tags) == null ? void 0 : r.split(",")) == null ? void 0 : w.map((b) => String(b || "").trim())) == null ? void 0 : u.filter((b) => b !== "") : null,
+        protocol: e.fields.protocol,
+        path: e.fields.path || null,
+        read_timeout: e.fields.read_timeout,
+        retries: e.fields.retries,
+        host: e.fields.host,
+        connect_timeout: e.fields.connect_timeout,
+        ca_certificates: e.fields.ca_certificates ? (v = e.fields.ca_certificates) == null ? void 0 : v.split(",").filter((b) => b !== "") : null,
+        client_certificate: e.fields.client_certificate ? { id: e.fields.client_certificate } : null,
+        write_timeout: e.fields.write_timeout,
+        port: e.fields.port,
+        url: e.fields.url,
+        enabled: e.fields.enabled
+      };
+      return e.fields.client_certificate && ["https", "wss", "tls"].includes(e.fields.protocol) && (t.client_certificate = { id: e.fields.client_certificate }), e.fields.tls_verify_enabled && ["https", "wss", "tls"].includes(e.fields.protocol) && (t.tls_verify = e.fields.tls_verify_value), he.value || (t.path = null), O.value === "create" ? E.value === "url" ? (delete t.protocol, delete t.host, delete t.path, a.config.app === "konnect" && delete t.port) : delete t.url : O.value === "edit" && delete t.url, t;
+    }), N = async () => {
+      var t, r, w, u;
+      try {
+        e.isReadonly = !0;
+        const v = h.value;
+        let b;
+        if (O.value === "create" ? b = await P.post(_.value, v) : O.value === "edit" && (b = ((t = a.config) == null ? void 0 : t.app) === "konnect" ? await P.put(_.value, v) : await P.patch(_.value, v)), b) {
+          const { data: i } = b;
+          e.fields.name = (i == null ? void 0 : i.name) || "", e.fields.port = i.port || ae.getPortFromProtocol(i.protocol), e.fields.protocol = (i == null ? void 0 : i.protocol) || "http", e.fields.host = (i == null ? void 0 : i.host) || "", e.fields.path = (i == null ? void 0 : i.path) || "", e.fields.url = (i == null ? void 0 : i.url) || "", e.fields.retries = i != null && i.retries || (i == null ? void 0 : i.retries) === 0 ? i == null ? void 0 : i.retries : 5, e.fields.connect_timeout = i != null && i.connect_timeout || (i == null ? void 0 : i.connect_timeout) === 0 ? i == null ? void 0 : i.connect_timeout : 6e4, e.fields.write_timeout = i != null && i.write_timeout || (i == null ? void 0 : i.write_timeout) === 0 ? i == null ? void 0 : i.write_timeout : 6e4, e.fields.read_timeout = i != null && i.read_timeout || (i == null ? void 0 : i.read_timeout) === 0 ? i == null ? void 0 : i.read_timeout : 6e4, e.fields.client_certificate = ((r = i == null ? void 0 : i.client_certificate) == null ? void 0 : r.id) || "", e.fields.ca_certificates = (w = i == null ? void 0 : i.ca_certificates) != null && w.length ? i == null ? void 0 : i.ca_certificates.join(",") : "", e.fields.tls_verify_enabled = (i == null ? void 0 : i.tls_verify) !== "" && (i == null ? void 0 : i.tls_verify) !== null && (i == null ? void 0 : i.tls_verify) !== void 0, e.fields.tls_verify_value = e.fields.tls_verify_enabled && (i == null ? void 0 : i.tls_verify), e.fields.tags = (u = i == null ? void 0 : i.tags) != null && u.length ? i.tags.join(", ") : "", e.fields.enabled = (i == null ? void 0 : i.enabled) ?? !0, Object.assign(C, e.fields), d("update", b == null ? void 0 : b.data);
+        }
+        return b;
+      } catch (v) {
+        const { fields: b, messages: i } = D(v);
+        e.errorMessages = i, b.length && b.forEach((J) => {
+          const ie = J.field;
+          ie === "client_certificate.id" ? e.formFieldErrors.client_certificate = J.message : ie.startsWith("ca_certificates") ? e.formFieldErrors.ca_certificates = J.message : Object.keys(e.formFieldErrors).includes(ie) && (e.formFieldErrors = {
+            ...e.formFieldErrors,
+            [ie]: J.message
+          });
+        }), d("error", v);
+      } finally {
+        e.isReadonly = !1;
+      }
+    };
+    return xe(() => a.gatewayServiceId, () => {
+      Object.assign(e.fields, C);
+    }), xe(e.fields, () => {
+      d("model-updated", h.value);
+    }), Je(() => {
+      d("model-updated", h.value), j.value || (e.fields.name = Fe());
+    }), L({
+      validateUrl: ce,
+      getPayload: h,
+      saveFormData: N,
+      canSubmit: re,
+      initForm: f
+    }), (t, r) => {
+      const w = T("KRadio"), u = T("KButton"), v = T("KInput"), b = T("KSelect"), i = T("KCheckbox"), J = T("KCollapse"), ie = T("KAlert");
+      return V(), F("div", Mt, [
+        n(o(yt), {
+          "can-submit": re.value,
+          config: l.config,
+          "edit-id": l.gatewayServiceId,
+          "entity-type": o(je).GatewayService,
+          "fetch-url": W.value,
+          "form-fields": h.value,
+          "is-readonly": e.isReadonly,
+          onCancel: y,
+          "onFetch:error": r[30] || (r[30] = (p) => t.$emit("error", p)),
+          "onFetch:success": f,
+          onLoading: r[31] || (r[31] = (p) => t.$emit("loading", p)),
+          onSubmit: N
+        }, {
+          "form-actions": c(() => [
+            Xe(t.$slots, "form-actions", {
+              canSubmit: re.value,
+              cancel: y,
+              submit: N
+            }, void 0, !0)
+          ]),
+          default: c(() => [
+            n(o(qe), {
+              description: o(s)("gateway_services.form.sections.keys.description"),
+              "hide-info-header": l.hideSectionsInfo,
+              title: o(s)("gateway_services.form.sections.keys.title")
+            }, {
+              default: c(() => [
+                j.value ? R("", !0) : (V(), F("div", Dt, [
+                  I("div", Bt, [
+                    n(w, {
+                      modelValue: E.value,
+                      "onUpdate:modelValue": r[0] || (r[0] = (p) => E.value = p),
+                      card: "",
+                      "card-orientation": "horizontal",
+                      "data-testid": "gateway-service-url-radio",
+                      description: o(s)("gateway_services.form.sections.keys.url.description"),
+                      label: o(s)("gateway_services.form.sections.keys.url.label"),
+                      "selected-value": fe.url,
+                      onChange: ve
+                    }, null, 8, ["modelValue", "description", "label", "selected-value"]),
+                    n(w, {
+                      modelValue: E.value,
+                      "onUpdate:modelValue": r[1] || (r[1] = (p) => E.value = p),
+                      card: "",
+                      "card-orientation": "horizontal",
+                      "checked-group": "protocol",
+                      "data-testid": "gateway-service-protocol-radio",
+                      description: o(s)("gateway_services.form.sections.keys.protocol.description"),
+                      label: o(s)("gateway_services.form.sections.keys.protocol.label"),
+                      "selected-value": fe.protocol,
+                      onChange: ve
+                    }, null, 8, ["modelValue", "description", "label", "selected-value"])
+                  ]),
+                  n(Re, { name: "slide-fade" }, {
+                    default: c(() => [
+                      E.value === "url" ? (V(), F("div", Kt, [
+                        n(v, {
+                          modelValue: e.fields.url,
+                          "onUpdate:modelValue": r[2] || (r[2] = (p) => e.fields.url = p),
+                          modelModifiers: { trim: !0 },
+                          class: "gateway-service-url-input gateway-service-form-margin-bottom",
+                          "data-testid": "gateway-service-url-input",
+                          error: Pe.value,
+                          "error-message": H("url"),
+                          label: o(s)("gateway_services.form.fields.upstream_url.label"),
+                          "label-attributes": {
+                            info: l.config.app === "konnect" ? o(s)("gateway_services.form.fields.upstream_url.tooltip_for_konnect") : o(s)("gateway_services.form.fields.upstream_url.tooltip_for_km"),
+                            tooltipAttributes: { maxWidth: "400" }
+                          },
+                          name: "url",
+                          placeholder: o(s)("gateway_services.form.fields.upstream_url.placeholder"),
+                          required: "",
+                          onInput: ye
+                        }, Ve({ _: 2 }, [
+                          l.hideTrySampleApiButton ? void 0 : {
+                            name: "after",
+                            fn: c(() => [
+                              n(u, {
+                                appearance: "tertiary",
+                                "data-testid": "try-sample-api",
+                                size: "small",
+                                onClick: ge
+                              }, {
+                                default: c(() => [
+                                  A(k(o(s)("gateway_services.form.buttons.try_sample")), 1)
+                                ]),
+                                _: 1
+                              })
+                            ]),
+                            key: "0"
+                          }
+                        ]), 1032, ["modelValue", "error", "error-message", "label", "label-attributes", "placeholder"])
+                      ])) : R("", !0)
+                    ]),
+                    _: 1
+                  })
+                ])),
+                n(Re, { name: "slide-fade" }, {
+                  default: c(() => [
+                    E.value === "protocol" || j.value ? (V(), F("div", Lt, [
+                      n(b, {
+                        modelValue: e.fields.protocol,
+                        "onUpdate:modelValue": r[3] || (r[3] = (p) => e.fields.protocol = p),
+                        "data-testid": "gateway-service-protocol-select",
+                        items: te,
+                        label: o(s)("gateway_services.form.fields.protocol.label"),
+                        "label-attributes": {
+                          info: o(s)("gateway_services.form.fields.protocol.tooltip"),
+                          tooltipAttributes: { maxWidth: "400" }
+                        },
+                        readonly: e.isReadonly,
+                        required: "",
+                        width: "100%",
+                        onSelected: pe
+                      }, null, 8, ["modelValue", "label", "label-attributes", "readonly"]),
+                      n(v, {
+                        modelValue: e.fields.host,
+                        "onUpdate:modelValue": r[4] || (r[4] = (p) => e.fields.host = p),
+                        modelModifiers: { trim: !0 },
+                        class: "gateway-service-form-margin-top",
+                        "data-testid": "gateway-service-host-input",
+                        error: !!e.formFieldErrors.host,
+                        "error-message": H("host"),
+                        label: o(s)("gateway_services.form.fields.host.label"),
+                        "label-attributes": {
+                          info: o(s)("gateway_services.form.fields.host.tooltip"),
+                          tooltipAttributes: { maxWidth: "400" }
+                        },
+                        name: "host",
+                        placeholder: o(s)("gateway_services.form.fields.host.placeholder"),
+                        required: "",
+                        onInput: r[5] || (r[5] = (p) => M("host"))
+                      }, Ve({ _: 2 }, [
+                        l.hideTrySampleApiButton ? void 0 : {
+                          name: "after",
+                          fn: c(() => [
+                            n(u, {
+                              appearance: "tertiary",
+                              size: "small",
+                              onClick: ge
+                            }, {
+                              default: c(() => [
+                                A(k(o(s)("gateway_services.form.buttons.try_sample")), 1)
+                              ]),
+                              _: 1
+                            })
+                          ]),
+                          key: "0"
+                        }
+                      ]), 1032, ["modelValue", "error", "error-message", "label", "label-attributes", "placeholder"]),
+                      he.value ? (V(), F("div", qt, [
+                        n(v, {
+                          modelValue: e.fields.path,
+                          "onUpdate:modelValue": r[6] || (r[6] = (p) => e.fields.path = p),
+                          modelModifiers: { trim: !0 },
+                          class: "gateway-service-form-margin-top",
+                          "data-testid": "gateway-service-path-input",
+                          error: !!e.formFieldErrors.path,
+                          "error-message": H("path"),
+                          label: o(s)("gateway_services.form.fields.path.label"),
+                          "label-attributes": {
+                            info: o(s)("gateway_services.form.fields.path.tooltip"),
+                            tooltipAttributes: { maxWidth: "400" }
+                          },
+                          name: "path",
+                          placeholder: o(s)("gateway_services.form.fields.path.placeholder"),
+                          onInput: r[7] || (r[7] = (p) => M("path"))
+                        }, null, 8, ["modelValue", "error", "error-message", "label", "label-attributes", "placeholder"])
+                      ])) : R("", !0),
+                      n(v, {
+                        modelValue: e.fields.port,
+                        "onUpdate:modelValue": [
+                          r[8] || (r[8] = (p) => e.fields.port = p),
+                          r[10] || (r[10] = () => {
+                            e.fields.port = z(e.fields.port + "");
+                          })
+                        ],
+                        class: "gateway-service-form-margin-top",
+                        "data-testid": "gateway-service-port-input",
+                        error: !!e.formFieldErrors.port,
+                        "error-message": H("port"),
+                        label: o(s)("gateway_services.form.fields.port.label"),
+                        "label-attributes": {
+                          info: o(s)("gateway_services.form.fields.port.tooltip"),
+                          tooltipAttributes: { maxWidth: "400" }
+                        },
+                        name: "port",
+                        type: "number",
+                        onInput: r[9] || (r[9] = (p) => M("port"))
+                      }, null, 8, ["modelValue", "error", "error-message", "label", "label-attributes"])
+                    ])) : R("", !0)
+                  ]),
+                  _: 1
+                }),
+                n(J, {
+                  modelValue: g.value,
+                  "onUpdate:modelValue": r[26] || (r[26] = (p) => g.value = p),
+                  "data-testid": "advanced-fields-collapse",
+                  "trigger-alignment": "leading",
+                  "trigger-label": o(s)("gateway_services.form.sections.keys.viewAdvancedFields")
+                }, {
+                  default: c(() => [
+                    n(Re, { name: "slide-fade" }, {
+                      default: c(() => [
+                        g.value ? R("", !0) : (V(), F("div", Gt, [
+                          I("div", Nt, [
+                            n(v, {
+                              modelValue: e.fields.retries,
+                              "onUpdate:modelValue": [
+                                r[11] || (r[11] = (p) => e.fields.retries = p),
+                                r[12] || (r[12] = () => {
+                                  e.fields.retries = z(e.fields.retries + "");
+                                })
+                              ],
+                              autocomplete: "off",
+                              "data-testid": "gateway-service-retries-input",
+                              label: o(s)("gateway_services.form.fields.retries.label"),
+                              "label-attributes": {
+                                info: o(s)("gateway_services.form.fields.retries.tooltip"),
+                                tooltipAttributes: { maxWidth: "400" }
+                              },
+                              name: "retries",
+                              readonly: e.isReadonly,
+                              type: "number"
+                            }, null, 8, ["modelValue", "label", "label-attributes", "readonly"])
+                          ]),
+                          I("div", Wt, [
+                            n(v, {
+                              modelValue: e.fields.connect_timeout,
+                              "onUpdate:modelValue": [
+                                r[13] || (r[13] = (p) => e.fields.connect_timeout = p),
+                                r[14] || (r[14] = () => {
+                                  e.fields.connect_timeout = z(e.fields.connect_timeout + "");
+                                })
+                              ],
+                              autocomplete: "off",
+                              "data-testid": "gateway-service-connTimeout-input",
+                              label: o(s)("gateway_services.form.fields.connect_timeout.label"),
+                              "label-attributes": {
+                                info: o(s)("gateway_services.form.fields.connect_timeout.tooltip"),
+                                tooltipAttributes: { maxWidth: "400" }
+                              },
+                              name: "connTimeout",
+                              readonly: e.isReadonly,
+                              type: "number"
+                            }, null, 8, ["modelValue", "label", "label-attributes", "readonly"])
+                          ]),
+                          I("div", Ot, [
+                            n(v, {
+                              modelValue: e.fields.write_timeout,
+                              "onUpdate:modelValue": [
+                                r[15] || (r[15] = (p) => e.fields.write_timeout = p),
+                                r[16] || (r[16] = () => {
+                                  e.fields.write_timeout = z(e.fields.write_timeout + "");
+                                })
+                              ],
+                              autocomplete: "off",
+                              "data-testid": "gateway-service-writeTimeout-input",
+                              label: o(s)("gateway_services.form.fields.write_timeout.label"),
+                              "label-attributes": {
+                                info: o(s)("gateway_services.form.fields.write_timeout.tooltip"),
+                                tooltipAttributes: { maxWidth: "400" }
+                              },
+                              name: "writeTimeout",
+                              readonly: e.isReadonly,
+                              type: "number"
+                            }, null, 8, ["modelValue", "label", "label-attributes", "readonly"])
+                          ]),
+                          I("div", jt, [
+                            n(v, {
+                              modelValue: e.fields.read_timeout,
+                              "onUpdate:modelValue": [
+                                r[17] || (r[17] = (p) => e.fields.read_timeout = p),
+                                r[18] || (r[18] = () => {
+                                  e.fields.read_timeout = z(e.fields.read_timeout + "");
+                                })
+                              ],
+                              autocomplete: "off",
+                              "data-testid": "gateway-service-readTimeout-input",
+                              label: o(s)("gateway_services.form.fields.read_timeout.label"),
+                              "label-attributes": {
+                                info: o(s)("gateway_services.form.fields.read_timeout.tooltip"),
+                                tooltipAttributes: { maxWidth: "400" }
+                              },
+                              name: "readTimeout",
+                              readonly: e.isReadonly,
+                              type: "number"
+                            }, null, 8, ["modelValue", "label", "label-attributes", "readonly"])
+                          ]),
+                          be.value ? (V(), F("div", zt, [
+                            n(v, {
+                              modelValue: e.fields.client_certificate,
+                              "onUpdate:modelValue": r[19] || (r[19] = (p) => e.fields.client_certificate = p),
+                              modelModifiers: { trim: !0 },
+                              autocomplete: "off",
+                              "data-testid": "gateway-service-clientCert-input",
+                              error: !!e.formFieldErrors.client_certificate,
+                              label: o(s)("gateway_services.form.fields.client_certificate.label"),
+                              "label-attributes": {
+                                info: o(s)("gateway_services.form.fields.client_certificate.tooltip"),
+                                tooltipAttributes: { maxWidth: "400" }
+                              },
+                              name: "clientCert",
+                              placeholder: o(s)("gateway_services.form.fields.client_certificate.placeholder"),
+                              readonly: e.isReadonly,
+                              type: "text",
+                              onInput: r[20] || (r[20] = (p) => _e("client_certificate"))
+                            }, null, 8, ["modelValue", "error", "label", "label-attributes", "placeholder", "readonly"])
+                          ])) : R("", !0),
+                          Ae.value ? (V(), F("div", Ht, [
+                            n(v, {
+                              modelValue: e.fields.ca_certificates,
+                              "onUpdate:modelValue": r[21] || (r[21] = (p) => e.fields.ca_certificates = p),
+                              modelModifiers: { trim: !0 },
+                              autocomplete: "off",
+                              "data-testid": "gateway-service-ca-certs-input",
+                              error: !!e.formFieldErrors.ca_certificates,
+                              label: o(s)("gateway_services.form.fields.ca_certificates.label"),
+                              "label-attributes": { tooltipAttributes: { maxWidth: "400" } },
+                              placeholder: o(s)("gateway_services.form.fields.ca_certificates.placeholder"),
+                              readonly: e.isReadonly,
+                              type: "text",
+                              onInput: r[22] || (r[22] = (p) => _e("ca_certificates"))
+                            }, {
+                              "label-tooltip": c(() => [
+                                n(o(q), {
+                                  keypath: "gateway_services.form.fields.ca_certificates.tooltip",
+                                  scope: "global"
+                                }, {
+                                  code1: c(() => [
+                                    I("code", null, k(o(s)("gateway_services.form.fields.ca_certificates.code1")), 1)
+                                  ]),
+                                  code2: c(() => [
+                                    I("code", null, k(o(s)("gateway_services.form.fields.ca_certificates.code2")), 1)
+                                  ]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            }, 8, ["modelValue", "error", "label", "placeholder", "readonly"])
+                          ])) : R("", !0),
+                          we.value ? (V(), F("div", Zt, [
+                            n(i, {
+                              modelValue: e.fields.tls_verify_enabled,
+                              "onUpdate:modelValue": r[23] || (r[23] = (p) => e.fields.tls_verify_enabled = p),
+                              "data-testid": "gateway-service-tls-verify-checkbox",
+                              description: o(s)("gateway_services.form.fields.tls_verify_enabled.help"),
+                              label: o(s)("gateway_services.form.fields.tls_verify_enabled.label"),
+                              "label-attributes": { tooltipAttributes: { maxWidth: "400" } }
+                            }, {
+                              tooltip: c(() => [
+                                n(o(q), {
+                                  keypath: "gateway_services.form.fields.tls_verify_enabled.tooltip",
+                                  scope: "global"
+                                }, {
+                                  code1: c(() => [
+                                    I("code", null, k(o(s)("gateway_services.form.fields.tls_verify_enabled.code1")), 1)
+                                  ]),
+                                  _: 1
+                                })
+                              ]),
+                              _: 1
+                            }, 8, ["modelValue", "description", "label"]),
+                            e.fields.tls_verify_enabled ? (V(), F("div", Jt, [
+                              n(w, {
+                                modelValue: e.fields.tls_verify_value,
+                                "onUpdate:modelValue": r[24] || (r[24] = (p) => e.fields.tls_verify_value = p),
+                                "data-testid": "gateway-service-tls-verify-true-option",
+                                label: o(s)("gateway_services.form.fields.tls_verify_option.true.label"),
+                                "selected-value": !0
+                              }, null, 8, ["modelValue", "label"])
+                            ])) : R("", !0),
+                            e.fields.tls_verify_enabled ? (V(), F("div", Qt, [
+                              n(w, {
+                                modelValue: e.fields.tls_verify_value,
+                                "onUpdate:modelValue": r[25] || (r[25] = (p) => e.fields.tls_verify_value = p),
+                                "data-testid": "gateway-service-tls-verify-false-option",
+                                label: o(s)("gateway_services.form.fields.tls_verify_option.false.label"),
+                                "selected-value": !1
+                              }, null, 8, ["modelValue", "label"])
+                            ])) : R("", !0)
+                          ])) : R("", !0)
+                        ]))
+                      ]),
+                      _: 1
+                    })
+                  ]),
+                  _: 1
+                }, 8, ["modelValue", "trigger-label"])
+              ]),
+              _: 1
+            }, 8, ["description", "hide-info-header", "title"]),
+            n(o(qe), {
+              description: o(s)("gateway_services.form.sections.general.description"),
+              "hide-info-header": l.hideSectionsInfo,
+              title: o(s)("gateway_services.form.sections.general.title")
+            }, {
+              default: c(() => [
+                n(v, {
+                  modelValue: e.fields.name,
+                  "onUpdate:modelValue": r[27] || (r[27] = (p) => e.fields.name = p),
+                  modelModifiers: { trim: !0 },
+                  autocomplete: "off",
+                  "data-testid": "gateway-service-name-input",
+                  error: ee.value,
+                  "error-message": ne.value,
+                  label: o(s)("gateway_services.form.fields.name.label"),
+                  "label-attributes": {
+                    info: o(s)("gateway_services.form.fields.name.tooltip"),
+                    tooltipAttributes: { maxWidth: "400" }
+                  },
+                  name: "name",
+                  placeholder: o(s)("gateway_services.form.fields.name.placeholder"),
+                  readonly: e.isReadonly,
+                  type: "text",
+                  onInput: oe
+                }, null, 8, ["modelValue", "error", "error-message", "label", "label-attributes", "placeholder", "readonly"]),
+                n(J, {
+                  "data-testid": "tags-collapse",
+                  "trigger-alignment": "leading",
+                  "trigger-label": o(s)("gateway_services.form.fields.tags.collapse")
+                }, {
+                  default: c(() => [
+                    I("div", Xt, [
+                      n(v, {
+                        modelValue: e.fields.tags,
+                        "onUpdate:modelValue": r[28] || (r[28] = (p) => e.fields.tags = p),
+                        modelModifiers: { trim: !0 },
+                        autocomplete: "off",
+                        "data-testid": "gateway-service-tags-input",
+                        help: o(s)("gateway_services.form.fields.tags.help"),
+                        label: o(s)("gateway_services.form.fields.tags.label"),
+                        "label-attributes": {
+                          info: o(s)("gateway_services.form.fields.tags.tooltip"),
+                          tooltipAttributes: { maxWidth: "400" }
+                        },
+                        name: "tags",
+                        placeholder: o(s)("gateway_services.form.fields.tags.placeholder"),
+                        readonly: e.isReadonly,
+                        type: "text",
+                        onInput: r[29] || (r[29] = (p) => G("tags"))
+                      }, null, 8, ["modelValue", "help", "label", "label-attributes", "placeholder", "readonly"])
+                    ])
+                  ]),
+                  _: 1
+                }, 8, ["trigger-label"])
+              ]),
+              _: 1
+            }, 8, ["description", "hide-info-header", "title"]),
+            e.errorMessages.length ? (V(), Q(ie, {
+              key: 0,
+              appearance: "danger",
+              "data-testid": "form-error"
+            }, {
+              default: c(() => [
+                I("ul", Yt, [
+                  (V(!0), F(Ge, null, Qe(e.errorMessages, (p) => (V(), F("li", { key: p }, k(p), 1))), 128))
+                ])
+              ]),
+              _: 1
+            })) : R("", !0)
+          ]),
+          _: 3
+        }, 8, ["can-submit", "config", "edit-id", "entity-type", "fetch-url", "form-fields", "is-readonly"])
+      ]);
+    };
+  }
+}), po = /* @__PURE__ */ ze(eo, [["__scopeId", "data-v-9865eab8"]]), { validateHost: to, validatePort: oo, validateProtocol: ro, validatePath: io } = X.useUrlValidators(), mo = () => ({
+  validateHost: to,
+  validatePort: oo,
+  validateProtocol: ro,
+  validatePath: io
+});
+export {
+  fo as GatewayServiceConfigCard,
+  po as GatewayServiceForm,
+  uo as GatewayServiceList,
+  mo as useUrlValidator
+};

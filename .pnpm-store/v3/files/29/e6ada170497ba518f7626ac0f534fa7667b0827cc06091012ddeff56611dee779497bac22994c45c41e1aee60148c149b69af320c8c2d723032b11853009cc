@@ -1,0 +1,7 @@
+import t from "./kongponents.es590.js";
+function i(e) {
+  return Object.assign({}, t(), e);
+}
+export {
+  i as default
+};

@@ -1,0 +1,38 @@
+export declare const DK_HEADER_HEIGHT = 44;
+export declare const DK_SIDE_PANEL_WIDTH = 220;
+export declare const DK_NODE_PROPERTIES_PANEL_WIDTH = 366;
+export declare const DK_NODE_PROPERTIES_PANEL_Z_INDEX = 1000;
+export declare const DK_NODE_PROPERTIES_PANEL_OFFSET_TOP: number;
+export declare const DK_FLOW_Z_LAYER_STEP = 1;
+export declare const DK_FLOW_GROUP_Z_OFFSET = 0;
+export declare const DK_FLOW_EDGE_Z_OFFSET = 1;
+export declare const DK_FLOW_BRANCH_EDGE_Z_OFFSET = 2;
+export declare const DK_FLOW_NODE_Z_OFFSET = 3;
+export declare const DK_BRANCH_GROUP_PADDING: number;
+export declare const DK_DATA_TRANSFER_MIME_TYPE = "application/x-datakit+json";
+export declare const HOTKEYS: {
+    readonly delete: ["Delete"];
+    readonly undo: ["Mod", "Z"];
+    readonly redo: {
+        readonly mac: ["Mod", "Shift", "Z"];
+        readonly windows: ["Mod", "Y"];
+        readonly linux: ["Mod", "Shift", "Z"];
+    };
+    readonly copy: ["Mod", "C"];
+    readonly paste: ["Mod", "V"];
+    readonly duplicate: ["Mod", "D"];
+};
+export declare const DEFAULT_LAYOUT_OPTIONS: {
+    readonly padding: 80;
+    readonly gaps: {
+        readonly nodes: 60;
+        readonly edges: 80;
+        readonly ranks: 60;
+    };
+};
+export declare const DEFAULT_VIEWPORT_WIDTH = 1600;
+export declare const MAX_ZOOM_LEVEL = 1.2;
+export declare const MIN_ZOOM_LEVEL = 0;
+export declare const SCROLL_DURATION = 200;
+export declare const CONFIRM_MODAL_PROVIDE_KEY: unique symbol;
+//# sourceMappingURL=constants.d.ts.map

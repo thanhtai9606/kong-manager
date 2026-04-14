@@ -1,0 +1,1 @@
+"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const t=require("./kongponents293.cjs"),r=require("./kongponents294.cjs");function u(e){return e!=null&&r.default(e.length)&&!t.default(e)}exports.default=u;

@@ -1,0 +1,137 @@
+import { defineComponent as S, computed as s, createBlock as C, openBlock as d, resolveDynamicComponent as y, normalizeStyle as b, withCtx as x, createElementBlock as F } from "vue";
+import { KUI_ICON_SIZE_50 as c } from "./kong-icons.es1592.js";
+const M = ["aria-hidden"], p = `<g clip-path="url(#clip0_246_4814)">
+<path d="M11.9999 24C13.4677 24 14.8738 23.736 16.1737 23.2536L16.6955 12L16.1738 0.746391C14.8738 0.264047 13.4677 0 11.9999 0C10.532 0 9.1259 0.264047 7.82596 0.746391L7.3042 12L7.82592 23.2536C9.1259 23.736 10.532 24 11.9999 24Z" fill="#0052B4"/>
+<path d="M0 12C0 17.1596 3.2565 21.5581 7.82611 23.2536V0.746399C3.2565 2.44191 0 6.84043 0 12Z" fill="#A2001D"/>
+<path d="M16.1738 0.746399V23.2537C20.7434 21.5581 23.9999 17.1596 23.9999 12C23.9999 6.84043 20.7434 2.44191 16.1738 0.746399Z" fill="#A2001D"/>
+<path d="M5.73926 12H6.78274V16.1739H5.73926V12Z" fill="#FFDA44"/>
+<path d="M1.56543 12H2.60891V16.1739H1.56543V12Z" fill="#FFDA44"/>
+<path d="M4.17434 14.6087C4.75064 14.6087 5.21783 14.1415 5.21783 13.5652C5.21783 12.9889 4.75064 12.5217 4.17434 12.5217C3.59804 12.5217 3.13086 12.9889 3.13086 13.5652C3.13086 14.1415 3.59804 14.6087 4.17434 14.6087Z" fill="#FFDA44"/>
+<path d="M4.17406 10.4348C4.4622 10.4348 4.69578 10.2012 4.69578 9.91305C4.69578 9.62491 4.4622 9.39133 4.17406 9.39133C3.88593 9.39133 3.65234 9.62491 3.65234 9.91305C3.65234 10.2012 3.88593 10.4348 4.17406 10.4348Z" fill="#FFDA44"/>
+<path d="M3.13086 15.1305H5.21783V16.1739H3.13086V15.1305Z" fill="#FFDA44"/>
+<path d="M3.13086 10.9565H5.21783V12H3.13086V10.9565Z" fill="#FFDA44"/>
+<path d="M4.17409 6.26086L4.54365 7.39805H5.73934L4.77207 8.1009L5.14136 9.23808L4.17409 8.53524L3.20687 9.23808L3.57615 8.1009L2.60889 7.39805H3.80457L4.17409 6.26086Z" fill="#FFDA44"/>
+</g>
+<defs>
+<clipPath id="clip0_246_4814">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>`, Z = /* @__PURE__ */ S({
+  __name: "FlagMnIcon",
+  props: {
+    /** The accessibility text provided to screen readers */
+    title: {
+      type: String,
+      required: !1,
+      default: ""
+    },
+    /** The icon color. Defaults to `currentColor` which inherits text color from the parent element */
+    color: {
+      type: String,
+      required: !1,
+      default: "currentColor"
+    },
+    /** The CSS display property for the icon. Defaults to `block` */
+    display: {
+      type: String,
+      required: !1,
+      default: "block"
+    },
+    /** Whether the icon is just eye-candy or is meaningful to the page (should screen-readers ignore the icon?) */
+    decorative: {
+      type: Boolean,
+      required: !1,
+      default: !1
+    },
+    /** The icon size */
+    size: {
+      type: [Number, String],
+      required: !1,
+      default: c,
+      // if setting to the imported const fails, just pass a number of 24 as the default.
+      validator: (i) => {
+        if (typeof i == "number" && i > 0)
+          return !0;
+        if (typeof i == "string") {
+          const e = String(i).replace(/px/gi, ""), n = Number(e);
+          if (n && !isNaN(n) && Number.isInteger(n) && n > 0)
+            return !0;
+        }
+        return !1;
+      }
+    },
+    /** The HTML tag to utilize for the icon's wrapper element. Defaults to `span` */
+    as: {
+      type: String,
+      required: !1,
+      default: "span"
+    },
+    /**
+     * A boolean to disable prefixing any internal SVG ids with a unique string which is done to resolve the potential for multiple SVG instances on the same page and the SVG utilizing the same ids and references internally (e.g. in the `<defs>` tag).
+     * Typically only set to `true` during snapshot testing.
+     * Defaults to `false`.
+     */
+    staticIds: {
+      type: Boolean,
+      default: !1
+    }
+  },
+  setup(i) {
+    const e = i, n = s(() => {
+      if (typeof e.size == "number" && e.size > 0)
+        return `${e.size}px`;
+      if (typeof e.size == "string") {
+        const r = String(e.size).replace(/px/gi, ""), t = Number(r);
+        if (t && !isNaN(t) && Number.isInteger(t) && t > 0)
+          return `${t}px`;
+      }
+      return c;
+    }), f = s(() => ({
+      boxSizing: "border-box",
+      color: e.color,
+      display: e.display,
+      flexShrink: "0",
+      height: n.value,
+      lineHeight: "0",
+      width: n.value,
+      pointerEvents: e.decorative ? "none" : void 0
+    })), u = (r) => {
+      const t = {}, v = Math.random().toString(36).substring(2, 12);
+      return r.replace(/id="([^"]+)"/g, (a, l) => {
+        const o = `${v}-${l}`;
+        return t[l] = o, `id="${o}"`;
+      }).replace(/#([^\s^")]+)/g, (a, l) => t[l] ? `#${t[l]}` : a);
+    }, g = {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "&": "&amp;"
+    }, h = (r) => r.replace(/[<>"'&]/g, (t) => g[t]), m = `${e.title ? `<title data-testid="kui-icon-svg-title">${h(e.title)}</title>` : ""}${e.staticIds ? p : u(p)}`;
+    return (r, t) => (d(), C(y(i.as), {
+      "aria-hidden": i.decorative ? "true" : void 0,
+      class: "kui-icon flag-mn-icon",
+      "data-testid": "kui-icon-wrapper-flag-mn-icon",
+      style: b(f.value),
+      tabindex: i.decorative ? "-1" : void 0
+    }, {
+      default: x(() => [
+        (d(), F("svg", {
+          "aria-hidden": i.decorative ? "true" : void 0,
+          "data-testid": "kui-icon-svg-flag-mn-icon",
+          fill: "none",
+          height: "100%",
+          role: "img",
+          viewBox: "0 0 24 24",
+          width: "100%",
+          xmlns: "http://www.w3.org/2000/svg",
+          innerHTML: m
+        }, null, 8, M))
+      ]),
+      _: 1
+    }, 8, ["aria-hidden", "style", "tabindex"]));
+  }
+});
+export {
+  Z as default
+};

@@ -1,0 +1,118 @@
+import * as monaco from 'monaco-editor';
+import type { Schema } from './schema';
+import type { ProvideCompletionItems } from './types';
+export declare const theme = "kong-expr-theme";
+export declare const buildLanguageId: (schema: Schema) => string;
+export declare const TokenType: {
+    IDENT: string;
+    OPERATOR: string;
+    QUOTE_OPEN: string;
+    QUOTE_CLOSE: string;
+    STR_LITERAL: string;
+    STR_ESCAPE: string;
+    STR_INVALID_ESCAPE: string;
+    RAW_STR_OPEN: string;
+    RAW_STR_CLOSE: string;
+    IP_V4: string;
+    IP_V6: string;
+    NUMBER: string;
+    WHITESPACE: string;
+    FUNC_NAME: string;
+    PAREN_OPEN: string;
+    PAREN_CLOSE: string;
+};
+export declare const registerTheme: () => void;
+export interface Token extends monaco.Token {
+    shortType: string;
+    lineIndex: number;
+    flatIndex: number;
+    flatOffset: number;
+}
+/**
+ * Token names are suffixed with the language ID (e.g., `identifier.kong-expressions-http`).
+ *
+ * This function removes the language ID suffix from the token type and returns the shortened token
+ * type. You can find a list of short token types in the {@link TokenType} object.
+ *
+ * @param languageId the language ID
+ * @param fullType the full token type
+ * @returns the shortened type or the full type if the full type does not end with the language ID
+ */
+export declare const shortenTokenType: (languageId: string, fullType: string) => string;
+/**
+ * Locate the token that includes the given offset on the given line.
+ *
+ * Time complexity = O(log n)
+ *
+ * @param nestedTokens
+ * @param lineIndex
+ * @param offset
+ * @returns
+ */
+export declare const locateToken: (nestedTokens: Token[][], lineIndex: number, offset: number) => Token | undefined;
+export declare const transformTokens: (model: monaco.editor.ITextModel, tokens: monaco.Token[][]) => [Token[], Token[][]];
+/**
+ * Get the range for the given tokens.
+ *
+ * Time complexity = O(1)
+ *
+ * @param model the text model
+ * @param tokens the tokens to get the range from (1D array)
+ * @param fromIndex the index of the first TOKEN (inclusive)
+ * @param toIndex the index of the last TOKEN (exclusive)
+ * @returns
+ */
+export declare const getTokensRange: (model: monaco.editor.ITextModel, tokens: Token[], fromIndex: number, toIndex: number) => monaco.Range;
+/**
+ * Scan forward (right) until the token that satisfies the condition is found.
+ *
+ * Time complexity = O(n)
+ *
+ * @param tokens the tokens to scan (1D array)
+ * @param fromIndex the index of the TOKEN to start scanning from (exclusive)
+ * @param until the condition to stop scanning
+ * @returns the index of the TOKEN that satisfies the condition or the length of the tokens if not found
+ */
+export declare const scanTokenForward: (tokens: Token[], fromIndex: number, until: (token: Token) => boolean) => number;
+/**
+ * Scan backward (left) until the token that satisfies the condition is found.
+ *
+ * Time complexity = O(n)
+ *
+ * @param tokens the tokens to scan (1D array)
+ * @param fromIndex the index of the TOKEN to start scanning from (exclusive)
+ * @param until the condition to stop scanning
+ * @returns the index of the TOKEN that satisfies the condition or `-1` if not found
+ */
+export declare const scanTokenBackward: (tokens: Token[], fromIndex: number, until: (token: Token) => boolean) => number;
+/**
+ * Scan the consecutive tokens from the given index backward (left) and forward (right) until the
+ * condition is met. The consecutive tokens DO NOT include the tokens met by the condition on both
+ * sides.
+ *
+ * Time complexity = O(n)
+ *
+ * @param model the text model
+ * @param tokens the tokens to scan (1D array)
+ * @param fromIndex the index to start scanning from (exclusive)
+ * @param until the condition to stop scanning
+ * @returns the range of the tokens and the index of the first token in the range
+ */
+export declare const scanTokensBidirectional: (model: monaco.editor.ITextModel, tokens: Token[], fromIndex: number, until: (token: Token) => boolean) => [monaco.Range, number];
+/**
+ * Locate the nearest IDENT token in the possible LHS of the given token.
+ * Note: This implementation is NOT OPTIMAL and only works on a best-effort basis.
+ *
+ * Time complexity = O(n)
+ *
+ * @param tokens the tokens to locate the LHS from (1D array)
+ * @param fromIndex the index of the string tokens (STR_LITERAL, STR_ESCAPE, STR_INVALID_ESCAPE)
+ * @returns the index of the LHS or `-1` if not found
+ */
+export declare const locateStringLhsIdent: (tokens: Token[], fromIndex: number) => number;
+export declare const languageDisposables: Record<string, () => void>;
+export declare const registerLanguage: (languageId: string, provideCompletionItems?: ProvideCompletionItems) => {
+    languageId: string;
+};
+export declare const tokenize: typeof monaco.editor.tokenize;
+//# sourceMappingURL=monaco.d.ts.map

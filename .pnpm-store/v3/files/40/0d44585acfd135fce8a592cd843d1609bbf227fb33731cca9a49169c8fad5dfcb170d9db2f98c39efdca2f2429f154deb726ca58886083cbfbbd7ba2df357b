@@ -1,0 +1,12 @@
+export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
+export type JsonPrimitive = string | number | boolean | null;
+export type JsonObject = {
+    [key: string]: JsonValue;
+};
+export type JsonArray = JsonValue[];
+export type FieldValue = Record<string, string>;
+export type StoreValue = JsonObject;
+export declare function storeValueToFieldValue(values: StoreValue): FieldValue;
+export declare function fieldValueToStoreValue(values: FieldValue): StoreValue;
+export declare function renameKeyAndKeepOrder<T extends StoreValue | FieldValue>(values: T, oldKey: string, newKey: string): T;
+//# sourceMappingURL=static.d.ts.map

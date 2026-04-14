@@ -1,0 +1,26 @@
+import { __module as e } from "./kongponents.es602.js";
+import { __require as l } from "./kongponents.es454.js";
+import { __require as O } from "./kongponents.es505.js";
+import { __require as m } from "./kongponents.es553.js";
+import { __require as p } from "./kongponents.es463.js";
+var u;
+function I() {
+  return u ? e.exports : (u = 1, (function(i, r) {
+    var t = l().default;
+    Object.defineProperty(r, "__esModule", {
+      value: !0
+    }), r.default = _;
+    var f = t(/* @__PURE__ */ O()), o = t(/* @__PURE__ */ m()), n = t(/* @__PURE__ */ p());
+    function _(s) {
+      (0, n.default)(1, arguments);
+      var d = (0, f.default)(s), a = /* @__PURE__ */ new Date(0);
+      a.setUTCFullYear(d, 0, 4), a.setUTCHours(0, 0, 0, 0);
+      var q = (0, o.default)(a);
+      return q;
+    }
+    i.exports = r.default;
+  })(e, e.exports), e.exports);
+}
+export {
+  I as __require
+};

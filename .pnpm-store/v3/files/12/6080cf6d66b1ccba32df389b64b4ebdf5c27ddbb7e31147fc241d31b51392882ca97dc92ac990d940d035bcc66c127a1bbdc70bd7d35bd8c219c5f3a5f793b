@@ -1,0 +1,6 @@
+import type { UnionFieldSchema } from '../../../../types/plugins/form-schema';
+import { isTagField } from '../../shared/utils';
+export declare function isEnumField(schema: UnionFieldSchema): boolean;
+export declare function isMultiEnumField(schema: UnionFieldSchema): boolean;
+export { isTagField };
+//# sourceMappingURL=schema-utils.d.ts.map

@@ -1,0 +1,47 @@
+import { defineComponent as r, openBlock as c, createElementBlock as u, createElementVNode as l, withKeys as s, withModifiers as n, normalizeClass as v, renderSlot as w, createTextVNode as b, toDisplayString as f } from "vue";
+const k = ["aria-selected", "data-testid"], y = { class: "select-item-container" }, $ = ["disabled", "value"], h = { class: "select-item-label" }, K = /* @__PURE__ */ r({
+  __name: "KSelectItem",
+  props: {
+    item: {}
+  },
+  emits: ["selected", "arrow-down", "arrow-up"],
+  setup(e, { emit: o }) {
+    const a = o, d = (t) => {
+      if (e.item.disabled) {
+        t.stopPropagation();
+        return;
+      }
+      a("selected", e.item);
+    };
+    return (t, i) => (c(), u("div", {
+      key: e.item.key,
+      "aria-selected": e.item.selected,
+      class: "select-item",
+      "data-testid": `select-item-${e.item.value}`,
+      role: "option"
+    }, [
+      l("div", y, [
+        l("button", {
+          class: v({ selected: e.item.selected }),
+          disabled: e.item.disabled === !0 ? !0 : void 0,
+          type: "button",
+          value: e.item.value,
+          onClick: d,
+          onKeydown: [
+            i[0] || (i[0] = s(n((m) => t.$emit("arrow-down"), ["prevent"]), ["down"])),
+            i[1] || (i[1] = s(n((m) => t.$emit("arrow-up"), ["prevent"]), ["up"]))
+          ]
+        }, [
+          l("span", h, [
+            w(t.$slots, "content", {}, () => [
+              b(f(e.item.label), 1)
+            ], !0)
+          ])
+        ], 42, $)
+      ])
+    ], 8, k));
+  }
+});
+export {
+  K as default
+};

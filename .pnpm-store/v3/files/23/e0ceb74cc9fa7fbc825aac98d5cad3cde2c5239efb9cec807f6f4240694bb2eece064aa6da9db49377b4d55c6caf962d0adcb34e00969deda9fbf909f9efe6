@@ -1,0 +1,21 @@
+export declare const createArraySelectFieldSchema: (values: string[], defaultValue?: string[]) => {
+    type: string;
+    valueType: string;
+    valueArrayType: string;
+    itemContainerComponent: string;
+    fieldClasses: string;
+    fieldItemsClasses: string;
+    validator: string;
+    styleClasses: string;
+    newElementButtonLabel: string;
+    newElementButtonLabelClasses: string;
+    items: {
+        default?: string | undefined;
+        type: string;
+        values: string[];
+        selectOptions: {
+            hideNoneSelectedText: boolean;
+        };
+    };
+};
+//# sourceMappingURL=ArraySelectFieldSchema.d.ts.map

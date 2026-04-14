@@ -1,0 +1,80 @@
+{
+  "name": "@kong-ui-public/expressions",
+  "version": "1.4.10",
+  "type": "module",
+  "module": "./dist/expressions.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/expressions.es.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@kong/atc-router": "1.6.0-rc.1",
+    "@kong/design-tokens": "1.20.0",
+    "@kong/kongponents": "9.52.5",
+    "@types/uuid": "^11.0.0",
+    "monaco-editor": "^0.55.1",
+    "vite-plugin-monaco-editor": "^1.1.0",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.5.0",
+    "vue": "^3.5.27"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/core/expressions"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/expressions",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "2048KB"
+  },
+  "peerDependencies": {
+    "@kong/kongponents": "^9.52.5",
+    "monaco-editor": "^0.55.1",
+    "vue": "^3.5.27",
+    "@kong-ui-public/forms": "^4.23.10"
+  },
+  "dependencies": {
+    "@kong/icons": "^1.48.0",
+    "uuid": "^11.1.0",
+    "@kong-ui-public/core": "^1.11.14",
+    "@kong-ui-public/i18n": "^2.4.6",
+    "@kong-ui-public/forms": "^4.23.10"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='core/expressions' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  }
+}

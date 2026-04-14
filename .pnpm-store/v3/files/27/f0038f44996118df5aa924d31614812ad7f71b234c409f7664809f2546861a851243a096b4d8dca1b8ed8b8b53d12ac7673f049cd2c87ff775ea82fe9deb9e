@@ -1,0 +1,2 @@
+export * from './urlValidator';
+//# sourceMappingURL=index.d.ts.map

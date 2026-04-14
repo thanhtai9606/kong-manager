@@ -1,0 +1,173 @@
+import { defineComponent as te, useCssVars as ae, watch as m, useSlots as le, useTemplateRef as re, ref as n, useAttrs as oe, computed as l, useId as P, onMounted as ie, nextTick as ne, openBlock as o, createElementBlock as c, normalizeClass as K, unref as v, createBlock as V, mergeProps as W, createSlots as ue, withCtx as x, createTextVNode as L, toDisplayString as I, renderSlot as p, createCommentVNode as b, createElementVNode as R, withModifiers as T, createVNode as se, Transition as de, Fragment as ce } from "vue";
+import fe from "./kongponents.es184.js";
+import me from "./kongponents.es51.js";
+import { KUI_ICON_SIZE_40 as O } from "./kongponents.es182.js";
+import ve from "./kongponents.es204.js";
+import he from "./kongponents.es205.js";
+const ge = ["id", "aria-describedby", "aria-invalid", "type", "value"], pe = ["aria-label"], be = ["id"], xe = /* @__PURE__ */ te({
+  inheritAttrs: !1,
+  __name: "KInput",
+  props: {
+    modelValue: { default: "" },
+    label: { default: "" },
+    labelAttributes: { default: () => ({}) },
+    help: { default: "" },
+    error: { type: Boolean },
+    errorMessage: { default: "" },
+    characterLimit: { default: null },
+    hasError: { type: Boolean },
+    type: { default: "text" },
+    showPasswordMaskToggle: { type: Boolean }
+  },
+  emits: ["input", "update:modelValue", "char-limit-exceeded"],
+  setup(t, { expose: H, emit: J }) {
+    ae((e) => ({
+      c6b8edec: A.value,
+      v9b2c0e7e: C.value
+    })), m(() => t.hasError, (e) => {
+      e && console.warn("KInput: `hasError` prop is deprecated. Please use `error` prop instead. See the migration guide for more details: https://kongponents.konghq.com/guide/migrating-to-version-9.html#kinput");
+    }, { immediate: !0 }), m(() => t.labelAttributes.help, (e) => {
+      e && console.warn("KInput: `help` property of `labelAttributes` prop is deprecated. Please use `info` prop instead. See the migration guide for more details: https://kongponents.konghq.com/guide/migrating-to-version-9.html#klabel");
+    });
+    const y = J, i = le(), U = re("inputElement"), u = n(""), h = n(!1), k = n(0), { stripRequiredLabel: z } = fe(), r = oe(), M = l(() => (r == null ? void 0 : r.required) !== void 0 && String(r == null ? void 0 : r.required) !== "false"), D = P(), $ = l(() => r.id ? String(r.id) : D), q = P(), F = l(() => z(t.label, M.value)), Z = l(() => {
+      var e;
+      return !!((e = t.labelAttributes) != null && e.info || i["label-tooltip"]);
+    }), j = l({
+      get() {
+        return t.modelValue;
+      },
+      set(e) {
+        E({ target: { value: e } });
+      }
+    }), G = l(() => {
+      const e = { ...r };
+      return delete e.class, delete e.input, delete e.onInput, e;
+    }), s = l(() => {
+      var B, N;
+      const e = ((B = u.value) == null ? void 0 : B.toString().length) || 0, a = ((N = t.modelValue) == null ? void 0 : N.toString().length) || 0;
+      let d = e;
+      return !h.value && a && (d = a), !!t.characterLimit && d > t.characterLimit;
+    }), Q = l(() => {
+      var e, a;
+      return s.value ? h.value ? `${(e = u.value) == null ? void 0 : e.toString().length} / ${t.characterLimit}` : `${(a = t.modelValue) == null ? void 0 : a.toString().length} / ${t.characterLimit}` : "";
+    }), X = l(() => !s.value && !t.error && !t.hasError && !!(t.help || i.help)), g = l(() => s.value ? Q.value : (t.error || t.hasError) && t.errorMessage ? t.errorMessage : t.help);
+    m(s, (e, a) => {
+      e !== a && (y("char-limit-exceeded", {
+        value: u.value,
+        length: u.value.length,
+        characterLimit: t.characterLimit,
+        limitExceeded: e
+      }), k.value += 1);
+    }), m(j, (e, a) => {
+      e !== a && E({ target: { value: e } });
+    });
+    const E = (e) => {
+      var d;
+      const a = JSON.parse(JSON.stringify((d = e == null ? void 0 : e.target) == null ? void 0 : d.value));
+      Y(a);
+    }, Y = (e) => {
+      u.value = e, h.value = !0, y("input", e), y("update:modelValue", e);
+    }, _ = () => u.value || h.value ? u.value : t.modelValue;
+    m(() => t.error, (e, a) => {
+      e !== a && (k.value += 1);
+    });
+    const S = n(null), w = n(null), A = n(O), C = n(O), f = n(!1), ee = l(() => t.type === "password" && f.value ? "text" : t.type);
+    return ie(async () => {
+      var e, a;
+      await ne(), (e = S.value) != null && e.offsetWidth && (A.value = S.value.offsetWidth + "px"), (a = w.value) != null && a.offsetWidth && (C.value = w.value.offsetWidth + "px");
+    }), H({
+      input: U
+    }), (e, a) => (o(), c("div", {
+      class: K(["k-input", [v(r).class, { "input-error": s.value || t.error || t.hasError }]])
+    }, [
+      t.label ? (o(), V(me, W({
+        key: 0,
+        for: $.value
+      }, t.labelAttributes, { required: M.value }), ue({
+        default: x(() => [
+          L(I(F.value) + " ", 1)
+        ]),
+        _: 2
+      }, [
+        Z.value ? {
+          name: "tooltip",
+          fn: x(() => [
+            p(e.$slots, "label-tooltip", {}, void 0, !0)
+          ]),
+          key: "0"
+        } : void 0
+      ]), 1040, ["for", "required"])) : b("", !0),
+      R("div", {
+        class: K(["input-element-wrapper", { "has-before-content": i.before, "has-after-content": i.after || t.type === "password" && t.showPasswordMaskToggle }])
+      }, [
+        i.before ? (o(), c("div", {
+          key: 0,
+          ref_key: "beforeSlotElement",
+          ref: S,
+          class: "before-content-wrapper"
+        }, [
+          p(e.$slots, "before", {}, void 0, !0)
+        ], 512)) : b("", !0),
+        R("input", W({
+          id: $.value,
+          ref: "inputElement",
+          "aria-describedby": g.value || i.help ? v(q) : void 0,
+          "aria-invalid": t.error || t.hasError || s.value ? "true" : void 0,
+          class: "input",
+          type: ee.value
+        }, G.value, {
+          value: _(),
+          onInput: E
+        }), null, 16, ge),
+        i.after || t.type === "password" && t.showPasswordMaskToggle ? (o(), c("div", {
+          key: 1,
+          ref_key: "afterSlotElement",
+          ref: w,
+          class: "after-content-wrapper"
+        }, [
+          t.type === "password" && t.showPasswordMaskToggle ? (o(), c("button", {
+            key: 0,
+            "aria-label": `${f.value ? "Hide" : "Show"} value`,
+            class: "mask-value-toggle-button",
+            type: "button",
+            onClick: a[0] || (a[0] = T((d) => f.value = !f.value, ["stop"])),
+            onMousedown: a[1] || (a[1] = T(() => {
+            }, ["prevent"])),
+            onMouseup: a[2] || (a[2] = T(() => {
+            }, ["prevent"]))
+          }, [
+            f.value ? (o(), V(v(ve), {
+              key: 0,
+              decorative: ""
+            })) : (o(), V(v(he), {
+              key: 1,
+              decorative: ""
+            }))
+          ], 40, pe)) : p(e.$slots, "after", { key: 1 }, void 0, !0)
+        ], 512)) : b("", !0)
+      ], 2),
+      se(de, {
+        mode: "out-in",
+        name: "kongponents-fade-transition"
+      }, {
+        default: x(() => [
+          g.value || i.help ? (o(), c("p", {
+            id: v(q),
+            key: String(k.value),
+            class: "help-text"
+          }, [
+            X.value ? p(e.$slots, "help", { key: 0 }, () => [
+              L(I(g.value), 1)
+            ], !0) : (o(), c(ce, { key: 1 }, [
+              L(I(g.value), 1)
+            ], 64))
+          ], 8, be)) : b("", !0)
+        ]),
+        _: 3
+      })
+    ], 2));
+  }
+});
+export {
+  xe as default
+};

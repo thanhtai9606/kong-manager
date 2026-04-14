@@ -1,0 +1,11 @@
+import t from "./kongponents.es579.js";
+function a(r) {
+  var o = t(r), e = o.pageXOffset, l = o.pageYOffset;
+  return {
+    scrollLeft: e,
+    scrollTop: l
+  };
+}
+export {
+  a as default
+};

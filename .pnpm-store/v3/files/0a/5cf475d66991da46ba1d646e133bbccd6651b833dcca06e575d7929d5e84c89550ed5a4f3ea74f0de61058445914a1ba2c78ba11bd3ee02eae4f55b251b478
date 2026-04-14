@@ -1,0 +1,88 @@
+import type { PropType } from 'vue';
+import type { AxiosError } from 'axios';
+import type { KonnectTargetFormConfig, KongManagerTargetFormConfig, EntityRow } from '../types';
+import '@kong-ui-public/entities-shared/dist/style.css';
+declare var __VLS_23: {};
+type __VLS_Slots = {} & {
+    info?: (props: typeof __VLS_23) => any;
+};
+declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectTargetFormConfig | KongManagerTargetFormConfig>;
+        required: true;
+        validator: (config: KonnectTargetFormConfig | KongManagerTargetFormConfig) => boolean;
+    };
+    isVisible: {
+        type: BooleanConstructor;
+        required: true;
+        default: boolean;
+    };
+    /** If a valid Target ID is provided, it will put the form in Edit mode instead of Create */
+    targetId: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+    failoverEnabled: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+    failoverUnsupported: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    error: (error: AxiosError<unknown, any>) => any;
+    cancel: () => any;
+    update: (target: EntityRow) => any;
+    loading: (isLoading: boolean) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectTargetFormConfig | KongManagerTargetFormConfig>;
+        required: true;
+        validator: (config: KonnectTargetFormConfig | KongManagerTargetFormConfig) => boolean;
+    };
+    isVisible: {
+        type: BooleanConstructor;
+        required: true;
+        default: boolean;
+    };
+    /** If a valid Target ID is provided, it will put the form in Edit mode instead of Create */
+    targetId: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+    failoverEnabled: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+    failoverUnsupported: {
+        type: BooleanConstructor;
+        required: false;
+        default: boolean;
+    };
+}>> & Readonly<{
+    onError?: ((error: AxiosError<unknown, any>) => any) | undefined;
+    onCancel?: (() => any) | undefined;
+    onUpdate?: ((target: EntityRow) => any) | undefined;
+    onLoading?: ((isLoading: boolean) => any) | undefined;
+}>, {
+    targetId: string;
+    failoverEnabled: boolean;
+    failoverUnsupported: boolean;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
+declare const _default: typeof __VLS_export;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+//# sourceMappingURL=TargetForm.vue.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"x509.d.ts","sourceRoot":"","sources":["../../../src/types/x509.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,QAAQ,GAAG;IACrB,OAAO,EAAE,MAAM,CAAA;IACf,MAAM,EAAE,MAAM,CAAA;IACd,QAAQ,EAAE,IAAI,CAAA;IACd,cAAc,CAAC,EAAE,MAAM,CAAA;IACvB,QAAQ,CAAC,EAAE,MAAM,EAAE,CAAA;CACpB,CAAA"}

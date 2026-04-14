@@ -1,0 +1,4 @@
+import type { SetFieldSchema } from '../../../../../types/plugins/form-schema';
+import type { HandlerOption } from './types';
+export declare function fillTag(option: HandlerOption<SetFieldSchema>): void;
+//# sourceMappingURL=tag.d.ts.map

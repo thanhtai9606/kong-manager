@@ -1,0 +1,27 @@
+import type { SelectItem, SelectProps, SelectSlots } from '../../../types';
+declare const __VLS_export: <T extends string | number, U extends boolean = false>(__VLS_props: NonNullable<Awaited<typeof __VLS_setup>>["props"], __VLS_ctx?: __VLS_PrettifyLocal<Pick<NonNullable<Awaited<typeof __VLS_setup>>, "attrs" | "emit" | "slots">>, __VLS_exposed?: NonNullable<Awaited<typeof __VLS_setup>>["expose"], __VLS_setup?: Promise<{
+    props: import("vue").PublicProps & __VLS_PrettifyLocal<SelectProps<T, U> & {
+        onInput?: ((...args: NoInfer<[value: (U extends true ? string | T : T) | null]>) => any) | undefined;
+        onSelected?: ((...args: NoInfer<[item: SelectItem<U extends true ? string | T : T>]>) => any) | undefined;
+        onChange?: ((...args: NoInfer<[item: SelectItem<U extends true ? string | T : T> | null]>) => any) | undefined;
+        "onUpdate:modelValue"?: ((...args: NoInfer<[value: (U extends true ? string | T : T) | null]>) => any) | undefined;
+        "onQuery-change"?: ((query: string) => any) | undefined;
+        "onItem-added"?: ((value: SelectItem<string>) => any) | undefined;
+        "onItem-removed"?: ((value: SelectItem<string>) => any) | undefined;
+    }> & (typeof globalThis extends {
+        __VLS_PROPS_FALLBACK: infer P;
+    } ? P : {});
+    expose: (exposed: {}) => void;
+    attrs: any;
+    slots: SelectSlots<U extends true ? string | T : T>;
+    emit: ((evt: "input", ...args: NoInfer<[value: (U extends true ? string | T : T) | null]>) => void) & ((evt: "selected", ...args: NoInfer<[item: SelectItem<U extends true ? string | T : T>]>) => void) & ((evt: "change", ...args: NoInfer<[item: SelectItem<U extends true ? string | T : T> | null]>) => void) & ((evt: "update:modelValue", ...args: NoInfer<[value: (U extends true ? string | T : T) | null]>) => void) & ((evt: "query-change", query: string) => void) & ((evt: "item-added", value: SelectItem<string>) => void) & ((evt: "item-removed", value: SelectItem<string>) => void);
+}>) => import("vue").VNode & {
+    __ctx?: Awaited<typeof __VLS_setup>;
+};
+declare const _default: typeof __VLS_export;
+export default _default;
+type __VLS_PrettifyLocal<T> = (T extends any ? {
+    [K in keyof T]: T[K];
+} : {
+    [K in keyof T as K]: T[K];
+}) & {};

@@ -1,0 +1,614 @@
+import { tabbable as ie, focusable as oe, isTabbable as P, getTabIndex as I, isFocusable as H } from "./kongponents.es328.js";
+/*!
+* focus-trap 7.8.0
+* @license MIT, https://github.com/focus-trap/focus-trap/blob/master/LICENSE
+*/
+function M(n, a) {
+  (a == null || a > n.length) && (a = n.length);
+  for (var i = 0, u = Array(a); i < a; i++) u[i] = n[i];
+  return u;
+}
+function ue(n) {
+  if (Array.isArray(n)) return M(n);
+}
+function X(n, a) {
+  var i = typeof Symbol < "u" && n[Symbol.iterator] || n["@@iterator"];
+  if (!i) {
+    if (Array.isArray(n) || (i = te(n)) || a) {
+      i && (n = i);
+      var u = 0, y = function() {
+      };
+      return {
+        s: y,
+        n: function() {
+          return u >= n.length ? {
+            done: !0
+          } : {
+            done: !1,
+            value: n[u++]
+          };
+        },
+        e: function(h) {
+          throw h;
+        },
+        f: y
+      };
+    }
+    throw new TypeError(`Invalid attempt to iterate non-iterable instance.
+In order to be iterable, non-array objects must have a [Symbol.iterator]() method.`);
+  }
+  var d, r = !0, m = !1;
+  return {
+    s: function() {
+      i = i.call(n);
+    },
+    n: function() {
+      var h = i.next();
+      return r = h.done, h;
+    },
+    e: function(h) {
+      m = !0, d = h;
+    },
+    f: function() {
+      try {
+        r || i.return == null || i.return();
+      } finally {
+        if (m) throw d;
+      }
+    }
+  };
+}
+function se(n, a, i) {
+  return (a = ve(a)) in n ? Object.defineProperty(n, a, {
+    value: i,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : n[a] = i, n;
+}
+function ce(n) {
+  if (typeof Symbol < "u" && n[Symbol.iterator] != null || n["@@iterator"] != null) return Array.from(n);
+}
+function le() {
+  throw new TypeError(`Invalid attempt to spread non-iterable instance.
+In order to be iterable, non-array objects must have a [Symbol.iterator]() method.`);
+}
+function Z(n, a) {
+  var i = Object.keys(n);
+  if (Object.getOwnPropertySymbols) {
+    var u = Object.getOwnPropertySymbols(n);
+    a && (u = u.filter(function(y) {
+      return Object.getOwnPropertyDescriptor(n, y).enumerable;
+    })), i.push.apply(i, u);
+  }
+  return i;
+}
+function U(n) {
+  for (var a = 1; a < arguments.length; a++) {
+    var i = arguments[a] != null ? arguments[a] : {};
+    a % 2 ? Z(Object(i), !0).forEach(function(u) {
+      se(n, u, i[u]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(n, Object.getOwnPropertyDescriptors(i)) : Z(Object(i)).forEach(function(u) {
+      Object.defineProperty(n, u, Object.getOwnPropertyDescriptor(i, u));
+    });
+  }
+  return n;
+}
+function de(n) {
+  return ue(n) || ce(n) || te(n) || le();
+}
+function fe(n, a) {
+  if (typeof n != "object" || !n) return n;
+  var i = n[Symbol.toPrimitive];
+  if (i !== void 0) {
+    var u = i.call(n, a);
+    if (typeof u != "object") return u;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (a === "string" ? String : Number)(n);
+}
+function ve(n) {
+  var a = fe(n, "string");
+  return typeof a == "symbol" ? a : a + "";
+}
+function te(n, a) {
+  if (n) {
+    if (typeof n == "string") return M(n, a);
+    var i = {}.toString.call(n).slice(8, -1);
+    return i === "Object" && n.constructor && (i = n.constructor.name), i === "Map" || i === "Set" ? Array.from(n) : i === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(i) ? M(n, a) : void 0;
+  }
+}
+var N = {
+  // Returns the trap from the top of the stack.
+  getActiveTrap: function(a) {
+    return (a == null ? void 0 : a.length) > 0 ? a[a.length - 1] : null;
+  },
+  // Pauses the currently active trap, then adds a new trap to the stack.
+  activateTrap: function(a, i) {
+    var u = N.getActiveTrap(a);
+    i !== u && N.pauseTrap(a);
+    var y = a.indexOf(i);
+    y === -1 || a.splice(y, 1), a.push(i);
+  },
+  // Removes the trap from the top of the stack, then unpauses the next trap down.
+  deactivateTrap: function(a, i) {
+    var u = a.indexOf(i);
+    u !== -1 && a.splice(u, 1), N.unpauseTrap(a);
+  },
+  // Pauses the trap at the top of the stack.
+  pauseTrap: function(a) {
+    var i = N.getActiveTrap(a);
+    i == null || i._setPausedState(!0);
+  },
+  // Unpauses the trap at the top of the stack.
+  unpauseTrap: function(a) {
+    var i = N.getActiveTrap(a);
+    i && !i._isManuallyPaused() && i._setPausedState(!1);
+  }
+}, be = function(a) {
+  return a.tagName && a.tagName.toLowerCase() === "input" && typeof a.select == "function";
+}, pe = function(a) {
+  return (a == null ? void 0 : a.key) === "Escape" || (a == null ? void 0 : a.key) === "Esc" || (a == null ? void 0 : a.keyCode) === 27;
+}, K = function(a) {
+  return (a == null ? void 0 : a.key) === "Tab" || (a == null ? void 0 : a.keyCode) === 9;
+}, ye = function(a) {
+  return K(a) && !a.shiftKey;
+}, me = function(a) {
+  return K(a) && a.shiftKey;
+}, ee = function(a) {
+  return setTimeout(a, 0);
+}, j = function(a) {
+  for (var i = arguments.length, u = new Array(i > 1 ? i - 1 : 0), y = 1; y < i; y++)
+    u[y - 1] = arguments[y];
+  return typeof a == "function" ? a.apply(void 0, u) : a;
+}, C = function(a) {
+  return a.target.shadowRoot && typeof a.composedPath == "function" ? a.composedPath()[0] : a.target;
+}, he = [], we = function(a, i) {
+  var u = (i == null ? void 0 : i.document) || document, y = (i == null ? void 0 : i.trapStack) || he, d = U({
+    returnFocusOnDeactivate: !0,
+    escapeDeactivates: !0,
+    delayInitialFocus: !0,
+    isolateSubtrees: !1,
+    isKeyForward: ye,
+    isKeyBackward: me
+  }, i), r = {
+    // containers given to createFocusTrap()
+    /** @type {Array<HTMLElement>} */
+    containers: [],
+    // list of objects identifying tabbable nodes in `containers` in the trap
+    // NOTE: it's possible that a group has no tabbable nodes if nodes get removed while the trap
+    //  is active, but the trap should never get to a state where there isn't at least one group
+    //  with at least one tabbable node in it (that would lead to an error condition that would
+    //  result in an error being thrown)
+    /** @type {Array<{
+     *    container: HTMLElement,
+     *    tabbableNodes: Array<HTMLElement>, // empty if none
+     *    focusableNodes: Array<HTMLElement>, // empty if none
+     *    posTabIndexesFound: boolean,
+     *    firstTabbableNode: HTMLElement|undefined,
+     *    lastTabbableNode: HTMLElement|undefined,
+     *    firstDomTabbableNode: HTMLElement|undefined,
+     *    lastDomTabbableNode: HTMLElement|undefined,
+     *    nextTabbableNode: (node: HTMLElement, forward: boolean) => HTMLElement|undefined
+     *  }>}
+     */
+    containerGroups: [],
+    // same order/length as `containers` list
+    // references to objects in `containerGroups`, but only those that actually have
+    //  tabbable nodes in them
+    // NOTE: same order as `containers` and `containerGroups`, but __not necessarily__
+    //  the same length
+    tabbableGroups: [],
+    // references to nodes that are siblings to the ancestors of this trap's containers.
+    /** @type {Set<HTMLElement>} */
+    adjacentElements: /* @__PURE__ */ new Set(),
+    // references to nodes that were inert or aria-hidden before the trap was activated.
+    /** @type {Set<HTMLElement>} */
+    alreadySilent: /* @__PURE__ */ new Set(),
+    nodeFocusedBeforeActivation: null,
+    mostRecentlyFocusedNode: null,
+    active: !1,
+    paused: !1,
+    manuallyPaused: !1,
+    // timer ID for when delayInitialFocus is true and initial focus in this trap
+    //  has been delayed during activation
+    delayInitialFocusTimer: void 0,
+    // the most recent KeyboardEvent for the configured nav key (typically [SHIFT+]TAB), if any
+    recentNavEvent: void 0
+  }, m, h = function(e, t, o) {
+    return e && e[t] !== void 0 ? e[t] : d[o || t];
+  }, S = function(e, t) {
+    var o = typeof (t == null ? void 0 : t.composedPath) == "function" ? t.composedPath() : void 0;
+    return r.containerGroups.findIndex(function(l) {
+      var c = l.container, f = l.tabbableNodes;
+      return c.contains(e) || // fall back to explicit tabbable search which will take into consideration any
+      //  web components if the `tabbableOptions.getShadowRoot` option was used for
+      //  the trap, enabling shadow DOM support in tabbable (`Node.contains()` doesn't
+      //  look inside web components even if open)
+      (o == null ? void 0 : o.includes(c)) || f.find(function(s) {
+        return s === e;
+      });
+    });
+  }, A = function(e) {
+    var t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, o = t.hasFallback, l = o === void 0 ? !1 : o, c = t.params, f = c === void 0 ? [] : c, s = d[e];
+    if (typeof s == "function" && (s = s.apply(void 0, de(f))), s === !0 && (s = void 0), !s) {
+      if (s === void 0 || s === !1)
+        return s;
+      throw new Error("`".concat(e, "` was specified but was not a node, or did not return a node"));
+    }
+    var v = s;
+    if (typeof s == "string") {
+      try {
+        v = u.querySelector(s);
+      } catch (b) {
+        throw new Error("`".concat(e, '` appears to be an invalid selector; error="').concat(b.message, '"'));
+      }
+      if (!v && !l)
+        throw new Error("`".concat(e, "` as selector refers to no known node"));
+    }
+    return v;
+  }, D = function() {
+    var e = A("initialFocus", {
+      hasFallback: !0
+    });
+    if (e === !1)
+      return !1;
+    if (e === void 0 || e && !H(e, d.tabbableOptions))
+      if (S(u.activeElement) >= 0)
+        e = u.activeElement;
+      else {
+        var t = r.tabbableGroups[0], o = t && t.firstTabbableNode;
+        e = o || A("fallbackFocus");
+      }
+    else e === null && (e = A("fallbackFocus"));
+    if (!e)
+      throw new Error("Your focus-trap needs to have at least one focusable element");
+    return e;
+  }, O = function() {
+    if (r.containerGroups = r.containers.map(function(e) {
+      var t = ie(e, d.tabbableOptions), o = oe(e, d.tabbableOptions), l = t.length > 0 ? t[0] : void 0, c = t.length > 0 ? t[t.length - 1] : void 0, f = o.find(function(b) {
+        return P(b);
+      }), s = o.slice().reverse().find(function(b) {
+        return P(b);
+      }), v = !!t.find(function(b) {
+        return I(b) > 0;
+      });
+      return {
+        container: e,
+        tabbableNodes: t,
+        focusableNodes: o,
+        /** True if at least one node with positive `tabindex` was found in this container. */
+        posTabIndexesFound: v,
+        /** First tabbable node in container, __tabindex__ order; `undefined` if none. */
+        firstTabbableNode: l,
+        /** Last tabbable node in container, __tabindex__ order; `undefined` if none. */
+        lastTabbableNode: c,
+        // NOTE: DOM order is NOT NECESSARILY "document position" order, but figuring that out
+        //  would require more than just https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+        //  because that API doesn't work with Shadow DOM as well as it should (@see
+        //  https://github.com/whatwg/dom/issues/320) and since this first/last is only needed, so far,
+        //  to address an edge case related to positive tabindex support, this seems like a much easier,
+        //  "close enough most of the time" alternative for positive tabindexes which should generally
+        //  be avoided anyway...
+        /** First tabbable node in container, __DOM__ order; `undefined` if none. */
+        firstDomTabbableNode: f,
+        /** Last tabbable node in container, __DOM__ order; `undefined` if none. */
+        lastDomTabbableNode: s,
+        /**
+         * Finds the __tabbable__ node that follows the given node in the specified direction,
+         *  in this container, if any.
+         * @param {HTMLElement} node
+         * @param {boolean} [forward] True if going in forward tab order; false if going
+         *  in reverse.
+         * @returns {HTMLElement|undefined} The next tabbable node, if any.
+         */
+        nextTabbableNode: function(g) {
+          var T = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : !0, w = t.indexOf(g);
+          return w < 0 ? T ? o.slice(o.indexOf(g) + 1).find(function(k) {
+            return P(k);
+          }) : o.slice(0, o.indexOf(g)).reverse().find(function(k) {
+            return P(k);
+          }) : t[w + (T ? 1 : -1)];
+        }
+      };
+    }), r.tabbableGroups = r.containerGroups.filter(function(e) {
+      return e.tabbableNodes.length > 0;
+    }), r.tabbableGroups.length <= 0 && !A("fallbackFocus"))
+      throw new Error("Your focus-trap must have at least one container with at least one tabbable node in it at all times");
+    if (r.containerGroups.find(function(e) {
+      return e.posTabIndexesFound;
+    }) && r.containerGroups.length > 1)
+      throw new Error("At least one node with a positive tabindex was found in one of your focus-trap's multiple containers. Positive tabindexes are only supported in single-container focus-traps.");
+  }, B = function(e) {
+    var t = e.activeElement;
+    if (t)
+      return t.shadowRoot && t.shadowRoot.activeElement !== null ? B(t.shadowRoot) : t;
+  }, F = function(e) {
+    if (e !== !1 && e !== B(document)) {
+      if (!e || !e.focus) {
+        F(D());
+        return;
+      }
+      e.focus({
+        preventScroll: !!d.preventScroll
+      }), r.mostRecentlyFocusedNode = e, be(e) && e.select();
+    }
+  }, q = function(e) {
+    var t = A("setReturnFocus", {
+      params: [e]
+    });
+    return t || (t === !1 ? !1 : e);
+  }, Y = function(e) {
+    var t = e.target, o = e.event, l = e.isBackward, c = l === void 0 ? !1 : l;
+    t = t || C(o), O();
+    var f = null;
+    if (r.tabbableGroups.length > 0) {
+      var s = S(t, o), v = s >= 0 ? r.containerGroups[s] : void 0;
+      if (s < 0)
+        c ? f = r.tabbableGroups[r.tabbableGroups.length - 1].lastTabbableNode : f = r.tabbableGroups[0].firstTabbableNode;
+      else if (c) {
+        var b = r.tabbableGroups.findIndex(function(x) {
+          var G = x.firstTabbableNode;
+          return t === G;
+        });
+        if (b < 0 && (v.container === t || H(t, d.tabbableOptions) && !P(t, d.tabbableOptions) && !v.nextTabbableNode(t, !1)) && (b = s), b >= 0) {
+          var g = b === 0 ? r.tabbableGroups.length - 1 : b - 1, T = r.tabbableGroups[g];
+          f = I(t) >= 0 ? T.lastTabbableNode : T.lastDomTabbableNode;
+        } else K(o) || (f = v.nextTabbableNode(t, !1));
+      } else {
+        var w = r.tabbableGroups.findIndex(function(x) {
+          var G = x.lastTabbableNode;
+          return t === G;
+        });
+        if (w < 0 && (v.container === t || H(t, d.tabbableOptions) && !P(t, d.tabbableOptions) && !v.nextTabbableNode(t)) && (w = s), w >= 0) {
+          var k = w === r.tabbableGroups.length - 1 ? 0 : w + 1, E = r.tabbableGroups[k];
+          f = I(t) >= 0 ? E.firstTabbableNode : E.firstDomTabbableNode;
+        } else K(o) || (f = v.nextTabbableNode(t));
+      }
+    } else
+      f = A("fallbackFocus");
+    return f;
+  }, L = function(e) {
+    var t = C(e);
+    if (!(S(t, e) >= 0)) {
+      if (j(d.clickOutsideDeactivates, e)) {
+        m.deactivate({
+          // NOTE: by setting `returnFocus: false`, deactivate() will do nothing,
+          //  which will result in the outside click setting focus to the node
+          //  that was clicked (and if not focusable, to "nothing"); by setting
+          //  `returnFocus: true`, we'll attempt to re-focus the node originally-focused
+          //  on activation (or the configured `setReturnFocus` node), whether the
+          //  outside click was on a focusable node or not
+          returnFocus: d.returnFocusOnDeactivate
+        });
+        return;
+      }
+      j(d.allowOutsideClick, e) || e.preventDefault();
+    }
+  }, V = function(e) {
+    var t = C(e), o = S(t, e) >= 0;
+    if (o || t instanceof Document)
+      o && (r.mostRecentlyFocusedNode = t);
+    else {
+      e.stopImmediatePropagation();
+      var l, c = !0;
+      if (r.mostRecentlyFocusedNode)
+        if (I(r.mostRecentlyFocusedNode) > 0) {
+          var f = S(r.mostRecentlyFocusedNode), s = r.containerGroups[f].tabbableNodes;
+          if (s.length > 0) {
+            var v = s.findIndex(function(b) {
+              return b === r.mostRecentlyFocusedNode;
+            });
+            v >= 0 && (d.isKeyForward(r.recentNavEvent) ? v + 1 < s.length && (l = s[v + 1], c = !1) : v - 1 >= 0 && (l = s[v - 1], c = !1));
+          }
+        } else
+          r.containerGroups.some(function(b) {
+            return b.tabbableNodes.some(function(g) {
+              return I(g) > 0;
+            });
+          }) || (c = !1);
+      else
+        c = !1;
+      c && (l = Y({
+        // move FROM the MRU node, not event-related node (which will be the node that is
+        //  outside the trap causing the focus escape we're trying to fix)
+        target: r.mostRecentlyFocusedNode,
+        isBackward: d.isKeyBackward(r.recentNavEvent)
+      })), F(l || r.mostRecentlyFocusedNode || D());
+    }
+    r.recentNavEvent = void 0;
+  }, ae = function(e) {
+    var t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : !1;
+    r.recentNavEvent = e;
+    var o = Y({
+      event: e,
+      isBackward: t
+    });
+    o && (K(e) && e.preventDefault(), F(o));
+  }, W = function(e) {
+    (d.isKeyForward(e) || d.isKeyBackward(e)) && ae(e, d.isKeyBackward(e));
+  }, $ = function(e) {
+    pe(e) && j(d.escapeDeactivates, e) !== !1 && (e.preventDefault(), m.deactivate());
+  }, z = function(e) {
+    var t = C(e);
+    S(t, e) >= 0 || j(d.clickOutsideDeactivates, e) || j(d.allowOutsideClick, e) || (e.preventDefault(), e.stopImmediatePropagation());
+  }, J = function() {
+    if (r.active)
+      return N.activateTrap(y, m), r.delayInitialFocusTimer = d.delayInitialFocus ? ee(function() {
+        F(D());
+      }) : F(D()), u.addEventListener("focusin", V, !0), u.addEventListener("mousedown", L, {
+        capture: !0,
+        passive: !1
+      }), u.addEventListener("touchstart", L, {
+        capture: !0,
+        passive: !1
+      }), u.addEventListener("click", z, {
+        capture: !0,
+        passive: !1
+      }), u.addEventListener("keydown", W, {
+        capture: !0,
+        passive: !1
+      }), u.addEventListener("keydown", $), m;
+  }, re = function(e) {
+    r.active && !r.paused && m._setSubtreeIsolation(!1), r.adjacentElements.clear(), r.alreadySilent.clear();
+    var t = /* @__PURE__ */ new Set(), o = /* @__PURE__ */ new Set(), l = X(e), c;
+    try {
+      for (l.s(); !(c = l.n()).done; ) {
+        var f = c.value;
+        t.add(f);
+        for (var s = typeof ShadowRoot < "u" && f.getRootNode() instanceof ShadowRoot, v = f; v; ) {
+          t.add(v);
+          var b = v.parentElement, g = [];
+          b ? g = b.children : !b && s && (g = v.getRootNode().children, b = v.getRootNode().host, s = typeof ShadowRoot < "u" && b.getRootNode() instanceof ShadowRoot);
+          var T = X(g), w;
+          try {
+            for (T.s(); !(w = T.n()).done; ) {
+              var k = w.value;
+              o.add(k);
+            }
+          } catch (E) {
+            T.e(E);
+          } finally {
+            T.f();
+          }
+          v = b;
+        }
+      }
+    } catch (E) {
+      l.e(E);
+    } finally {
+      l.f();
+    }
+    t.forEach(function(E) {
+      o.delete(E);
+    }), r.adjacentElements = o;
+  }, Q = function() {
+    if (r.active)
+      return u.removeEventListener("focusin", V, !0), u.removeEventListener("mousedown", L, !0), u.removeEventListener("touchstart", L, !0), u.removeEventListener("click", z, !0), u.removeEventListener("keydown", W, !0), u.removeEventListener("keydown", $), m;
+  }, ne = function(e) {
+    var t = e.some(function(o) {
+      var l = Array.from(o.removedNodes);
+      return l.some(function(c) {
+        return c === r.mostRecentlyFocusedNode;
+      });
+    });
+    t && F(D());
+  }, _ = typeof window < "u" && "MutationObserver" in window ? new MutationObserver(ne) : void 0, R = function() {
+    _ && (_.disconnect(), r.active && !r.paused && r.containers.map(function(e) {
+      _.observe(e, {
+        subtree: !0,
+        childList: !0
+      });
+    }));
+  };
+  return m = {
+    get active() {
+      return r.active;
+    },
+    get paused() {
+      return r.paused;
+    },
+    activate: function(e) {
+      if (r.active)
+        return this;
+      var t = h(e, "onActivate"), o = h(e, "onPostActivate"), l = h(e, "checkCanFocusTrap"), c = N.getActiveTrap(y), f = !1;
+      if (c && !c.paused) {
+        var s;
+        (s = c._setSubtreeIsolation) === null || s === void 0 || s.call(c, !1), f = !0;
+      }
+      try {
+        l || O(), r.active = !0, r.paused = !1, r.nodeFocusedBeforeActivation = B(u), t == null || t();
+        var v = function() {
+          l && O(), J(), R(), d.isolateSubtrees && m._setSubtreeIsolation(!0), o == null || o();
+        };
+        if (l)
+          return l(r.containers.concat()).then(v, v), this;
+        v();
+      } catch (g) {
+        if (c === N.getActiveTrap(y) && f) {
+          var b;
+          (b = c._setSubtreeIsolation) === null || b === void 0 || b.call(c, !0);
+        }
+        throw g;
+      }
+      return this;
+    },
+    deactivate: function(e) {
+      if (!r.active)
+        return this;
+      var t = U({
+        onDeactivate: d.onDeactivate,
+        onPostDeactivate: d.onPostDeactivate,
+        checkCanReturnFocus: d.checkCanReturnFocus
+      }, e);
+      clearTimeout(r.delayInitialFocusTimer), r.delayInitialFocusTimer = void 0, r.paused || m._setSubtreeIsolation(!1), r.alreadySilent.clear(), Q(), r.active = !1, r.paused = !1, R(), N.deactivateTrap(y, m);
+      var o = h(t, "onDeactivate"), l = h(t, "onPostDeactivate"), c = h(t, "checkCanReturnFocus"), f = h(t, "returnFocus", "returnFocusOnDeactivate");
+      o == null || o();
+      var s = function() {
+        ee(function() {
+          f && F(q(r.nodeFocusedBeforeActivation)), l == null || l();
+        });
+      };
+      return f && c ? (c(q(r.nodeFocusedBeforeActivation)).then(s, s), this) : (s(), this);
+    },
+    pause: function(e) {
+      return r.active ? (r.manuallyPaused = !0, this._setPausedState(!0, e)) : this;
+    },
+    unpause: function(e) {
+      return r.active ? (r.manuallyPaused = !1, y[y.length - 1] !== this ? this : this._setPausedState(!1, e)) : this;
+    },
+    updateContainerElements: function(e) {
+      var t = [].concat(e).filter(Boolean);
+      return r.containers = t.map(function(o) {
+        return typeof o == "string" ? u.querySelector(o) : o;
+      }), d.isolateSubtrees && re(r.containers), r.active && (O(), d.isolateSubtrees && !r.paused && m._setSubtreeIsolation(!0)), R(), this;
+    }
+  }, Object.defineProperties(m, {
+    _isManuallyPaused: {
+      value: function() {
+        return r.manuallyPaused;
+      }
+    },
+    _setPausedState: {
+      value: function(e, t) {
+        if (r.paused === e)
+          return this;
+        if (r.paused = e, e) {
+          var o = h(t, "onPause"), l = h(t, "onPostPause");
+          o == null || o(), Q(), R(), m._setSubtreeIsolation(!1), l == null || l();
+        } else {
+          var c = h(t, "onUnpause"), f = h(t, "onPostUnpause");
+          c == null || c(), m._setSubtreeIsolation(!0), O(), J(), R(), f == null || f();
+        }
+        return this;
+      }
+    },
+    _setSubtreeIsolation: {
+      value: function(e) {
+        d.isolateSubtrees && r.adjacentElements.forEach(function(t) {
+          var o;
+          if (e)
+            switch (d.isolateSubtrees) {
+              case "aria-hidden":
+                (t.ariaHidden === "true" || ((o = t.getAttribute("aria-hidden")) === null || o === void 0 ? void 0 : o.toLowerCase()) === "true") && r.alreadySilent.add(t), t.setAttribute("aria-hidden", "true");
+                break;
+              default:
+                (t.inert || t.hasAttribute("inert")) && r.alreadySilent.add(t), t.setAttribute("inert", !0);
+                break;
+            }
+          else if (!r.alreadySilent.has(t)) switch (d.isolateSubtrees) {
+            case "aria-hidden":
+              t.removeAttribute("aria-hidden");
+              break;
+            default:
+              t.removeAttribute("inert");
+              break;
+          }
+        });
+      }
+    }
+  }), m.updateContainerElements(a), m;
+};
+export {
+  we as createFocusTrap
+};

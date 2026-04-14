@@ -1,0 +1,6 @@
+import type { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
+export default function useAxios(): {
+    getAxiosInstance: (options?: AxiosRequestConfig) => AxiosInstance;
+    getTraceIdFromError: (error: AxiosError | any) => string;
+};
+//# sourceMappingURL=index.d.ts.map

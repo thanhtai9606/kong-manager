@@ -1,0 +1,3 @@
+import type { JwtSecretFieldSchema } from '../../types/plugins/jwt';
+export declare const jwtSecretSchema: JwtSecretFieldSchema;
+//# sourceMappingURL=JWT.d.ts.map

@@ -1,0 +1,41 @@
+import type { Ref } from 'vue';
+import type { IConfig } from 'swrv';
+import type { IKey, fetcherFn } from 'swrv/dist/types';
+import type { SwrvState } from '../../types';
+export default function useUtilities(): {
+    useRequest: <Response = {
+        data: unknown;
+    }, Error = {
+        message: string;
+    }>(key: IKey, fn?: fetcherFn<Response>, config?: IConfig) => {
+        data: import("vue").ComputedRef<any>;
+        response: Ref<Response | undefined, Response | undefined>;
+        error: Ref<Error | undefined, Error | undefined>;
+        isValidating: Ref<boolean, boolean>;
+        isLoading: Ref<boolean, boolean>;
+        revalidate: (data?: fetcherFn<Response> | undefined, opts?: import("swrv/dist/types").revalidateOptions) => Promise<void>;
+    };
+    useDebounce: <F extends (...args: any[]) => any>(fn: F, defaultDelay?: number) => {
+        debouncedFn: (...args: Parameters<F>) => void;
+        generateDebouncedFn: (delay: number) => (...args: Parameters<F>) => void;
+    };
+    clientSideSorter: (key: string, previousKey: string, sortOrder: string, items: Array<Record<string, any>>) => {
+        previousKey: string;
+        sortOrder: string;
+    };
+    useSwrvState: (response: Ref<any>, error: Ref<any>, isValidating: Ref<boolean>) => {
+        hasData: Ref<boolean, boolean>;
+        state: Ref<SwrvState, SwrvState>;
+        swrvState: {
+            readonly VALIDATING: "VALIDATING";
+            readonly VALIDATING_HAS_DATA: "VALIDATING_HAS_DATA";
+            readonly PENDING: "PENDING";
+            readonly SUCCESS: "SUCCESS";
+            readonly SUCCESS_HAS_DATA: "SUCCESS_HAS_DATA";
+            readonly ERROR: "ERROR";
+            readonly STALE_IF_ERROR: "STALE_IF_ERROR";
+        };
+    };
+    cloneDeep: (val: Record<string, any>) => any;
+    stripRequiredLabel: (label: string, required: boolean) => string;
+};

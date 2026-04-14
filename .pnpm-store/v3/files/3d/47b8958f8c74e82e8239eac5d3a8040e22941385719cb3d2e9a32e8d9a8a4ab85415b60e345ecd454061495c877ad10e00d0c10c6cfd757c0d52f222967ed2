@@ -1,0 +1,18 @@
+declare const _default: {
+    list: {
+        konnect: string;
+        kongManager: string;
+    };
+    form: {
+        konnect: {
+            create: string;
+            edit: string;
+        };
+        kongManager: {
+            create: string;
+            edit: string;
+        };
+    };
+};
+export default _default;
+//# sourceMappingURL=targets-endpoints.d.ts.map

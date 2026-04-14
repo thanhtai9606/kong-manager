@@ -1,0 +1,80 @@
+import type { PropType } from 'vue';
+import type { AxiosError } from 'axios';
+import type { KongManagerKeyEntityConfig, KonnectKeyEntityConfig } from '../types';
+import '@kong-ui-public/entities-shared/dist/style.css';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectKeyEntityConfig | KongManagerKeyEntityConfig>;
+        required: true;
+        validator: (config: KonnectKeyEntityConfig | KongManagerKeyEntityConfig) => boolean;
+    };
+    /**
+     * External link for documentation that determines visibility of Documentation button
+     */
+    configCardDoc: {
+        type: StringConstructor;
+        default: string;
+        required: false;
+    };
+    /**
+     * Control visibility of card title content
+     */
+    hideTitle: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Keyset id for scoped key entity
+     */
+    keySetId: {
+        type: PropType<string | null>;
+        default: null;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    loading: (isLoading: boolean) => any;
+    "fetch:success": (data: Record<string, any>) => any;
+    "fetch:error": (error: AxiosError<unknown, any>) => any;
+    "navigation-click": (id: string, entityType: string) => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectKeyEntityConfig | KongManagerKeyEntityConfig>;
+        required: true;
+        validator: (config: KonnectKeyEntityConfig | KongManagerKeyEntityConfig) => boolean;
+    };
+    /**
+     * External link for documentation that determines visibility of Documentation button
+     */
+    configCardDoc: {
+        type: StringConstructor;
+        default: string;
+        required: false;
+    };
+    /**
+     * Control visibility of card title content
+     */
+    hideTitle: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Keyset id for scoped key entity
+     */
+    keySetId: {
+        type: PropType<string | null>;
+        default: null;
+    };
+}>> & Readonly<{
+    onLoading?: ((isLoading: boolean) => any) | undefined;
+    "onFetch:success"?: ((data: Record<string, any>) => any) | undefined;
+    "onFetch:error"?: ((error: AxiosError<unknown, any>) => any) | undefined;
+    "onNavigation-click"?: ((id: string, entityType: string) => any) | undefined;
+}>, {
+    keySetId: string | null;
+    configCardDoc: string;
+    hideTitle: boolean;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=KeyConfigCard.vue.d.ts.map

@@ -1,0 +1,19 @@
+import { __exports as t } from "./kongponents.es513.js";
+var r;
+function s() {
+  if (r) return t;
+  r = 1, Object.defineProperty(t, "__esModule", {
+    value: !0
+  }), t.getDefaultOptions = u, t.setDefaultOptions = n;
+  var e = {};
+  function u() {
+    return e;
+  }
+  function n(i) {
+    e = i;
+  }
+  return t;
+}
+export {
+  s as __require
+};

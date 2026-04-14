@@ -1,0 +1,23 @@
+import type { CodeBlockProps, CodeBlockSlots, CodeBlockEventData } from '../../../types';
+type __VLS_Slots = CodeBlockSlots;
+declare const __VLS_base: import("vue").DefineComponent<CodeBlockProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    "code-block-render": (evt: CodeBlockEventData) => any;
+    "matching-lines-change": (evt: CodeBlockEventData) => any;
+    "query-change": (query: string) => any;
+    "filter-mode-change": (on: boolean) => any;
+    "reg-exp-mode-change": (on: boolean) => any;
+}, string, import("vue").PublicProps, Readonly<CodeBlockProps> & Readonly<{
+    "onCode-block-render"?: ((evt: CodeBlockEventData) => any) | undefined;
+    "onMatching-lines-change"?: ((evt: CodeBlockEventData) => any) | undefined;
+    "onQuery-change"?: ((query: string) => any) | undefined;
+    "onFilter-mode-change"?: ((on: boolean) => any) | undefined;
+    "onReg-exp-mode-change"?: ((on: boolean) => any) | undefined;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
+declare const _default: typeof __VLS_export;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};

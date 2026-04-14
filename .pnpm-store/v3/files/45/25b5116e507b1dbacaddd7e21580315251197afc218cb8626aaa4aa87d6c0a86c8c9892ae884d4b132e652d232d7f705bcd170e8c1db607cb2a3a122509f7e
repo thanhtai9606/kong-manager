@@ -1,0 +1,7 @@
+export interface EmptyStateFeature {
+    title: string;
+    description: string;
+}
+export type AppearanceTypes = 'primary' | 'secondary';
+export declare const Appearances: string[];
+//# sourceMappingURL=entity-empty-state.d.ts.map

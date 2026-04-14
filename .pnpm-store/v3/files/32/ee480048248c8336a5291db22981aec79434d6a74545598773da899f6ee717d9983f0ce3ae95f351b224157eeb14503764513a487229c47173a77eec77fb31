@@ -1,0 +1,3 @@
+import type { DataPlaneNodeCommon } from '../types';
+export declare const mockDataPlane: () => DataPlaneNodeCommon;
+//# sourceMappingURL=data-planes.d.ts.map

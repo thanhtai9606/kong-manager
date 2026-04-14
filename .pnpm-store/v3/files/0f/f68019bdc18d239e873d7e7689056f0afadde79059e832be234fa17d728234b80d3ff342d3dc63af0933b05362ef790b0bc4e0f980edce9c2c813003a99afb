@@ -1,0 +1,99 @@
+import { type PropType } from 'vue';
+import type { Field } from '../composables/useRedisPartial';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    defaultRedisConfigItem: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+    updateRedisModel: {
+        type: PropType<(val: string | number) => void>;
+        required: true;
+    };
+    pluginRedisFields: {
+        type: {
+            (arrayLength: number): Field[];
+            (...items: Field[]): Field[];
+            new (arrayLength: number): Field[];
+            new (...items: Field[]): Field[];
+            isArray(arg: any): arg is any[];
+            readonly prototype: any[];
+            from<T>(arrayLike: ArrayLike<T>): T[];
+            from<T, U>(arrayLike: ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
+            from<T>(iterable: Iterable<T> | ArrayLike<T>): T[];
+            from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
+            of<T>(...items: T[]): T[];
+            fromAsync<T>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T | PromiseLike<T>> | ArrayLike<T | PromiseLike<T>>): Promise<T[]>;
+            fromAsync<T, U>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T> | ArrayLike<T>, mapFn: (value: Awaited<T>, index: number) => U, thisArg?: any): Promise<Awaited<U>[]>;
+            readonly [Symbol.species]: ArrayConstructor;
+        };
+        required: true;
+    };
+    redisType: {
+        type: StringConstructor;
+        default: string;
+    };
+    isCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /** Enables Konnect-managed Redis grouping and copy in this select (from FormRedis/plugin form) */
+    isKonnectManagedRedisEnabled: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    showNewPartialModal: () => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    defaultRedisConfigItem: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+    updateRedisModel: {
+        type: PropType<(val: string | number) => void>;
+        required: true;
+    };
+    pluginRedisFields: {
+        type: {
+            (arrayLength: number): Field[];
+            (...items: Field[]): Field[];
+            new (arrayLength: number): Field[];
+            new (...items: Field[]): Field[];
+            isArray(arg: any): arg is any[];
+            readonly prototype: any[];
+            from<T>(arrayLike: ArrayLike<T>): T[];
+            from<T, U>(arrayLike: ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
+            from<T>(iterable: Iterable<T> | ArrayLike<T>): T[];
+            from<T, U>(iterable: Iterable<T> | ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): U[];
+            of<T>(...items: T[]): T[];
+            fromAsync<T>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T | PromiseLike<T>> | ArrayLike<T | PromiseLike<T>>): Promise<T[]>;
+            fromAsync<T, U>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T> | ArrayLike<T>, mapFn: (value: Awaited<T>, index: number) => U, thisArg?: any): Promise<Awaited<U>[]>;
+            readonly [Symbol.species]: ArrayConstructor;
+        };
+        required: true;
+    };
+    redisType: {
+        type: StringConstructor;
+        default: string;
+    };
+    isCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /** Enables Konnect-managed Redis grouping and copy in this select (from FormRedis/plugin form) */
+    isKonnectManagedRedisEnabled: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>> & Readonly<{
+    onShowNewPartialModal?: (() => any) | undefined;
+}>, {
+    isKonnectManagedRedisEnabled: boolean;
+    defaultRedisConfigItem: string;
+    redisType: string;
+    isCustomPlugin: boolean;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=RedisConfigSelect.vue.d.ts.map

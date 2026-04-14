@@ -1,0 +1,106 @@
+import type { PropType } from 'vue';
+import { type KongManagerPluginSelectConfig, type KonnectPluginSelectConfig, type PluginType, type PluginCardList } from '../../types';
+declare const __VLS_export: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>;
+        required: true;
+        validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig) => boolean;
+    };
+    /**
+     * Whether or not user has rights to create custom plugins
+     */
+    canCreateCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Whether or not user has rights to delete custom plugins
+     */
+    canDeleteCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Whether or not user has rights to edit custom plugins
+     */
+    canEditCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Plugins to display in the grid
+     */
+    pluginList: {
+        type: PropType<PluginCardList>;
+        default: () => {};
+    };
+    /**
+     * @param {boolean} navigateOnClick if false, let consuming component handle event when clicking on a plugin
+     * Used in conjunction with `@plugin-clicked` event
+     */
+    navigateOnClick: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    "plugin-clicked": (plugin: PluginType) => any;
+    "delete:success": (pluginName: string) => any;
+    revalidate: () => any;
+}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+    config: {
+        type: PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>;
+        required: true;
+        validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig) => boolean;
+    };
+    /**
+     * Whether or not user has rights to create custom plugins
+     */
+    canCreateCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Whether or not user has rights to delete custom plugins
+     */
+    canDeleteCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Whether or not user has rights to edit custom plugins
+     */
+    canEditCustomPlugin: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    /**
+     * Plugins to display in the grid
+     */
+    pluginList: {
+        type: PropType<PluginCardList>;
+        default: () => {};
+    };
+    /**
+     * @param {boolean} navigateOnClick if false, let consuming component handle event when clicking on a plugin
+     * Used in conjunction with `@plugin-clicked` event
+     */
+    navigateOnClick: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>> & Readonly<{
+    "onPlugin-clicked"?: ((plugin: PluginType) => any) | undefined;
+    "onDelete:success"?: ((pluginName: string) => any) | undefined;
+    onRevalidate?: (() => any) | undefined;
+}>, {
+    canDeleteCustomPlugin: boolean;
+    canEditCustomPlugin: boolean;
+    navigateOnClick: boolean;
+    canCreateCustomPlugin: boolean;
+    pluginList: PluginCardList;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const _default: typeof __VLS_export;
+export default _default;
+//# sourceMappingURL=PluginCustomGrid.vue.d.ts.map

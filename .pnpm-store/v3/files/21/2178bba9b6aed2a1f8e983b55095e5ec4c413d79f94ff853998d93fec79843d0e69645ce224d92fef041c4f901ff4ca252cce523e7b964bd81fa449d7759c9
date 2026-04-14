@@ -1,0 +1,56 @@
+import type { PropType } from 'vue';
+declare var __VLS_1: {
+    isAllowed: boolean | undefined;
+};
+type __VLS_Slots = {} & {
+    default?: (props: typeof __VLS_1) => any;
+};
+declare const __VLS_base: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+    /**
+     * Provide an async function that returns a boolean to determine whether
+     * the wrapper should hide or show the default slot content.
+    */
+    authFunction: {
+        type: PropType<() => (boolean | Promise<boolean>)>;
+        required: true;
+        default: () => Promise<boolean>;
+    };
+    /**
+     * Should the default slot content be shown once the authFunction is evaluated no matter what?
+     * e.g. if you want to display the item but disable it.
+     */
+    forceShow: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /**
+     * Provide an async function that returns a boolean to determine whether
+     * the wrapper should hide or show the default slot content.
+    */
+    authFunction: {
+        type: PropType<() => (boolean | Promise<boolean>)>;
+        required: true;
+        default: () => Promise<boolean>;
+    };
+    /**
+     * Should the default slot content be shown once the authFunction is evaluated no matter what?
+     * e.g. if you want to display the item but disable it.
+     */
+    forceShow: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>> & Readonly<{}>, {
+    forceShow: boolean;
+    authFunction: () => (boolean | Promise<boolean>);
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
+declare const _default: typeof __VLS_export;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+//# sourceMappingURL=PermissionsWrapper.vue.d.ts.map

@@ -1,0 +1,27 @@
+import { __module as u } from "./kongponents.es620.js";
+var n;
+function _() {
+  return n ? u.exports : (n = 1, (function(d, l) {
+    Object.defineProperty(l, "__esModule", {
+      value: !0
+    }), l.default = f;
+    function f(t) {
+      return function(r, e) {
+        var v = e != null && e.context ? String(e.context) : "standalone", a;
+        if (v === "formatting" && t.formattingValues) {
+          var i = t.defaultFormattingWidth || t.defaultWidth, c = e != null && e.width ? String(e.width) : i;
+          a = t.formattingValues[c] || t.formattingValues[i];
+        } else {
+          var m = t.defaultWidth, h = e != null && e.width ? String(e.width) : t.defaultWidth;
+          a = t.values[h] || t.values[m];
+        }
+        var o = t.argumentCallback ? t.argumentCallback(r) : r;
+        return a[o];
+      };
+    }
+    d.exports = l.default;
+  })(u, u.exports), u.exports);
+}
+export {
+  _ as __require
+};

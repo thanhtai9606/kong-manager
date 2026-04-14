@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"crypto/tls"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -10,6 +11,15 @@ import (
 	"github.com/kong/kong-manager/internal/models"
 	"gorm.io/gorm"
 )
+
+func kongUpstreamTransport(insecureSkipVerify bool) http.RoundTripper {
+	if !insecureSkipVerify {
+		return http.DefaultTransport
+	}
+	t := http.DefaultTransport.(*http.Transport).Clone()
+	t.TLSClientConfig = &tls.Config{InsecureSkipVerify: true} //nolint:gosec // gated by KONG_UPSTREAM_TLS_SKIP_VERIFY
+	return t
+}
 
 // DynamicKongHandler proxies to Kong Admin: /kong-admin/... uses the "default" cluster row;
 // /kong-admin/c/{slug}/... looks up KongCluster by slug.
@@ -24,6 +34,7 @@ func DynamicKongHandler(db *gorm.DB, cfg *config.Config) http.Handler {
 		prefix = "/kong-admin"
 	}
 	cPrefix := prefix + "/c/"
+	rt := kongUpstreamTransport(cfg.KongUpstreamTLSSkipVerify)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		p := r.URL.Path
@@ -88,6 +99,7 @@ func DynamicKongHandler(db *gorm.DB, cfg *config.Config) http.Handler {
 		}
 
 		rp := &httputil.ReverseProxy{
+			Transport: rt,
 			Director: func(req *http.Request) {
 				req.URL.Scheme = target.Scheme
 				req.URL.Host = target.Host

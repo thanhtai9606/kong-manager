@@ -14,10 +14,17 @@ type Config struct {
 	DatabaseDriver     string
 	DatabaseURL        string
 	JWTSecret          string
-	JWTTTL             time.Duration
-	KongAdminURL       string
-	KongAdminToken     string
+	JWTTTL time.Duration
+	// KongAdminURL seeds the initial "default" KongCluster row and is a fallback if that row is missing.
+	// At runtime, each cluster’s upstream is kong_clusters.admin_base_url (see proxy.DynamicKongHandler).
+	KongAdminURL string
+	// KongAdminToken is the default Admin token when a cluster row has no per-cluster token.
+	KongAdminToken string
 	KongProxyPrefix    string
+	// KongUpstreamTLSSkipVerify disables TLS verification when the BFF connects to Kong Admin (HTTPS).
+	// Set via KONG_UPSTREAM_TLS_SKIP_VERIFY=true for local/dev Kong on https://localhost:8444 with self-signed certs.
+	// Do not enable in production unless you trust the network path to Kong Admin.
+	KongUpstreamTLSSkipVerify bool
 	// AdminGUIPath is the SPA base path (e.g. /__km_base__) without trailing slash; empty if served at /.
 	// Must match window.K_CONFIG.ADMIN_GUI_PATH so API paths are normalized before Casbin.
 	AdminGUIPath       string
@@ -67,6 +74,7 @@ func Load() *Config {
 		KongAdminURL:    getenv("KONG_ADMIN_URL", "http://127.0.0.1:8001"),
 		KongAdminToken:  getenv("KONG_ADMIN_TOKEN", ""),
 		KongProxyPrefix: getenv("KONG_PROXY_PREFIX", "/kong-admin"),
+		KongUpstreamTLSSkipVerify: parseBool(getenv("KONG_UPSTREAM_TLS_SKIP_VERIFY", ""), false),
 		AdminGUIPath:    strings.TrimSpace(getenv("ADMIN_GUI_PATH", "")),
 		BootstrapUsername: getenv("BOOTSTRAP_ADMIN_USERNAME", ""),
 		BootstrapPassword: getenv("BOOTSTRAP_ADMIN_PASSWORD", ""),

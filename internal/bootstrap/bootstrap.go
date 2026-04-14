@@ -63,6 +63,8 @@ func Run(cfg *config.Config, db *gorm.DB, enforcer *casbin.Enforcer) error {
 	return nil
 }
 
+// seedDefaultKongCluster inserts the "default" row once; KONG_ADMIN_URL is only used here.
+// Runtime routing uses kong_clusters rows (see proxy.DynamicKongHandler).
 func seedDefaultKongCluster(cfg *config.Config, db *gorm.DB) error {
 	var n int64
 	if err := db.Model(&models.KongCluster{}).Count(&n).Error; err != nil {

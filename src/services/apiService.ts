@@ -16,7 +16,10 @@ function storedClusterSlug(): string {
 
 let activeClusterSlug = storedClusterSlug()
 
-/** Builds Kong Admin base URL for a cluster slug (BFF path /kong-admin/c/{slug}). */
+/**
+ * Browser → BFF path for Kong Admin (same origin). Slug selects which DB row the BFF proxies to.
+ * The real Kong Admin host:port lives in kong_clusters.admin_base_url, not in this string.
+ */
 export function kongAdminUrlForSlug(slug: string): string {
   if (!config.AUTH_REQUIRED) {
     return config.ADMIN_API_URL

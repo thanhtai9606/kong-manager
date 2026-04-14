@@ -79,7 +79,7 @@
     },
     "clusters": {
       "switchLabel": "Gateway cluster",
-      "description": "Each entry is a Kong Admin API base URL. Traffic is proxied as /kong-admin/c/{slug}/… . Start the BFF with KONG_ADMIN_URL pointing at your Kong (e.g. http://127.0.0.1:9090) so the seeded default cluster is correct, or edit the default row here.",
+      "description": "Upstream Kong Admin URLs are stored per cluster (dynamic). The env KONG_ADMIN_URL only seeds the first \"default\" row when the table is empty; after that, add or edit clusters here. The UI calls the BFF at /kong-admin/c/{slug}/… and the BFF forwards to the matching admin_base_url.",
       "addTitle": "Add cluster",
       "loading": "Loading…",
       "fields": {

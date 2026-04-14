@@ -3,7 +3,7 @@ import {
   type AxiosRequestConfig,
 } from 'axios'
 import { config } from 'config'
-import { useAxios } from '@kong-ui-public/entities-shared'
+import { kongAxios } from '@/services/kongAxios'
 
 const KM_CLUSTER_SLUG_KEY = 'km_kong_cluster_slug'
 
@@ -52,29 +52,13 @@ function bffAppUrl(path: string): string {
   return `${window.location.origin}${gui}${p}`
 }
 
-/** Session storage key for the Kong Manager BFF JWT. */
-export const KM_TOKEN_KEY = 'km_token'
-
-export function setKmToken(token: string | null) {
-  if (token) {
-    sessionStorage.setItem(KM_TOKEN_KEY, token)
-  } else {
-    sessionStorage.removeItem(KM_TOKEN_KEY)
-  }
-}
+export { KM_TOKEN_KEY, setKmToken } from '@/services/kongAxios'
 
 class ApiService {
   instance: AxiosInstance
 
   constructor() {
-    this.instance = useAxios().axiosInstance
-    this.instance.interceptors.request.use((reqConfig) => {
-      const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(KM_TOKEN_KEY) : null
-      if (token) {
-        reqConfig.headers.Authorization = `Bearer ${token}`
-      }
-      return reqConfig
-    })
+    this.instance = kongAxios
   }
 
   getInfo() {

@@ -4,6 +4,7 @@ import english from '@/locales/en.json'
 import App from '@/App.vue'
 import { router } from '@/router'
 import { registerGlobalComponents } from './registerGlobalComponents'
+import { provideKongAxios } from '@/services/kongAxios'
 import './styles/index'
 import { createPinia } from 'pinia'
 
@@ -13,6 +14,8 @@ import '@/monaco-workers'
 const i18n = createI18n<typeof english>('en-us', english, { isGlobal: true })
 
 const app = createApp(App)
+
+provideKongAxios(app)
 
 const pinia = createPinia()
 

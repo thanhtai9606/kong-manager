@@ -36,65 +36,51 @@
       v-else
       class="admin-audit__table-wrap"
     >
+      <div class="admin-audit__table-panel">
+        <table class="admin-audit__table">
+          <thead>
+            <tr
+              v-for="headerGroup in table.getHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <th
+                v-for="header in headerGroup.headers"
+                :key="header.id"
+                scope="col"
+              >
+                <FlexRender
+                  v-if="!header.isPlaceholder"
+                  :render="header.column.columnDef.header"
+                  :props="header.getContext()"
+                />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="row in table.getRowModel().rows"
+              :key="row.id"
+            >
+              <td
+                v-for="cell in row.getVisibleCells()"
+                :key="cell.id"
+                :class="{
+                  'admin-audit__cell--details': cell.column.id === 'details',
+                  'admin-audit__cell--time': cell.column.id === 'created_at',
+                }"
+              >
+                <FlexRender
+                  :render="cell.column.columnDef.cell"
+                  :props="cell.getContext()"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div
         v-if="showPager"
         class="admin-audit__toolbar"
-      >
-        <AuditLogPagination
-          :page-size="pageSize"
-          :offset="offset"
-          :total="total"
-          :page-end="pageEnd"
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          :last-offset="lastOffset"
-          @update:page-size="onPageSizeUpdate"
-          @first="goFirst"
-          @prev="pagePrev"
-          @next="pageNext"
-          @last="goLast"
-          @refresh="reload"
-        />
-      </div>
-      <table class="admin-audit__table">
-        <thead>
-          <tr
-            v-for="headerGroup in table.getHeaderGroups()"
-            :key="headerGroup.id"
-          >
-            <th
-              v-for="header in headerGroup.headers"
-              :key="header.id"
-            >
-              <FlexRender
-                v-if="!header.isPlaceholder"
-                :render="header.column.columnDef.header"
-                :props="header.getContext()"
-              />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="row in table.getRowModel().rows"
-            :key="row.id"
-          >
-            <td
-              v-for="cell in row.getVisibleCells()"
-              :key="cell.id"
-              :class="{ 'admin-audit__details': cell.column.id === 'details' }"
-            >
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div
-        v-if="showPager"
-        class="admin-audit__toolbar admin-audit__toolbar--bottom"
       >
         <AuditLogPagination
           :page-size="pageSize"
@@ -188,7 +174,12 @@ const columns = computed(() => [
   }),
   columnHelper.accessor('action', {
     header: () => t('admin.auditLog.headers.action'),
-    cell: info => h('code', info.getValue()),
+    cell: info =>
+      h(
+        'code',
+        { class: 'admin-audit__action-code' },
+        info.getValue(),
+      ),
   }),
   columnHelper.accessor('resource', {
     header: () => t('admin.auditLog.headers.resource'),
@@ -301,33 +292,95 @@ onMounted(() => {
   overflow-x: auto;
 }
 
+.admin-audit__table-panel {
+  border: 1px solid var(--kui-color-border-neutral, #e0e0e0);
+  border-radius: var(--kui-border-radius-30, 8px);
+  background: var(--kui-color-background, #fff);
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 2px 8px rgb(0 0 0 / 0.06);
+  overflow: hidden;
+}
+
 .admin-audit__table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8125rem;
+  line-height: 1.45;
 
   th,
   td {
     text-align: left;
-    padding: 0.55rem 0.65rem;
-    border-bottom: 1px solid var(--kui-color-border-neutral, #e7e7e7);
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px solid var(--kui-color-border-neutral-weaker, #ececec);
     vertical-align: top;
   }
 
   thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     font-weight: 600;
-    color: var(--kui-color-text-neutral, #525252);
-    background: var(--kui-color-background-neutral-weakest, #f5f5f5);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--kui-color-text-neutral-stronger, #3d3d3d);
+    background: linear-gradient(
+      180deg,
+      var(--kui-color-background-neutral-weakest, #fafafa) 0%,
+      var(--kui-color-background-neutral-weak, #f0f0f0) 100%
+    );
+    border-bottom: 2px solid var(--kui-color-border-neutral, #d9d9d9);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.03);
+  }
+
+  tbody tr {
+    transition: background-color 0.12s ease;
+  }
+
+  tbody tr:nth-child(even) td {
+    background: var(--kui-color-background-neutral-weakest, rgb(0 0 0 / 0.02));
+  }
+
+  tbody tr:nth-child(odd) td {
+    background: var(--kui-color-background, #fff);
   }
 
   tbody tr:hover td {
-    background: var(--kui-color-background-neutral-weakest, rgba(0, 0, 0, 0.04));
+    background: var(--kui-color-background-primary-weakest, rgb(59 130 246 / 0.08)) !important;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
   }
 }
 
-.admin-audit__details {
+.admin-audit__cell--time {
+  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, monospace;
+  font-size: 0.8rem;
+  color: var(--kui-color-text-neutral, #525252);
+  white-space: nowrap;
+}
+
+.admin-audit__cell--details {
   word-break: break-word;
   max-width: 28rem;
+  color: var(--kui-color-text-neutral, #525252);
+}
+
+/* Rendered inside TanStack FlexRender — needs :deep */
+.admin-audit__table :deep(.admin-audit__action-code) {
+  display: inline-block;
+  margin: 0;
+  padding: 0.15rem 0.45rem;
+  font-family: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--kui-color-text-primary, #1155cc);
+  background: rgb(17 85 204 / 0.08);
+  border: 1px solid rgb(17 85 204 / 0.22);
+  border-radius: var(--kui-border-radius-20, 4px);
 }
 
 .admin-audit__error {
@@ -337,11 +390,6 @@ onMounted(() => {
 }
 
 .admin-audit__toolbar {
-  margin-bottom: 0.75rem;
-}
-
-.admin-audit__toolbar--bottom {
-  margin-bottom: 0;
   margin-top: 0.75rem;
 }
 </style>

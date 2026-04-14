@@ -7,50 +7,24 @@
       <SupportText class="admin-sso__warn">
         {{ t('admin.sso.redirectUriKeycloak') }}
       </SupportText>
+      <SupportText class="admin-sso__warn">
+        {{ t('admin.sso.redirectUriSameHost') }}
+      </SupportText>
     </template>
   </PageHeader>
 
-  <KCard class="admin-sso__card">
-    <h3 class="admin-sso__h3">
-      {{ t('admin.sso.addTitle') }}
-    </h3>
-    <div class="admin-sso__form">
-      <KInput
-        v-model="createForm.slug"
-        :placeholder="t('admin.sso.fields.slug')"
-      />
-      <KInput
-        v-model="createForm.name"
-        :placeholder="t('admin.sso.fields.name')"
-      />
-      <KInput
-        v-model="createForm.issuer_url"
-        :placeholder="t('admin.sso.fields.issuerUrl')"
-      />
-      <KInput
-        v-model="createForm.client_id"
-        :placeholder="t('admin.sso.fields.clientId')"
-      />
-      <KInput
-        v-model="createForm.client_secret"
-        type="password"
-        :placeholder="t('admin.sso.fields.clientSecret')"
-      />
-      <KInput
-        v-model="createForm.scopes"
-        :placeholder="t('admin.sso.fields.scopes')"
-      />
+  <KCard>
+    <div class="admin-sso__toolbar">
+      <h3 class="admin-sso__list-title">
+        {{ t('admin.sso.providersList') }}
+      </h3>
       <KButton
         appearance="primary"
-        :disabled="saving"
-        @click="createProvider"
+        @click="openCreateModal"
       >
-        {{ t('global.buttons.create') }}
+        {{ t('admin.sso.addProviderButton') }}
       </KButton>
     </div>
-  </KCard>
-
-  <KCard>
     <div
       v-if="loading"
       class="admin-sso__state"
@@ -115,6 +89,109 @@
     </div>
   </KCard>
 
+  <!-- Create -->
+  <KModal
+    :visible="createModalVisible"
+    :title="t('admin.sso.createModalTitle')"
+    :max-width="'640px'"
+    :action-button-text="t('global.buttons.create')"
+    :cancel-button-text="t('global.buttons.cancel')"
+    :action-button-disabled="savingCreate"
+    @cancel="closeCreateModal"
+    @proceed="saveCreateModal"
+  >
+    <div class="admin-sso__modal-body">
+      <p class="admin-sso__modal-lead">
+        {{ t('admin.sso.createLead') }}
+      </p>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.slug') }}</span>
+        <KInput
+          v-model="createForm.slug"
+          :placeholder="t('admin.sso.fields.slug')"
+        />
+      </label>
+
+      <div class="admin-sso__field admin-sso__redirect-block">
+        <span class="admin-sso__label">{{ t('admin.sso.redirectUriLabel') }}</span>
+        <p class="admin-sso__redirect-hint">
+          {{ t('admin.sso.redirectUriRegister') }}
+        </p>
+        <div class="admin-sso__redirect-row">
+          <code class="admin-sso__redirect-url">{{ createRedirectPreview }}</code>
+          <KButton
+            size="small"
+            appearance="secondary"
+            :disabled="!createForm.slug.trim()"
+            @click="copyCreateRedirectUri"
+          >
+            {{ t('admin.sso.copyRedirectUri') }}
+          </KButton>
+        </div>
+      </div>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.name') }}</span>
+        <KInput
+          v-model="createForm.name"
+          :placeholder="t('admin.sso.fields.name')"
+        />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.issuerUrl') }}</span>
+        <KInput
+          v-model="createForm.issuer_url"
+          :placeholder="t('admin.sso.fields.issuerUrl')"
+        />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.clientId') }}</span>
+        <KInput
+          v-model="createForm.client_id"
+          :placeholder="t('admin.sso.fields.clientId')"
+        />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.clientSecret') }}</span>
+        <KInput
+          v-model="createForm.client_secret"
+          type="password"
+          :placeholder="t('admin.sso.fields.clientSecret')"
+        />
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.scopes') }}</span>
+        <KInput
+          v-model="createForm.scopes"
+          :placeholder="t('admin.sso.fields.scopes')"
+        />
+      </label>
+
+      <label class="admin-sso__field admin-sso__field--inline">
+        <KCheckbox
+          :model-value="createForm.enabled"
+          @update:model-value="(v: boolean) => { createForm.enabled = v }"
+        />
+        <span>{{ t('admin.sso.fields.enabled') }}</span>
+      </label>
+
+      <label class="admin-sso__field">
+        <span class="admin-sso__label">{{ t('admin.sso.fields.sortOrder') }}</span>
+        <KInput
+          :model-value="String(createForm.sort_order)"
+          type="number"
+          @update:model-value="(v: string) => { createForm.sort_order = parseInt(v, 10) || 0 }"
+        />
+      </label>
+    </div>
+  </KModal>
+
+  <!-- Edit -->
   <KModal
     :visible="editModalVisible"
     :title="t('admin.sso.editTitle')"
@@ -148,7 +225,7 @@
           <KButton
             size="small"
             appearance="secondary"
-            @click="copyRedirectUri"
+            @click="copyEditRedirectUri"
           >
             {{ t('admin.sso.copyRedirectUri') }}
           </KButton>
@@ -233,14 +310,27 @@ const toaster = useToaster()
 
 const rows = ref<SSOProviderRow[]>([])
 const loading = ref(true)
-const saving = ref(false)
 const errorMessage = ref('')
+
+const createModalVisible = ref(false)
+const savingCreate = ref(false)
 
 const editModalVisible = ref(false)
 const editingRow = ref<SSOProviderRow | null>(null)
 const savingModal = ref(false)
 
 const editDraft = reactive({
+  name: '',
+  issuer_url: '',
+  client_id: '',
+  client_secret: '',
+  scopes: '',
+  enabled: true,
+  sort_order: 0,
+})
+
+const createForm = reactive({
+  slug: '',
   name: '',
   issuer_url: '',
   client_id: '',
@@ -259,19 +349,76 @@ const publicOrigin = computed(() => {
 
 const guiPath = computed(() => config.ADMIN_GUI_PATH.replace(/\/$/, '') || '')
 
-const createForm = reactive({
-  slug: '',
-  name: '',
-  issuer_url: '',
-  client_id: '',
-  client_secret: '',
-  scopes: '',
+const createRedirectPreview = computed(() => {
+  const s = createForm.slug.trim()
+  if (!s) {
+    return t('admin.sso.redirectPreviewNeedSlug')
+  }
+  return callbackUrlForSlug(s)
 })
 
 /** Must match BFF buildOIDCRedirectURI (same origin + gui + /api/auth/oidc/{slug}/callback). */
 function callbackUrlForSlug(slug: string): string {
   const gui = guiPath.value
   return `${publicOrigin.value}${gui}/api/auth/oidc/${encodeURIComponent(slug)}/callback`
+}
+
+function openCreateModal() {
+  createForm.slug = ''
+  createForm.name = ''
+  createForm.issuer_url = ''
+  createForm.client_id = ''
+  createForm.client_secret = ''
+  createForm.scopes = ''
+  createForm.enabled = true
+  createForm.sort_order = 0
+  createModalVisible.value = true
+}
+
+function closeCreateModal() {
+  createModalVisible.value = false
+}
+
+async function saveCreateModal() {
+  if (!createForm.slug.trim() || !createForm.name.trim() || !createForm.issuer_url.trim()
+    || !createForm.client_id.trim() || !createForm.client_secret.trim()) {
+    toaster.open({ appearance: 'warning', message: t('admin.sso.createValidation') })
+    return
+  }
+  savingCreate.value = true
+  try {
+    await apiService.bffPost('/api/admin/sso-providers', {
+      slug: createForm.slug.trim(),
+      name: createForm.name.trim(),
+      issuer_url: createForm.issuer_url.trim(),
+      client_id: createForm.client_id.trim(),
+      client_secret: createForm.client_secret.trim(),
+      scopes: createForm.scopes.trim() || undefined,
+      enabled: createForm.enabled,
+      sort_order: Number.isFinite(createForm.sort_order) ? createForm.sort_order : 0,
+    })
+    toaster.open({ appearance: 'success', message: t('admin.sso.created') })
+    closeCreateModal()
+    await load()
+  } catch {
+    toaster.open({ appearance: 'danger', message: t('global.error') })
+  } finally {
+    savingCreate.value = false
+  }
+}
+
+async function copyCreateRedirectUri() {
+  const s = createForm.slug.trim()
+  if (!s) {
+    return
+  }
+  const text = callbackUrlForSlug(s)
+  try {
+    await navigator.clipboard.writeText(text)
+    toaster.open({ appearance: 'success', message: t('admin.sso.redirectUriCopied') })
+  } catch {
+    toaster.open({ appearance: 'danger', message: t('admin.sso.copyFailed') })
+  }
 }
 
 function openEditModal(p: SSOProviderRow) {
@@ -292,7 +439,7 @@ function closeEditModal() {
   editDraft.client_secret = ''
 }
 
-async function copyRedirectUri() {
+async function copyEditRedirectUri() {
   if (!editingRow.value) {
     return
   }
@@ -351,32 +498,6 @@ async function load() {
   }
 }
 
-async function createProvider() {
-  saving.value = true
-  try {
-    await apiService.bffPost('/api/admin/sso-providers', {
-      slug: createForm.slug.trim(),
-      name: createForm.name.trim(),
-      issuer_url: createForm.issuer_url.trim(),
-      client_id: createForm.client_id.trim(),
-      client_secret: createForm.client_secret.trim(),
-      scopes: createForm.scopes.trim() || undefined,
-    })
-    createForm.slug = ''
-    createForm.name = ''
-    createForm.issuer_url = ''
-    createForm.client_id = ''
-    createForm.client_secret = ''
-    createForm.scopes = ''
-    toaster.open({ appearance: 'success', message: t('admin.sso.created') })
-    await load()
-  } catch {
-    toaster.open({ appearance: 'danger', message: t('global.error') })
-  } finally {
-    saving.value = false
-  }
-}
-
 async function toggleEnabled(p: SSOProviderRow) {
   try {
     await apiService.bffPatch(`/api/admin/sso-providers/${p.id}`, {
@@ -411,26 +532,19 @@ onMounted(() => {
   margin-top: 0.75rem;
 }
 
-.admin-sso__card {
-  margin-bottom: 1.5rem;
-}
-
-.admin-sso__h3 {
-  margin: 0 0 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.admin-sso__form {
+.admin-sso__toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.admin-sso__form :deep(.k-input) {
-  min-width: 200px;
-  flex: 1 1 200px;
+.admin-sso__list-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .admin-sso__state,

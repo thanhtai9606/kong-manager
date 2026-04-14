@@ -8,4 +8,6 @@
 window.K_CONFIG = {
   AUTH_REQUIRED: true,
   ADMIN_API_URL: '/kong-admin',
+  // Optional: full URL or site path for the image above the login form (default: bundled Kong Manager logo).
+  // LOGIN_LOGO_URL: 'https://example.com/brand.svg',
 }

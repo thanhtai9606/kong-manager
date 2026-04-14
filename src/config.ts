@@ -79,4 +79,12 @@ export const config = {
   get ANONYMOUS_REPORTS() {
     return getConfig('ANONYMOUS_REPORTS', false)
   },
+
+  /**
+   * Optional image URL for the login page (full https URL, or site-root path like /brand/logo.png).
+   * When unset, the default Kong Manager logo from the bundle is used.
+   */
+  get LOGIN_LOGO_URL() {
+    return getConfig<string | null>('LOGIN_LOGO_URL', null)
+  },
 }

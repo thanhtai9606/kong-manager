@@ -1,5 +1,17 @@
 <template>
   <div class="login-wrap">
+    <div
+      v-if="loginLogoSrc"
+      class="login-brand"
+    >
+      <img
+        :src="loginLogoSrc"
+        alt=""
+        class="login-brand__img"
+        width="200"
+        height="48"
+      >
+    </div>
     <KCard
       class="login-card"
       :title="t('auth.title')"
@@ -67,12 +79,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { KButton, KCard, KInput } from '@kong/kongponents'
 import { useI18n } from '@/composables/useI18n'
 import { config } from 'config'
 import { useAuthStore } from '@/stores/auth'
+import defaultLoginLogo from '@/assets/logo.svg?url'
 
 defineOptions({ name: 'AuthLoginPage' })
 
@@ -86,6 +99,21 @@ const password = ref('')
 const loading = ref(false)
 const error = ref('')
 const ssoProviders = ref<Array<{ slug: string, name: string }>>([])
+
+const loginLogoSrc = computed(() => {
+  const raw = config.LOGIN_LOGO_URL
+  if (raw == null || String(raw).trim() === '') {
+    return defaultLoginLogo
+  }
+  const u = String(raw).trim()
+  if (/^https?:\/\//i.test(u)) {
+    return u
+  }
+  if (u.startsWith('/')) {
+    return `${typeof window !== 'undefined' ? window.location.origin : ''}${u}`
+  }
+  return defaultLoginLogo
+})
 
 function apiBase(): string {
   return config.ADMIN_GUI_PATH.replace(/\/$/, '') || ''
@@ -173,11 +201,27 @@ async function submit() {
 <style scoped lang="scss">
 .login-wrap {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   padding: 2rem;
   box-sizing: border-box;
+  gap: 1.25rem;
+}
+
+.login-brand {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-brand__img {
+  max-height: 52px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .login-card {

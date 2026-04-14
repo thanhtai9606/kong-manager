@@ -32,8 +32,9 @@ type Config struct {
 	BootstrapPassword  string
 	CookieSecure       bool
 	// PublicBaseURL is the browser-facing origin (scheme + host, no path), e.g. https://kong-manager.example.com
-	// Used to build OIDC redirect_uri when reverse proxies do not set X-Forwarded-* reliably. Optional if the
-	// request Host + X-Forwarded-Proto are enough.
+	// Used to build OIDC redirect_uri when the request Host does not match the browser (e.g. some dev proxies
+	// rewrite Host to the upstream port). Set PUBLIC_BASE_URL=http://localhost:8080 when FE is on :8080 and
+	// BFF on :8081 if redirect_uri still does not match Keycloak.
 	PublicBaseURL string
 	// OIDCTLSkipVerify disables TLS certificate verification for outbound OIDC discovery/token/JWKS (Issuer URL).
 	// Set OIDC_TLS_SKIP_VERIFY=true for local IdPs with self-signed certs (e.g. Keycloak on https://localhost).

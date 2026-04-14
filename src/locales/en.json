@@ -168,7 +168,7 @@
       "editTitle": "Edit SSO provider",
       "editLead": "Update IdP settings. The redirect URI below must be added exactly in Keycloak (or your IdP) under the client’s Valid redirect URIs.",
       "redirectUriKeycloak": "If Keycloak shows “Invalid parameter: redirect_uri”, the callback URL registered on the IdP does not match the URL Kong Manager sends. Copy the Redirect URI into the same Keycloak client as your Client ID (e.g. kong-manager-uat), under Valid redirect URIs — scheme, host, path, and port must match exactly.",
-      "redirectUriSameHost": "Sign in to Kong Manager using the same host you put in Keycloak (http://localhost:8088 and http://127.0.0.1:8088 are different redirect URIs).",
+      "redirectUriSameHost": "Use the same host in the browser as in Keycloak (localhost vs 127.0.0.1, or different ports, are different URIs). If FE is on port 8080 and BFF on 8081, the dev proxy must preserve the browser Host, or set server env PUBLIC_BASE_URL=http://localhost:8080 so the BFF builds redirect_uri correctly.",
       "providersList": "Providers",
       "addProviderButton": "Add provider",
       "createModalTitle": "Add SSO provider",

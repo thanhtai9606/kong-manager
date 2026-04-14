@@ -44,8 +44,10 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/api': { target: kongManagerBff, changeOrigin: true },
-      '/kong-admin': { target: kongManagerBff, changeOrigin: true },
+      // changeOrigin: false keeps the browser Host (e.g. localhost:8080) when forwarding to the BFF.
+      // If true, Host becomes 127.0.0.1:8081 and OIDC redirect_uri no longer matches what you register in Keycloak.
+      '/api': { target: kongManagerBff, changeOrigin: false },
+      '/kong-admin': { target: kongManagerBff, changeOrigin: false },
       '/kconfig.js': process.env.KONG_GUI_URL || 'http://127.0.0.1:8002',
     },
     port: 8080,

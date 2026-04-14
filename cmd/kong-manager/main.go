@@ -57,6 +57,8 @@ func main() {
 		ar.Use(httpapi.JWTAuth(jwtSvc))
 		ar.Use(httpapi.CasbinAuthorize(enforcer, cfg.KongProxyPrefix))
 		ar.Put("/users/{userID}/groups", admin.PutUserGroups(db, enforcer))
+		ar.Patch("/users/{userID}", admin.PatchUser(db, enforcer))
+		ar.Delete("/users/{userID}", admin.DeleteUser(db, enforcer))
 		ar.Post("/users", admin.CreateUser(db, enforcer))
 		ar.Get("/users", admin.ListUsers(db))
 		ar.Get("/audit-logs", admin.ListAuditLogs(db))

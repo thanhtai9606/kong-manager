@@ -35,13 +35,21 @@
       },
       "error": {
         "load": "Could not load users.",
-        "forbidden": "You do not have permission to view users (admin role required)."
+        "forbidden": "You do not have permission to view users (admin role required).",
+        "usernameRequired": "Username is required.",
+        "passwordMin": "New password must be at least 8 characters, or leave empty to keep the current password."
       },
-      "editRoles": "Assign roles",
-      "saveRoles": "Save",
-      "rolesSaved": "Role assignments updated.",
+      "editUser": "Edit",
+      "delete": "Delete",
+      "newPassword": "New password",
+      "passwordPlaceholder": "Leave blank to keep current",
+      "editHint": "Change username and/or set a new password (min. 8 characters). Role checkboxes replace the user’s groups when you save.",
+      "saveChanges": "Save changes",
+      "saved": "User updated.",
+      "confirmDelete": "Delete user \"{name}\"? This cannot be undone.",
+      "deleted": "User deleted.",
       "createTitle": "Add user",
-      "createHint": "Password must be at least 8 characters. Optionally assign roles before the first sign-in.",
+      "createHint": "Password must be at least 8 characters. Usernames may include letters (any language), digits, _, ., @, -. Optionally assign roles before the first sign-in.",
       "createSubmit": "Create user",
       "created": "User created.",
       "createError": "Could not create user (duplicate name or invalid input)."
@@ -49,7 +57,8 @@
     "auditLog": {
       "description": "Append-only record of privileged actions (who did what, and when).",
       "loading": "Loading…",
-      "empty": "No audit entries yet.",
+      "empty": "No audit entries yet. Actions such as creating users, updating roles, or deleting users are logged here.",
+      "summary": "{count} total entries",
       "prev": "Previous",
       "next": "Next",
       "refresh": "Refresh",
@@ -154,7 +163,8 @@
       "back": "Back",
       "edit": "Edit",
       "save": "Save",
-      "create": "Create"
+      "create": "Create",
+      "cancel": "Cancel"
     },
     "learn.more": "Learn more"
   },

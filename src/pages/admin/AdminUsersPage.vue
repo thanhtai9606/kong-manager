@@ -42,7 +42,7 @@
         :key="`new-${g.id}`"
         :model-value="newGroupIds.has(g.id)"
         :label="g.name"
-        @change="toggleNewGroup(g.id)"
+        @update:model-value="(v: boolean) => setNewGroup(g.id, v)"
       />
     </div>
     <KButton
@@ -116,9 +116,18 @@
                 <KButton
                   size="small"
                   appearance="secondary"
-                  @click="toggleEdit(u.id)"
+                  @click="openEdit(u)"
                 >
-                  {{ t('admin.users.editRoles') }}
+                  {{ t('admin.users.editUser') }}
+                </KButton>
+                <KButton
+                  v-if="authStore.username !== u.username"
+                  size="small"
+                  appearance="danger"
+                  class="admin-users__btn-delete"
+                  @click="confirmDelete(u)"
+                >
+                  {{ t('admin.users.delete') }}
                 </KButton>
               </td>
             </tr>
@@ -127,23 +136,52 @@
               class="admin-users__edit-row"
             >
               <td colspan="4">
+                <div class="admin-users__edit-grid">
+                  <label class="admin-users__field">
+                    <span>{{ t('auth.username') }}</span>
+                    <KInput
+                      v-model="draftUsername"
+                      autocomplete="off"
+                    />
+                  </label>
+                  <label class="admin-users__field">
+                    <span>{{ t('admin.users.newPassword') }}</span>
+                    <KInput
+                      v-model="draftPassword"
+                      type="password"
+                      autocomplete="new-password"
+                      :placeholder="t('admin.users.passwordPlaceholder')"
+                    />
+                  </label>
+                </div>
+                <p class="admin-users__edit-hint">
+                  {{ t('admin.users.editHint') }}
+                </p>
                 <div class="admin-users__checks">
                   <KCheckbox
                     v-for="g in allGroups"
                     :key="g.id"
                     :model-value="draftGroupIds.has(g.id)"
                     :label="g.name"
-                    @change="toggleDraftGroup(g.id)"
+                    @update:model-value="(v: boolean) => setDraftGroup(g.id, v)"
                   />
                 </div>
-                <KButton
-                  appearance="primary"
-                  class="admin-users__save"
-                  :disabled="savingUserId === u.id"
-                  @click="saveUserGroups(u)"
-                >
-                  {{ t('admin.users.saveRoles') }}
-                </KButton>
+                <div class="admin-users__edit-actions">
+                  <KButton
+                    appearance="primary"
+                    class="admin-users__save"
+                    :disabled="savingUserId === u.id"
+                    @click="saveUserEdit(u)"
+                  >
+                    {{ t('admin.users.saveChanges') }}
+                  </KButton>
+                  <KButton
+                    appearance="tertiary"
+                    @click="closeEdit"
+                  >
+                    {{ t('global.buttons.cancel') }}
+                  </KButton>
+                </div>
               </td>
             </tr>
           </template>
@@ -159,8 +197,10 @@ import type { AxiosError } from 'axios'
 import { KBadge, KButton, KCard, KCheckbox, KInput } from '@kong/kongponents'
 import dayjs from 'dayjs'
 import SupportText from '@/components/SupportText.vue'
+import PageHeader from '@/components/PageHeader.vue'
 import { useI18n } from '@/composables/useI18n'
 import { useToaster } from '@/composables/useToaster'
+import { useAuthStore } from '@/stores/auth'
 import { apiService } from '@/services/apiService'
 
 defineOptions({ name: 'AdminUsersPage' })
@@ -179,12 +219,15 @@ interface AdminUserRow {
 
 const { t } = useI18n()
 const toaster = useToaster()
+const authStore = useAuthStore()
 
 const users = ref<AdminUserRow[]>([])
 const allGroups = ref<AdminGroup[]>([])
 const loading = ref(true)
 const errorMessage = ref('')
 const editingUserId = ref<number | null>(null)
+const draftUsername = ref('')
+const draftPassword = ref('')
 const draftGroupIds = ref<Set<number>>(new Set())
 const savingUserId = ref<number | null>(null)
 
@@ -197,34 +240,109 @@ function formatAt(iso: string) {
   return dayjs(iso).format('MMM DD, YYYY, h:mm A')
 }
 
-function toggleEdit(userId: number) {
-  if (editingUserId.value === userId) {
-    editingUserId.value = null
-    return
+function axiosErrBody(err: unknown): string | null {
+  const e = err as AxiosError
+  const d = e.response?.data
+  if (typeof d === 'string' && d.trim()) {
+    return d.trim()
   }
-  const u = users.value.find((x) => x.id === userId)
-  editingUserId.value = userId
-  draftGroupIds.value = new Set((u?.groups ?? []).map((g) => g.id))
+  return null
 }
 
-function toggleNewGroup(groupId: number) {
+function setNewGroup(groupId: number, checked: boolean) {
   const next = new Set(newGroupIds.value)
-  if (next.has(groupId)) {
-    next.delete(groupId)
-  } else {
+  if (checked) {
     next.add(groupId)
+  } else {
+    next.delete(groupId)
   }
   newGroupIds.value = next
 }
 
-function toggleDraftGroup(groupId: number) {
+function setDraftGroup(groupId: number, checked: boolean) {
   const next = new Set(draftGroupIds.value)
-  if (next.has(groupId)) {
-    next.delete(groupId)
-  } else {
+  if (checked) {
     next.add(groupId)
+  } else {
+    next.delete(groupId)
   }
   draftGroupIds.value = next
+}
+
+function openEdit(u: AdminUserRow) {
+  if (editingUserId.value === u.id) {
+    closeEdit()
+    return
+  }
+  editingUserId.value = u.id
+  draftUsername.value = u.username
+  draftPassword.value = ''
+  draftGroupIds.value = new Set((u.groups ?? []).map((g) => g.id))
+}
+
+function closeEdit() {
+  editingUserId.value = null
+}
+
+async function saveUserEdit(u: AdminUserRow) {
+  savingUserId.value = u.id
+  try {
+    const un = draftUsername.value.trim()
+    if (!un) {
+      toaster.open({ appearance: 'danger', message: t('admin.users.error.usernameRequired') })
+      return
+    }
+    const pw = draftPassword.value
+    if (pw.length > 0 && pw.length < 8) {
+      toaster.open({ appearance: 'danger', message: t('admin.users.error.passwordMin') })
+      return
+    }
+    const patchBody: Record<string, string> = {}
+    if (un !== u.username) {
+      patchBody.username = un
+    }
+    if (pw.length >= 8) {
+      patchBody.password = pw
+    }
+    if (Object.keys(patchBody).length > 0) {
+      await apiService.bffPatch<AdminUserRow>(`/api/admin/users/${u.id}`, patchBody)
+    }
+    const { data } = await apiService.bffPut<AdminUserRow>(`/api/admin/users/${u.id}/groups`, {
+      group_ids: [...draftGroupIds.value],
+    })
+    const idx = users.value.findIndex((x) => x.id === u.id)
+    if (idx >= 0) {
+      users.value[idx] = data
+    }
+    closeEdit()
+    toaster.open({ appearance: 'success', message: t('admin.users.saved') })
+  } catch (err) {
+    const msg = axiosErrBody(err) ?? t('global.error')
+    toaster.open({ appearance: 'danger', message: msg })
+  } finally {
+    savingUserId.value = null
+  }
+}
+
+function confirmDelete(u: AdminUserRow) {
+  if (!window.confirm(t('admin.users.confirmDelete', { name: u.username }))) {
+    return
+  }
+  void deleteUser(u)
+}
+
+async function deleteUser(u: AdminUserRow) {
+  try {
+    await apiService.bffDelete(`/api/admin/users/${u.id}`)
+    users.value = users.value.filter((x) => x.id !== u.id)
+    if (editingUserId.value === u.id) {
+      closeEdit()
+    }
+    toaster.open({ appearance: 'success', message: t('admin.users.deleted') })
+  } catch (err) {
+    const msg = axiosErrBody(err) ?? t('global.error')
+    toaster.open({ appearance: 'danger', message: msg })
+  }
 }
 
 async function createUser() {
@@ -240,29 +358,11 @@ async function createUser() {
     newGroupIds.value = new Set()
     toaster.open({ appearance: 'success', message: t('admin.users.created') })
     await load()
-  } catch {
-    toaster.open({ appearance: 'danger', message: t('admin.users.createError') })
+  } catch (err) {
+    const msg = axiosErrBody(err) ?? t('admin.users.createError')
+    toaster.open({ appearance: 'danger', message: msg })
   } finally {
     creating.value = false
-  }
-}
-
-async function saveUserGroups(u: AdminUserRow) {
-  savingUserId.value = u.id
-  try {
-    const { data } = await apiService.bffPut<AdminUserRow>(`/api/admin/users/${u.id}/groups`, {
-      group_ids: [...draftGroupIds.value],
-    })
-    const idx = users.value.findIndex((x) => x.id === u.id)
-    if (idx >= 0) {
-      users.value[idx] = data
-    }
-    editingUserId.value = null
-    toaster.open({ appearance: 'success', message: t('admin.users.rolesSaved') })
-  } catch {
-    toaster.open({ appearance: 'danger', message: t('global.error') })
-  } finally {
-    savingUserId.value = null
   }
 }
 
@@ -336,12 +436,40 @@ onMounted(() => {
 .admin-users__cell-actions {
   text-align: right;
   white-space: nowrap;
+
+  :deep(.k-button) {
+    margin-left: 0.35rem;
+  }
+}
+
+.admin-users__btn-delete {
+  margin-left: 0.25rem;
 }
 
 .admin-users__edit-row td {
   background: var(--kui-color-background-neutral-weakest, #fafafa);
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.admin-users__edit-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.admin-users__edit-hint {
+  font-size: 0.8125rem;
+  color: var(--kui-color-text-neutral, #525252);
+  margin: 0 0 0.75rem;
+}
+
+.admin-users__edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
 }
 
 .admin-users__checks {

@@ -4,6 +4,12 @@
       <SupportText>
         {{ t('admin.auditLog.description') }}
       </SupportText>
+      <p
+        v-if="!loading && !errorMessage"
+        class="admin-audit__summary"
+      >
+        {{ t('admin.auditLog.summary', { count: total }) }}
+      </p>
     </template>
   </PageHeader>
 
@@ -171,6 +177,12 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.admin-audit__summary {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--kui-color-text-neutral, #525252);
+}
+
 .admin-audit__state {
   padding: 1rem 0;
   color: var(--kui-color-text-neutral, #525252);

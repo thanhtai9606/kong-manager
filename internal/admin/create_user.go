@@ -17,7 +17,8 @@ import (
 	"gorm.io/gorm"
 )
 
-var usernameRe = regexp.MustCompile(`^[a-zA-Z0-9_.@-]{1,191}$`)
+// Letters include Unicode (e.g. Vietnamese); digits ASCII.
+var usernameRe = regexp.MustCompile(`^[\p{L}\p{N}_.@-]{1,191}$`)
 
 type createUserBody struct {
 	Username string `json:"username"`

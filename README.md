@@ -2,6 +2,8 @@
 
 [Installation](#getting-started) | [Provide feedback](https://github.com/Kong/kong-manager/issues/new/choose) | [Ask a question](https://join.slack.com/t/kongcommunity/shared_invite/zt-1s4nb74vo-jLdMEk8MoTm~uMWYMMLPWg) | [Contributing](#contributing) | [Blog](https://konghq.com/blog)
 
+> **BFF / backend (fork & roadmap):** xem [BACKEND_PLAN.md](BACKEND_PLAN.md) — kế hoạch Go + auth + Casbin + proxy Kong và trạng thái triển khai.
+
 ![Kong Manager OSS - Plugin list](./media/Plugin%20list.png)
 
 Kong Manager OSS, a **free** and **open-source** UI for [Kong](https://github.com/kong/kong), the world's most used open source API Gateway.

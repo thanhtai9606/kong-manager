@@ -36,9 +36,15 @@ export const config = {
   get ADMIN_API_URL() {
     const ADMIN_API_URL = getConfig<string | null>('ADMIN_API_URL', null)
     if (ADMIN_API_URL) {
-      return /^(https?:)?\/\//.test(ADMIN_API_URL)
-        ? ADMIN_API_URL
-        : `${window.location.protocol}//${ADMIN_API_URL}`
+      if (/^https?:\/\//i.test(ADMIN_API_URL)) {
+        return ADMIN_API_URL
+      }
+      // Same-origin path (e.g. /kong-admin when served by the Go BFF)
+      if (ADMIN_API_URL.startsWith('/')) {
+        const gui = config.ADMIN_GUI_PATH.replace(/\/$/, '') || ''
+        return `${window.location.origin}${gui}${ADMIN_API_URL}`
+      }
+      return `${window.location.protocol}//${ADMIN_API_URL}`
     }
 
     const port = window.location.protocol.toLowerCase() === 'https:'
@@ -46,6 +52,11 @@ export const config = {
       : config.ADMIN_API_PORT
 
     return `${window.location.protocol}//${window.location.hostname}:${port}`
+  },
+
+  /** When true, router requires login and Kong calls go through the BFF (see ADMIN_API_URL). */
+  get AUTH_REQUIRED() {
+    return getConfig<boolean>('AUTH_REQUIRED', false)
   },
 
   get ANONYMOUS_REPORTS() {

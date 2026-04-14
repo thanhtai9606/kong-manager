@@ -3,6 +3,7 @@ import {
 } from 'vue-router'
 
 import { config } from 'config'
+import { KM_TOKEN_KEY } from '@/services/apiService'
 import { useInfoStore } from './stores/info'
 
 const routes: RouteRecordRaw[] = [
@@ -13,6 +14,16 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/overview/Overview.vue'),
     meta: {
       title: 'Overview',
+    },
+  },
+
+  {
+    name: 'login',
+    path: '/login',
+    component: () => import('@/pages/auth/Login.vue'),
+    meta: {
+      title: 'Sign in',
+      public: true,
     },
   },
 
@@ -473,8 +484,18 @@ export const router = createRouter({
   routes,
 })
 
-router.beforeEach(() => {
-  const infoStore = useInfoStore()
+router.beforeEach(async (to) => {
+  if (config.AUTH_REQUIRED) {
+    const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(KM_TOKEN_KEY) : null
+    if (to.name === 'login' && token) {
+      const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/'
+      return { path: redirect }
+    }
+    if (!to.meta?.public && !token) {
+      return { name: 'login', query: { redirect: to.fullPath } }
+    }
+  }
 
-  infoStore.getInfo({ silent: true })
+  const infoStore = useInfoStore()
+  await infoStore.getInfo({ silent: true })
 })

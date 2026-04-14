@@ -107,7 +107,7 @@ async function signOut() {
 .user-profile-bar__name {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--kui-color-text, #1a1a1a);
+  color: var(--kui-color-text,rgb(255, 255, 255));
   min-width: 0;
   max-width: 11rem;
   overflow: hidden;

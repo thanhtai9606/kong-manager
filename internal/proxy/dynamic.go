@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -98,6 +99,7 @@ func DynamicKongHandler(db *gorm.DB, cfg *config.Config) http.Handler {
 			return
 		}
 
+		upstream := target.String()
 		rp := &httputil.ReverseProxy{
 			Transport: rt,
 			Director: func(req *http.Request) {
@@ -111,6 +113,11 @@ func DynamicKongHandler(db *gorm.DB, cfg *config.Config) http.Handler {
 				if req.Header.Get("X-Forwarded-Host") == "" {
 					req.Header.Set("X-Forwarded-Host", r.Host)
 				}
+			},
+			// Default ReverseProxy returns 502 with an empty body; surface the real error for ops/debugging.
+			ErrorHandler: func(w http.ResponseWriter, r *http.Request, err error) {
+				log.Printf("kong-admin proxy: upstream=%s path=%s: %v", upstream, suffix, err)
+				http.Error(w, "bad gateway (upstream Kong Admin): "+err.Error(), http.StatusBadGateway)
 			},
 		}
 		rp.ServeHTTP(w, r)

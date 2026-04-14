@@ -4,4 +4,12 @@ declare global {
   }
 }
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    shell?: 'admin'
+    public?: boolean
+    adminPageKey?: string
+  }
+}
+
 export {}

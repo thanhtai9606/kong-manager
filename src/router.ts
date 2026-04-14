@@ -27,6 +27,67 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  {
+    path: '/admin',
+    component: () => import('@/pages/admin/AdminLayout.vue'),
+    meta: {
+      shell: 'admin',
+      title: 'Admin',
+    },
+    children: [
+      {
+        name: 'admin-home',
+        path: '',
+        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        meta: {
+          shell: 'admin',
+          adminPageKey: 'home',
+          title: 'Admin',
+        },
+      },
+      {
+        name: 'admin-users',
+        path: 'users',
+        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        meta: {
+          shell: 'admin',
+          adminPageKey: 'users',
+          title: 'Users',
+        },
+      },
+      {
+        name: 'admin-rbac',
+        path: 'rbac',
+        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        meta: {
+          shell: 'admin',
+          adminPageKey: 'rbac',
+          title: 'RBAC',
+        },
+      },
+      {
+        name: 'admin-clusters',
+        path: 'clusters',
+        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        meta: {
+          shell: 'admin',
+          adminPageKey: 'clusters',
+          title: 'Kong clusters',
+        },
+      },
+      {
+        name: 'admin-notifications',
+        path: 'notifications',
+        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        meta: {
+          shell: 'admin',
+          adminPageKey: 'notifications',
+          title: 'Notifications',
+        },
+      },
+    ],
+  },
+
   // not found page
   {
     name: 'not-found',

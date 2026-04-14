@@ -5,7 +5,41 @@
     "password": "Password",
     "submit": "Sign in",
     "invalid": "Invalid username or password",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "menu": {
+      "admin": "Admin",
+      "signOut": "Sign out"
+    }
+  },
+  "admin": {
+    "nav": {
+      "backToGateway": "Back to Gateway",
+      "home": "Admin",
+      "users": "Users",
+      "rbac": "RBAC",
+      "clusters": "Kong clusters",
+      "notifications": "Notifications"
+    },
+    "placeholder": {
+      "description": "This section will be connected to the control plane. Placeholder content only."
+    },
+    "pages": {
+      "home": {
+        "title": "Admin"
+      },
+      "users": {
+        "title": "Users"
+      },
+      "rbac": {
+        "title": "RBAC"
+      },
+      "clusters": {
+        "title": "Kong clusters"
+      },
+      "notifications": {
+        "title": "Notifications"
+      }
+    }
   },
   "global": {
     "copied": "Successfully copied to clipboard",

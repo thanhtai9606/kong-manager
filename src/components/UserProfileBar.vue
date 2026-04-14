@@ -3,30 +3,44 @@
     class="user-profile-bar"
     data-testid="user-profile-bar"
   >
-    <div
-      class="user-profile-bar__avatar"
-      aria-hidden="true"
-    >
-      {{ initials }}
-    </div>
-    <div class="user-profile-bar__meta">
-      <span class="user-profile-bar__name">{{ displayName }}</span>
+    <KDropdown>
       <KButton
         appearance="tertiary"
-        class="user-profile-bar__signout"
-        data-testid="user-sign-out"
-        @click="signOut"
+        class="user-profile-bar__trigger"
+        data-testid="user-profile-menu-trigger"
       >
-        {{ t('auth.signOut') }}
+        <span
+          class="user-profile-bar__avatar"
+          aria-hidden="true"
+        >{{ initials }}</span>
+        <span class="user-profile-bar__name">{{ displayName }}</span>
+        <ChevronDownIcon class="user-profile-bar__chevron" />
       </KButton>
-    </div>
+      <template #items>
+        <KDropdownItem
+          v-if="config.AUTH_REQUIRED"
+          data-testid="user-menu-admin"
+          @click="goAdmin"
+        >
+          {{ t('auth.menu.admin') }}
+        </KDropdownItem>
+        <KDropdownItem
+          data-testid="user-sign-out"
+          @click="signOut"
+        >
+          {{ t('auth.menu.signOut') }}
+        </KDropdownItem>
+      </template>
+    </KDropdown>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { KButton } from '@kong/kongponents'
+import { KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
+import { ChevronDownIcon } from '@kong/icons'
+import { config } from 'config'
 import { useI18n } from '@/composables/useI18n'
 import { useAuthStore } from '@/stores/auth'
 
@@ -50,6 +64,10 @@ const initials = computed(() => {
   return u.slice(0, 2).toUpperCase()
 })
 
+function goAdmin() {
+  void router.push({ name: 'admin-home' })
+}
+
 async function signOut() {
   authStore.clearSession()
   await router.replace({ name: 'login' })
@@ -60,8 +78,15 @@ async function signOut() {
 .user-profile-bar {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  max-width: 280px;
+  max-width: 320px;
+}
+
+.user-profile-bar__trigger {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding-inline: 0.35rem 0.25rem !important;
 }
 
 .user-profile-bar__avatar {
@@ -73,33 +98,26 @@ async function signOut() {
   color: #fff;
   font-size: 0.75rem;
   font-weight: 700;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   letter-spacing: 0.02em;
-}
-
-.user-profile-bar__meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-  min-width: 0;
 }
 
 .user-profile-bar__name {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--kui-color-text, #1a1a1a);
-  max-width: 100%;
+  min-width: 0;
+  max-width: 11rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.user-profile-bar__signout {
-  padding: 0 !important;
-  min-height: auto !important;
-  font-size: 0.75rem !important;
+.user-profile-bar__chevron {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
 }
 </style>

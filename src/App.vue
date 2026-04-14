@@ -1,6 +1,12 @@
 <template>
+  <div
+    v-if="isAdminShell"
+    class="admin-root"
+  >
+    <router-view />
+  </div>
   <AppLayout
-    v-if="showAppShell"
+    v-else-if="showAppShell"
     :sidebar-top-items="sidebarItems"
   >
     <template #navbar-right>
@@ -41,6 +47,10 @@ const route = useRoute()
 const authStore = useAuthStore()
 const infoStore = useInfoStore()
 const { isHybridMode } = storeToRefs(infoStore)
+
+const isAdminShell = computed(() =>
+  route.matched.some((r) => r.meta?.shell === 'admin'),
+)
 
 /** With BFF auth, unauthenticated users only see the login route (no sidebar/header). */
 const showAppShell = computed(() => {
@@ -159,5 +169,9 @@ const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
 .auth-only-view {
   min-height: 100vh;
   background: var(--kui-color-background, #f7f7f7);
+}
+
+.admin-root {
+  min-height: 100vh;
 }
 </style>

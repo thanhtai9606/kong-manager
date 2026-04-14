@@ -23,6 +23,37 @@
     "placeholder": {
       "description": "This section will be connected to the control plane. Placeholder content only."
     },
+    "users": {
+      "description": "Local accounts registered in Kong Manager. Group membership drives Casbin roles.",
+      "loading": "Loading…",
+      "empty": "No users found.",
+      "headers": {
+        "username": "Username",
+        "groups": "Groups",
+        "createdAt": "Created"
+      },
+      "error": {
+        "load": "Could not load users.",
+        "forbidden": "You do not have permission to view users (admin role required)."
+      }
+    },
+    "rbac": {
+      "description": "Effective Casbin policies: which roles can access which paths, and which users belong to which roles.",
+      "loading": "Loading…",
+      "policiesTitle": "Policies (role → resource → action)",
+      "groupingTitle": "User → role",
+      "headers": {
+        "role": "Role / subject",
+        "resource": "Resource",
+        "action": "Action",
+        "user": "User",
+        "group": "Role"
+      },
+      "error": {
+        "load": "Could not load RBAC data.",
+        "forbidden": "You do not have permission to view RBAC (admin role required)."
+      }
+    },
     "pages": {
       "home": {
         "title": "Admin"

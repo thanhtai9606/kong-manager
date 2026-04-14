@@ -1,0 +1,14 @@
+---
+description: Vue — auth, apiService, trang admin
+globs: "src/**/*.{vue,ts}"
+alwaysApply: false
+---
+
+# Vue — auth & API
+
+- **Token:** `sessionStorage` key `KM_TOKEN_KEY` (`apiService.ts`). Login: `fetch` same-origin `…/api/auth/login` (xem `Login.vue` — `apiBase()` từ `ADMIN_GUI_PATH`).
+- **Kong Admin:** mọi entity dùng `apiService` với `adminApiUrl()` → không dùng cho `/api/admin/*`.
+- **BFF app API:** chỉ `apiService.bffGet` / mở rộng tương tự — URL đầy đủ same-origin (`bffAppUrl`).
+- **Admin routes:** `meta.shell: 'admin'`; component layout `AdminLayout.vue`; đừng bọc thêm `AppLayout` Kong ở `App.vue` khi đã admin shell.
+- **i18n:** khóa mới trong `src/locales/en.json`; `useI18n` typed theo JSON — tránh `t(\`dynamic.${x}\`)` nếu không khớp type; dùng `switch` hoặc map key đầy đủ.
+- **Lint:** `pnpm lint` — component đa từ: `defineOptions({ name: '…' })`.

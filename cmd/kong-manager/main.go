@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/kong/kong-manager/internal/admin"
 	"github.com/kong/kong-manager/internal/auth"
 	"github.com/kong/kong-manager/internal/bootstrap"
 	"github.com/kong/kong-manager/internal/config"
@@ -55,6 +56,13 @@ func main() {
 	})
 
 	r.Post("/api/auth/login", jwtSvc.LoginHandler(db))
+
+	r.Route("/api/admin", func(ar chi.Router) {
+		ar.Use(httpapi.JWTAuth(jwtSvc))
+		ar.Use(httpapi.CasbinAuthorize(enforcer))
+		ar.Get("/users", admin.ListUsers(db))
+		ar.Get("/rbac", admin.RBACSnapshot(enforcer))
+	})
 
 	kongHandler := httpapi.JWTAuth(jwtSvc)(
 		httpapi.CasbinAuthorize(enforcer)(

@@ -1,0 +1,44 @@
+---
+description: Bản đồ nhanh Kong Manager fork — đọc khi mất context phiên
+alwaysApply: true
+---
+
+# Kong Manager (BFF fork) — bản đồ nhanh
+
+## Stack
+
+- **Frontend:** Vue 3 + Vite + Pinia + Vue Router; Kong UI (`@kong-ui-public/*`, `@kong/kongponents`). i18n: `src/locales/en.json` + `useI18n`.
+- **Backend:** Go `chi`, GORM, Casbin, JWT; phục vụ static SPA + API + proxy Kong.
+
+## Đường dẫn quan trọng
+
+| Khu vực | Đường dẫn |
+|--------|-----------|
+| Entry Go | `cmd/kong-manager/main.go` |
+| HTTP / middleware | `internal/httpapi/` (`JWTAuth`, `CasbinAuthorize`, SPA) |
+| Auth API | `internal/auth/` — login, JWT; `POST /api/auth/login` |
+| Users / RBAC API app | `internal/admin/handlers.go` — `GET /api/admin/users`, `GET /api/admin/rbac` |
+| Casbin / seed policy | `internal/rbac/` — seed gồm `/kong-admin/*` và `/api/admin/*` cho role `admin` |
+| Models | `internal/models/models.go` — `User`, `Group` |
+| Config / env | `internal/config/config.go` |
+| Vue entry / shell | `src/App.vue` — tách **admin shell** (`meta.shell === 'admin'`) vs Kong `AppLayout` |
+| Router | `src/router.ts` — `/login`, `/admin/*`, entity Kong |
+| Kong Admin qua browser | `src/services/apiService.ts` — Bearer `KM_TOKEN_KEY`; base `config.ADMIN_API_URL` (thường same-origin `/…/kong-admin`) |
+| API BFF (không phải Kong) | `apiService.bffGet('/api/admin/...')` — same-origin JWT |
+| Admin UI | `src/pages/admin/*`, layout `AdminLayout.vue` |
+| Auth UI | `src/pages/auth/Login.vue`, `src/stores/auth.ts` |
+| Roadmap backend | `BACKEND_PLAN.md` |
+
+## Chạy local (nhớ)
+
+- **BFF:** `HTTP_ADDR=:8081 KONG_ADMIN_URL=… BOOTSTRAP_ADMIN_USERNAME=… BOOTSTRAP_ADMIN_PASSWORD=… go run ./cmd/kong-manager`
+- **UI + proxy:** `pnpm serve:bff` — Vite proxy tới BFF (`vite.config.ts`, biến `KONG_MANAGER_BFF_URL`).
+- **Lint:** `pnpm lint` (gồm `vue-tsc`).
+
+## Quy ước nhanh
+
+- Route **public:** `meta.public: true` (ví dụ login). Auth bật: `config.AUTH_REQUIRED` + guard trong `router.beforeEach`.
+- **Admin shell:** route matched có `meta.shell: 'admin'` → `App.vue` chỉ render `<router-view />` (không lồng Kong sidebar).
+- **Casbin:** user → nhóm trong DB; `rbac.SyncUserGroups`; policy p gán quyền role lên path (Kong proxy + `/api/admin/*`).
+
+Khi sửa API mới: thêm route trong `main.go` **trước** catch-all `/*`; nếu cần Casbin, seed policy tương ứng trong `SeedDefaultPolicies`.

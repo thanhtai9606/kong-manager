@@ -48,7 +48,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'admin-users',
         path: 'users',
-        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        component: () => import('@/pages/admin/AdminUsersPage.vue'),
         meta: {
           shell: 'admin',
           adminPageKey: 'users',
@@ -58,7 +58,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'admin-rbac',
         path: 'rbac',
-        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        component: () => import('@/pages/admin/AdminRbacPage.vue'),
         meta: {
           shell: 'admin',
           adminPageKey: 'rbac',

@@ -1,0 +1,14 @@
+---
+description: Quy ước Go BFF (chi, handler, Casbin)
+globs: "**/*.go"
+alwaysApply: false
+---
+
+# Go BFF
+
+- Router: `chi` — đăng ký route cụ thể (`/healthz`, `/api/auth/login`, `/api/admin/*`) **trước** handler `/*` phục vụ SPA + Kong proxy.
+- Handlers trả JSON: set `Content-Type: application/json`; lỗi dùng `http.Error` với mã HTTP đúng.
+- JWT: `httpapi.JWTAuth` gắn `Claims` vào context; đọc bằng `httpapi.ClaimsFrom`.
+- Kong proxy: bọc `JWTAuth` → `CasbinAuthorize` → `proxy.Handler` — path Kong lấy từ config `KongProxyPrefix` (mặc định `/kong-admin`).
+- API quản trị app (`/api/admin/*`): cùng chuỗi JWT + Casbin; policy phải có trong `SeedDefaultPolicies` (role `admin` → `/api/admin/*`).
+- DB: GORM trong `internal/db`; model tại `internal/models`.

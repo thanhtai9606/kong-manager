@@ -1,0 +1,24 @@
+# Dependencies & build output
+node_modules/
+dist/
+dist-ssr/
+bundle-analyzer/
+
+# Test / report artifacts
+test-results/
+playwright-report/
+coverage/
+*.log
+
+# Local env
+.env
+.env.*
+!.env.example
+
+# Screenshots / large media (see paths in README)
+media/
+
+# Husky internal hook copies
+.husky/_/
+
+.DS_Store

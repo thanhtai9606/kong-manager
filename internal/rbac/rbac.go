@@ -32,6 +32,8 @@ func SeedDefaultPolicies(e *casbin.Enforcer) error {
 		return err
 	}
 	_, _ = e.AddPolicy("viewer", "/kong-admin/*", "GET")
+	// BFF admin API (user list, RBAC snapshot) — admin role only.
+	_, _ = e.AddPolicy("admin", "/api/admin/*", "*")
 	return nil
 }
 

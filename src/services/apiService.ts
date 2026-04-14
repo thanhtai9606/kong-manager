@@ -9,6 +9,16 @@ function adminApiUrl(): string {
   return config.ADMIN_API_URL
 }
 
+/** Same-origin BFF app API (e.g. `/api/admin/*`), not Kong Admin. */
+function bffAppUrl(path: string): string {
+  const gui = config.ADMIN_GUI_PATH.replace(/\/$/, '') || ''
+  const p = path.startsWith('/') ? path : `/${path}`
+  if (typeof window === 'undefined') {
+    return p
+  }
+  return `${window.location.origin}${gui}${p}`
+}
+
 /** Session storage key for the Kong Manager BFF JWT. */
 export const KM_TOKEN_KEY = 'km_token'
 
@@ -78,6 +88,11 @@ class ApiService {
 
   delete(url = '', reqConfig: AxiosRequestConfig = {}) {
     return this.instance.delete(`${adminApiUrl()}/${url}`, reqConfig)
+  }
+
+  /** GET against the Go BFF (JWT + Casbin), not Kong Admin. */
+  bffGet<T>(path: string, reqConfig: AxiosRequestConfig = {}) {
+    return this.instance.get<T>(bffAppUrl(path), reqConfig)
   }
 }
 

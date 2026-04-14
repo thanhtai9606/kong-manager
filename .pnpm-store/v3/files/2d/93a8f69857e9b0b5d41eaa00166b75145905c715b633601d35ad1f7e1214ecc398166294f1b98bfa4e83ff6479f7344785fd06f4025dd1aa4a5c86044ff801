@@ -1,5 +1,0 @@
-import o from "./kongponents.es24.js";
-/* empty css                 */
-export {
-  o as default
-};

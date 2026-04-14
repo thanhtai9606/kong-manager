@@ -1,3 +1,0 @@
-import type { ACLFieldSchema } from '../../types/plugins/acl';
-export declare const aclSchema: ACLFieldSchema;
-//# sourceMappingURL=ACL.d.ts.map

@@ -1,1 +1,0 @@
-"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const u=require("./kongponents581.cjs");function f(o){var e=u.default(o),t=e.overflow,l=e.overflowX,r=e.overflowY;return/auto|scroll|overlay|hidden/.test(t+r+l)}exports.default=f;

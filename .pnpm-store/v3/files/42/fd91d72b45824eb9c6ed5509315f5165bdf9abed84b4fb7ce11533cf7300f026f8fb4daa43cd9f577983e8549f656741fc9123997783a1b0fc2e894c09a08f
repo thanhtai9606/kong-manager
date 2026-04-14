@@ -1,3 +1,0 @@
-import type { MapHandlerOption } from './types';
-export declare function fillMap(option: MapHandlerOption): void;
-//# sourceMappingURL=map.d.ts.map

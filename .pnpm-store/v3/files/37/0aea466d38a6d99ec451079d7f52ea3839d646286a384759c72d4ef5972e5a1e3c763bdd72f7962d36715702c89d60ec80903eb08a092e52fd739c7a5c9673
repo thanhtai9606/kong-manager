@@ -1,6 +1,0 @@
-import type { MaybeRefOrGetter, Slot } from 'vue';
-export declare const useFieldPath: (name: MaybeRefOrGetter<string>) => import("vue").ComputedRef<string>;
-export declare const useFieldRenderer: (path: MaybeRefOrGetter<string>) => import("vue").ComputedRef<Slot<{
-    name: string;
-}> | Slot<any> | undefined>;
-//# sourceMappingURL=field-path.d.ts.map

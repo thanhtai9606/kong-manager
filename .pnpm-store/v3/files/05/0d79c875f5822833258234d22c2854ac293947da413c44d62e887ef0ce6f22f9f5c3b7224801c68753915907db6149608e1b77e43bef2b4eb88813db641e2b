@@ -1,7 +1,0 @@
-import t from "./kongponents.es342.js";
-/* empty css                  */
-import o from "./kongponents.es75.js";
-const c = /* @__PURE__ */ o(t, [["__scopeId", "data-v-12cbeddf"]]);
-export {
-  c as default
-};

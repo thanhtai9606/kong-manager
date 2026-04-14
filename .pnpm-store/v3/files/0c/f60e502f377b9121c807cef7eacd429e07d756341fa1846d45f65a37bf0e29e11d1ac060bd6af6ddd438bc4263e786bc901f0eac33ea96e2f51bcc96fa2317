@@ -1,1 +1,0 @@
-"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const a=require("./kongponents476.cjs"),n=require("./kongponents518.cjs"),s=require("./kongponents409.cjs");function d(r){s.default(1,arguments);var t=a.default(r),e=new Date(0);e.setUTCFullYear(t,0,4),e.setUTCHours(0,0,0,0);var u=n.default(e);return u}exports.default=d;

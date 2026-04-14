@@ -1,1 +1,0 @@
-"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});var r={start:"end",end:"start"};function a(e){return e.replace(/start|end/g,function(t){return r[t]})}exports.default=a;

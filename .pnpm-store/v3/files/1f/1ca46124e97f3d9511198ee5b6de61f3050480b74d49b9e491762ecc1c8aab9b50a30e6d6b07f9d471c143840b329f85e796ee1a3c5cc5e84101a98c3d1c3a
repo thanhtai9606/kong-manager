@@ -1,8 +1,0 @@
-function e(t, r) {
-  return function(n) {
-    return n == null ? !1 : n[t] === r && (r !== void 0 || t in Object(n));
-  };
-}
-export {
-  e as default
-};

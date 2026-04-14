@@ -1,4 +1,0 @@
-import type { CodeToHastOptions } from '@shikijs/core';
-declare function codeToHtml(code: string, options: CodeToHastOptions): string;
-export { codeToHtml };
-//# sourceMappingURL=shiki.d.ts.map

@@ -27,3 +27,6 @@ bundle-analyzer
 
 # suppress build warning
 public/kconfig.js
+
+# local pnpm store (e.g. pnpm config set store-dir .pnpm-store)
+.pnpm-store/

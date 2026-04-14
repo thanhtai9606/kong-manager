@@ -1,4 +1,0 @@
-import a from "./kongponents.es417.js";
-export {
-  a as default
-};

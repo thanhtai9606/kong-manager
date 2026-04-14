@@ -58,28 +58,37 @@
       </div>
       <table class="admin-audit__table">
         <thead>
-          <tr>
-            <th>{{ t('admin.auditLog.headers.time') }}</th>
-            <th>{{ t('admin.auditLog.headers.actor') }}</th>
-            <th>{{ t('admin.auditLog.headers.action') }}</th>
-            <th>{{ t('admin.auditLog.headers.resource') }}</th>
-            <th>{{ t('admin.auditLog.headers.details') }}</th>
-            <th>{{ t('admin.auditLog.headers.ip') }}</th>
+          <tr
+            v-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <th
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+            >
+              <FlexRender
+                v-if="!header.isPlaceholder"
+                :render="header.column.columnDef.header"
+                :props="header.getContext()"
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="row in items"
+            v-for="row in table.getRowModel().rows"
             :key="row.id"
           >
-            <td>{{ formatAt(row.created_at) }}</td>
-            <td>{{ row.actor_username }}</td>
-            <td><code>{{ row.action }}</code></td>
-            <td>{{ row.resource || '—' }}</td>
-            <td class="admin-audit__details">
-              {{ truncateDetails(row.details) }}
+            <td
+              v-for="cell in row.getVisibleCells()"
+              :key="cell.id"
+              :class="{ 'admin-audit__details': cell.column.id === 'details' }"
+            >
+              <FlexRender
+                :render="cell.column.columnDef.cell"
+                :props="cell.getContext()"
+              />
             </td>
-            <td>{{ row.client_ip || '—' }}</td>
           </tr>
         </tbody>
       </table>
@@ -108,9 +117,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, h, onMounted, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import { KCard } from '@kong/kongponents'
+import {
+  FlexRender,
+  createColumnHelper,
+  getCoreRowModel,
+  useVueTable,
+} from '@tanstack/vue-table'
 import dayjs from 'dayjs'
 import SupportText from '@/components/SupportText.vue'
 import PageHeader from '@/components/PageHeader.vue'
@@ -159,6 +174,46 @@ function truncateDetails(s: string | undefined) {
   }
   return s.length > 120 ? `${s.slice(0, 117)}…` : s
 }
+
+const columnHelper = createColumnHelper<AuditLogRow>()
+
+const columns = computed(() => [
+  columnHelper.accessor('created_at', {
+    header: () => t('admin.auditLog.headers.time'),
+    cell: info => formatAt(info.getValue()),
+  }),
+  columnHelper.accessor('actor_username', {
+    header: () => t('admin.auditLog.headers.actor'),
+    cell: info => info.getValue(),
+  }),
+  columnHelper.accessor('action', {
+    header: () => t('admin.auditLog.headers.action'),
+    cell: info => h('code', info.getValue()),
+  }),
+  columnHelper.accessor('resource', {
+    header: () => t('admin.auditLog.headers.resource'),
+    cell: info => info.getValue() || '—',
+  }),
+  columnHelper.display({
+    id: 'details',
+    header: () => t('admin.auditLog.headers.details'),
+    cell: ({ row }) => truncateDetails(row.original.details),
+  }),
+  columnHelper.accessor('client_ip', {
+    header: () => t('admin.auditLog.headers.ip'),
+    cell: info => info.getValue() || '—',
+  }),
+])
+
+const table = useVueTable({
+  get data() {
+    return items.value
+  },
+  get columns() {
+    return columns.value
+  },
+  getCoreRowModel: getCoreRowModel(),
+})
 
 async function reload() {
   loading.value = true
@@ -259,9 +314,14 @@ onMounted(() => {
     vertical-align: top;
   }
 
-  th {
+  thead th {
     font-weight: 600;
     color: var(--kui-color-text-neutral, #525252);
+    background: var(--kui-color-background-neutral-weakest, #f5f5f5);
+  }
+
+  tbody tr:hover td {
+    background: var(--kui-color-background-neutral-weakest, rgba(0, 0, 0, 0.04));
   }
 }
 

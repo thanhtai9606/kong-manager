@@ -1,2 +1,0 @@
-export { default as GithubStar } from './github-star/GithubStar.vue';
-//# sourceMappingURL=index.d.ts.map

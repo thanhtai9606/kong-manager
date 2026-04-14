@@ -1,1 +1,0 @@
-{"version":3,"file":"useTableState.d.ts","sourceRoot":"","sources":["../../../src/composables/useTableState.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,GAAG,EAAE,MAAM,KAAK,CAAA;AAC9B,OAAO,KAAK,EAAE,gBAAgB,EAAE,MAAM,UAAU,CAAA;AAIhD,MAAM,CAAC,OAAO,UAAU,aAAa,CAAC,KAAK,CAAC,EAAE,GAAG,CAAC,MAAM,CAAC,GAAG,CAAC,MAAM,MAAM,CAAC;;;;;;;;;;qCAqBhC,gBAAgB,KAAG,IAAI;EA8BhE"}

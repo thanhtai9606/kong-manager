@@ -1,3 +1,0 @@
-import type { OasValidationSchema } from '../../types/plugins/oas-validation';
-export declare const oasValidationSchema: OasValidationSchema;
-//# sourceMappingURL=OASValidation.d.ts.map

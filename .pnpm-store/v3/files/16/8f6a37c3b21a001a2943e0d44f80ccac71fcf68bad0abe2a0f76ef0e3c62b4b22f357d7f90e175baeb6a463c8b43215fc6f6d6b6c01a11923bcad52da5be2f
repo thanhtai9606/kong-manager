@@ -1,3 +1,0 @@
-import type { MetricFieldsSchema } from '../../types/plugins/metric-fields';
-export declare const metricFieldsSchema: MetricFieldsSchema;
-//# sourceMappingURL=MetricFields.d.ts.map

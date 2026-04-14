@@ -1,8 +1,0 @@
-import e from "./kongponents.es420.js";
-import o from "./kongponents.es409.js";
-function n(t) {
-  return o(1, arguments), t instanceof Date || e(t) === "object" && Object.prototype.toString.call(t) === "[object Date]";
-}
-export {
-  n as default
-};

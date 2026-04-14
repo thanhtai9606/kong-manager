@@ -1,6 +1,0 @@
-import type { MonacoEditorActionConfig } from '../types';
-/**
- * Formatting-related toolbar actions
- */
-export declare const formattingActions: Record<string, MonacoEditorActionConfig>;
-//# sourceMappingURL=formatting.d.ts.map

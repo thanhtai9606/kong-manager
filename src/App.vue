@@ -20,7 +20,7 @@
     <template #sidebar-header>
       <NavbarLogo />
     </template>
-    <router-view />
+    <router-view :key="clusterRouteKey" />
     <MakeAWish />
   </AppLayout>
   <div
@@ -52,12 +52,17 @@ const infoStore = useInfoStore()
 const kongClusterStore = useKongClusterStore()
 const { isHybridMode } = storeToRefs(infoStore)
 
+/** Remount gateway pages when Kong cluster changes so lists/detail refetch against the new admin base URL. */
+const clusterRouteKey = computed(
+  () => `${kongClusterStore.selectedSlug}::${route.fullPath}`,
+)
+
 async function loadClustersIfAuth() {
   if (!config.AUTH_REQUIRED || !authStore.isAuthenticated) {
     return
   }
   await kongClusterStore.loadClusters()
-  await infoStore.getInfo({ silent: true })
+  await infoStore.getInfo({ silent: true, force: true })
 }
 
 onMounted(() => {

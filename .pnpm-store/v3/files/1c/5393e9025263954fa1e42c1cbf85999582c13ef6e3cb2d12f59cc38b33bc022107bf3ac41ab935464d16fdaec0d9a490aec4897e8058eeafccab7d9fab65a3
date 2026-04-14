@@ -1,4 +1,0 @@
-const r = ["", "radio", "card"];
-export {
-  r as RadioTypesArray
-};

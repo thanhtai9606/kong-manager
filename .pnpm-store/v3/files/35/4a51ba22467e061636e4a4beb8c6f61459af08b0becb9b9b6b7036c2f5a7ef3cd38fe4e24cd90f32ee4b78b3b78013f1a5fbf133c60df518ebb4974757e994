@@ -1,4 +1,0 @@
-import type { BooleanFieldSchema } from '../../../../../types/plugins/form-schema';
-import type { HandlerOption } from './types';
-export declare function fillBoolean(option: HandlerOption<BooleanFieldSchema>): void;
-//# sourceMappingURL=boolean.d.ts.map

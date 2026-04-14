@@ -1,9 +1,0 @@
-import MonacoEditor from './components/MonacoEditor.vue';
-import MonacoEditorStatusOverlay from './components/MonacoEditorStatusOverlay.vue';
-export { MonacoEditor, MonacoEditorStatusOverlay, };
-export * from './features/code-lenses';
-export * from './singletons/model-contexts';
-export * from './types';
-export { useMonacoEditor } from './composables/useMonacoEditor';
-export { createWrapAction } from './actions';
-//# sourceMappingURL=index.d.ts.map

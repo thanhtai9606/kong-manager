@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const i=15,g=(S,e)=>S.pageSize?S.pageSize:e.initialPageSize?e.initialPageSize:e.pageSizes&&Array.isArray(e.pageSizes)&&e.pageSizes.length?e.pageSizes[0]:i;exports.DEFAULT_PAGE_SIZE=i;exports.getInitialPageSize=g;

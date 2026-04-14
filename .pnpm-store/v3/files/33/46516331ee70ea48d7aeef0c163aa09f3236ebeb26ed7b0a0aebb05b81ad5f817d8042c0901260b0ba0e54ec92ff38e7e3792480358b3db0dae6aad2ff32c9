@@ -1,8 +1,0 @@
-import f from "./kongponents.es581.js";
-function a(e) {
-  var o = f(e), r = o.overflow, t = o.overflowX, l = o.overflowY;
-  return /auto|scroll|overlay|hidden/.test(r + l + t);
-}
-export {
-  a as default
-};

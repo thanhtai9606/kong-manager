@@ -7,13 +7,14 @@
     <template #sidebar-header>
       <NavbarLogo />
     </template>
-    <router-view />
+    <router-view :key="clusterRouteKey" />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useKongClusterStore } from '@/stores/kongCluster'
 import { AppLayout, type SidebarPrimaryItem } from '@kong-ui-public/app-layout'
 import { config } from 'config'
 import NavbarLogo from '@/components/NavbarLogo.vue'
@@ -24,7 +25,12 @@ import { useI18n } from '@/composables/useI18n'
 defineOptions({ name: 'AdminLayout' })
 
 const route = useRoute()
+const kongClusterStore = useKongClusterStore()
 const { t } = useI18n()
+
+const clusterRouteKey = computed(
+  () => `${kongClusterStore.selectedSlug}::${route.fullPath}`,
+)
 
 const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
   {

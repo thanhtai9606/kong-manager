@@ -1,7 +1,0 @@
-import { getDefaultExportFromCjs as e } from "./kongponents.es517.js";
-import { __require as r } from "./kongponents.es467.js";
-var o = /* @__PURE__ */ r();
-const a = /* @__PURE__ */ e(o);
-export {
-  a as default
-};

@@ -40,7 +40,8 @@ const enabledClusters = computed(() => store.clusters.filter((c) => c.enabled))
 function onChange(ev: Event) {
   const slug = (ev.target as HTMLSelectElement).value
   store.selectSlug(slug)
-  void infoStore.getInfo({ silent: true })
+  // Without force, getInfo returns cached /info from the previous cluster.
+  void infoStore.getInfo({ silent: true, force: true })
 }
 </script>
 

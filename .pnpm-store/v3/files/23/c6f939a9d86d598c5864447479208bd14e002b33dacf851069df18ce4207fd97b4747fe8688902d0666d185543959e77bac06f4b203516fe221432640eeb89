@@ -1,4 +1,0 @@
-const r = ["large", "medium", "small"];
-export {
-  r as CardSizeArray
-};

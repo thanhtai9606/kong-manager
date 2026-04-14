@@ -1,4 +1,0 @@
-var e = /* @__PURE__ */ ((r) => (r.Default = "default", r.Error = "error", r.Search = "search", r.Kong = "kong", r))(e || {});
-export {
-  e as EmptyStateIconVariants
-};

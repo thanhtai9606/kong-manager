@@ -1,1 +1,0 @@
-"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});function u(t,a){for(var r=t<0?"-":"",e=Math.abs(t).toString();e.length<a;)e="0"+e;return r+e}exports.default=u;

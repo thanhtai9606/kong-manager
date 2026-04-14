@@ -1,5 +1,0 @@
-export default function useDate(): {
-    formatDateBy: (seconds: number, options?: Intl.DateTimeFormatOptions) => string | null;
-    formatUnixToDate: (timestamp: number, omitTimezone?: boolean) => string;
-};
-//# sourceMappingURL=index.d.ts.map

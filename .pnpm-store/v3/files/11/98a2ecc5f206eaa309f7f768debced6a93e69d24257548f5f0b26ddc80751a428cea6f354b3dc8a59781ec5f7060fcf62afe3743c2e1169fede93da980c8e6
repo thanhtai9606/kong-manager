@@ -1,9 +1,0 @@
-import t from "./kongponents.es298.js";
-import m from "./kongponents.es290.js";
-var r = "[object Symbol]";
-function i(o) {
-  return typeof o == "symbol" || m(o) && t(o) == r;
-}
-export {
-  i as default
-};

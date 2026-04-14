@@ -1,9 +1,0 @@
-import o from "./kongponents.es218.js";
-import { getMaximumDepth as _ } from "./kongponents.es218.js";
-/* empty css                  */
-import r from "./kongponents.es75.js";
-const a = /* @__PURE__ */ r(o, [["__scopeId", "data-v-032174d6"]]);
-export {
-  a as default,
-  _ as getMaximumDepth
-};

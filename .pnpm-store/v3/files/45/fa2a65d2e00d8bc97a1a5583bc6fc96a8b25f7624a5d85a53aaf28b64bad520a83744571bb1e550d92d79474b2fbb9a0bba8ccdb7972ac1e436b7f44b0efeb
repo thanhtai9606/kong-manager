@@ -1,5 +1,0 @@
-import o from "./kongponents.es296.js";
-var m = o.Symbol;
-export {
-  m as default
-};

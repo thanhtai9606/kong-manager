@@ -3,6 +3,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { ref } from 'vue'
 import en from '@/locales/en.json'
 import viPartial from '@/locales/overrides/vi.json'
+import viPack from '@/locales/overrides/vi-pack.json'
 import zhCNPartial from '@/locales/overrides/zh-CN.json'
 import jaJPPartial from '@/locales/overrides/ja-JP.json'
 import koKRPartial from '@/locales/overrides/ko-KR.json'
@@ -50,7 +51,9 @@ function buildLocale(partial: Record<string, unknown>): MessageSource {
 
 export const catalogs: Record<LocaleCode, MessageSource> = {
   'en-us': en,
-  'vi-vn': buildLocale(viPartial as Record<string, unknown>),
+  'vi-vn': buildLocale(
+    merge({}, viPartial, viPack) as Record<string, unknown>,
+  ),
   'zh-cn': buildLocale(zhCNPartial as Record<string, unknown>),
   'ja-jp': buildLocale(jaJPPartial as Record<string, unknown>),
   'ko-kr': buildLocale(koKRPartial as Record<string, unknown>),

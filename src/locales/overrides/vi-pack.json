@@ -1,0 +1,229 @@
+{
+  "overview": {
+    "info": {
+      "gateway": {
+        "title": "Gateway",
+        "edition": "Phiên bản",
+        "version": "Phiên bản phần mềm"
+      },
+      "node": {
+        "title": "Chi tiết nút",
+        "address": "Địa chỉ",
+        "hostname": "Tên máy"
+      },
+      "port": {
+        "title": "Chi tiết cổng",
+        "port": "Cổng Kong Manager",
+        "ssl": "Cổng SSL Kong Manager",
+        "proxy": "Cổng proxy",
+        "proxy.ssl": "Cổng proxy SSL"
+      },
+      "datastore": {
+        "title": "Kho dữ liệu",
+        "type": "Loại",
+        "user": "Người dùng",
+        "host": "Máy chủ",
+        "port": "Cổng",
+        "ssl": "SSL"
+      }
+    },
+    "resource": {
+      "intro": {
+        "title": "Giới thiệu",
+        "description": "API gateway gốc đám mây nhẹ, nhanh và linh hoạt."
+      },
+      "start": {
+        "title": "Bắt đầu",
+        "description": "Mới dùng Kong? Bắt đầu với các bước cơ bản."
+      },
+      "plugin": {
+        "title": "Plugin Hub",
+        "description": "Mở rộng Kong Gateway bằng các plugin mạnh."
+      },
+      "discuss": {
+        "title": "Kong Nation",
+        "description": "Trao đổi với cộng đồng về Kong."
+      }
+    }
+  },
+  "konnect-cta": {
+    "name": "Konnect",
+    "description": "Cách dễ nhất để bắt đầu với Kong Gateway.",
+    "get.started": "Bắt đầu",
+    "footer.description": "Không cần thẻ tín dụng — có gói miễn phí",
+    "feature.1": "Đơn giản hóa vận hành Gateway với control plane SaaS của Konnect",
+    "feature.2": "Dùng thử plugin doanh nghiệp như OpenID Connect, mTLS, OPA",
+    "feature.3": "Phân tích API sẵn có",
+    "feature.4": "Nâng cấp Kong Gateway thuận tiện hơn",
+    "feature.5": "Trao API Dev Portal kèm quản lý đăng ký"
+  },
+  "entities": {
+    "service": {
+      "description": "Gateway Service là lớp trừu tượng cho từng dịch vụ upstream của bạn (ví dụ microservice biến đổi dữ liệu, API thanh toán).",
+      "created": "Đã tạo Gateway Service \"{name}\"!",
+      "updated": "Đã cập nhật Gateway Service \"{name}\"!",
+      "deleted": "Đã xóa Gateway Service \"{name}\"!",
+      "list.title": "Dịch vụ Gateway",
+      "detail.title": "Gateway Service: {name}",
+      "create.form.title": "Gateway Service mới",
+      "edit.form.title": "Sửa Gateway Service"
+    },
+    "route": {
+      "description": "Route định nghĩa quy tắc khớp yêu cầu từ client và gắn với một Service.",
+      "created": "Đã tạo Route \"{name}\"!",
+      "updated": "Đã cập nhật Route \"{name}\"!",
+      "deleted": "Đã xóa Route \"{name}\"!",
+      "list.title": "Route",
+      "detail.title": "Route: {name}",
+      "create.form.title": "Route mới",
+      "edit.form.title": "Sửa Route"
+    },
+    "consumer": {
+      "description": "Consumer là người dùng cuối của một dịch vụ.",
+      "created": "Đã tạo Consumer \"{name}\"!",
+      "updated": "Đã cập nhật Consumer \"{name}\"!",
+      "deleted": "Đã xóa Consumer \"{name}\"!",
+      "list.title": "Consumer",
+      "detail.title": "Consumer: {name}",
+      "create.form.title": "Consumer mới",
+      "edit.form.title": "Sửa Consumer"
+    },
+    "consumer-credential": {
+      "created": "Đã tạo credential!",
+      "updated": "Đã cập nhật credential!",
+      "deleted": "Đã xóa credential!",
+      "empty": {
+        "title": "Chưa bật plugin",
+        "message": "Thêm một trong các plugin sau để có thể thêm credential cho Consumer này: {plugins}",
+        "button": "Cài plugin"
+      },
+      "create.form.title": "Tạo: {type}",
+      "edit.form.title": "Sửa: {type}"
+    },
+    "plugin": {
+      "description": "Plugin mở rộng Kong: giới hạn tốc độ, xác thực, ghi log, v.v.",
+      "created": "Đã tạo plugin \"{name}\"!",
+      "updated": "Đã cập nhật plugin \"{name}\"!",
+      "deleted": "Đã xóa plugin \"{name}\"!",
+      "enabled": "Đã bật plugin \"{name}\"!",
+      "disabled": "Đã tắt plugin \"{name}\"!",
+      "list.title": "Plugin",
+      "create.form.title": "Plugin mới",
+      "edit.form.title": "Sửa plugin"
+    },
+    "upstream": {
+      "description": "Upstream là hostname ảo để cân bằng tải yêu cầu tới nhiều dịch vụ.",
+      "created": "Đã tạo Upstream \"{name}\"!",
+      "updated": "Đã cập nhật Upstream \"{name}\"!",
+      "deleted": "Đã xóa Upstream \"{name}\"!",
+      "list.title": "Upstream",
+      "detail.title": "Upstream: {name}",
+      "create.form.title": "Upstream mới",
+      "edit.form.title": "Sửa Upstream"
+    },
+    "certificate": {
+      "description": "Chứng chỉ dùng để kết thúc SSL/TLS cho kết nối mã hóa.",
+      "created": "Đã tạo chứng chỉ \"{id}\"!",
+      "updated": "Đã cập nhật chứng chỉ \"{id}\"!",
+      "deleted": "Đã xóa chứng chỉ \"{id}\"!",
+      "list.title": "Chứng chỉ",
+      "detail.title": "Chứng chỉ: {id}",
+      "create.form.title": "Chứng chỉ mới",
+      "edit.form.title": "Sửa chứng chỉ"
+    },
+    "ca-certificate": {
+      "description": "Chứng chỉ CA dùng để xác thực chứng chỉ client hoặc server.",
+      "created": "Đã tạo CA Certificate \"{id}\"!",
+      "updated": "Đã cập nhật CA Certificate \"{id}\"!",
+      "deleted": "Đã xóa CA Certificate \"{id}\"!",
+      "list.title": "Chứng chỉ CA",
+      "detail.title": "CA Certificate: {id}",
+      "create.form.title": "CA Certificate mới",
+      "edit.form.title": "Sửa CA Certificate"
+    },
+    "sni": {
+      "description": "SNI ánh xạ nhiều hostname tới một chứng chỉ.",
+      "created": "Đã tạo SNI \"{name}\"!",
+      "updated": "Đã cập nhật SNI \"{name}\"!",
+      "deleted": "Đã xóa SNI \"{name}\"!",
+      "list.title": "SNI",
+      "detail.title": "SNI: {name}",
+      "create.form.title": "SNI mới",
+      "edit.form.title": "Sửa SNI"
+    },
+    "target": {
+      "created": "Đã tạo Target \"{name}\"!",
+      "updated": "Đã cập nhật Target \"{name}\"!",
+      "deleted": "Đã xóa Target \"{name}\"!",
+      "marked.as.healthy": "Đã đánh dấu Target là khỏe!",
+      "marked.as.unhealthy": "Đã đánh dấu Target là không khỏe!",
+      "list.title": "Target",
+      "detail.title": "Target: {name}",
+      "create.form.title": "Target mới",
+      "edit.form.title": "Sửa Target"
+    },
+    "vault": {
+      "description": "Tăng cường bảo mật Kong Gateway bằng bí mật tập trung.",
+      "created": "Đã tạo Vault \"{name}\"!",
+      "updated": "Đã cập nhật Vault \"{name}\"!",
+      "deleted": "Đã xóa Vault \"{name}\"!",
+      "list.title": "Vault",
+      "detail.title": "Vault: {name}",
+      "create.form.title": "Vault mới",
+      "edit.form.title": "Sửa Vault"
+    },
+    "key": {
+      "description": "Đối tượng Key chứa khóa bất đối xứng ở nhiều định dạng.",
+      "created": "Đã tạo Key \"{name}\"!",
+      "updated": "Đã cập nhật Key \"{name}\"!",
+      "deleted": "Đã xóa Key \"{name}\"!",
+      "list.title": "Khóa",
+      "detail.title": "Key: {name}",
+      "create.form.title": "Key mới",
+      "edit.form.title": "Sửa Key"
+    },
+    "key-set": {
+      "description": "Key Set là tập hợp các đối tượng khóa.",
+      "created": "Đã tạo Key Set \"{name}\"!",
+      "updated": "Đã cập nhật Key Set \"{name}\"!",
+      "deleted": "Đã xóa Key Set \"{name}\"!",
+      "list.title": "Bộ khóa",
+      "detail.title": "Key Set: {name}",
+      "create.form.title": "Key Set mới",
+      "edit.form.title": "Sửa Key Set"
+    },
+    "dp-nodes": {
+      "list.title": "Nút Data Plane",
+      "copy.id": "Sao chép ID",
+      "copy.success": "Đã sao chép {id} vào clipboard",
+      "not.applicable": "Không có",
+      "headers": {
+        "hostname": "Hostname",
+        "version": "Phiên bản",
+        "last.seen": "Lần thấy cuối",
+        "sync.status": "Trạng thái đồng bộ",
+        "cert.expires.at": "Hết hạn chứng chỉ",
+        "log.level": "Mức log",
+        "labels": "Nhãn"
+      },
+      "empty": {
+        "title": "Không có nút Data Plane",
+        "message": "Không có nút Data Plane nào kết nối tới Control Plane này"
+      },
+      "error": {
+        "title": "Không lấy được Data Plane Nodes",
+        "fetch.fail": "Không tải được data plane",
+        "copy.fail": "Không sao chép được vào clipboard",
+        "get.log.level.fail": "Không lấy được mức log của nút {id}"
+      },
+      "bulk.actions": {
+        "placeholder": "{count} thao tác hàng loạt",
+        "change.log.level": "Đổi mức log"
+      },
+      "tooltips": {
+        "revert": "Mức log sẽ hoàn về {level} lúc {time}",
+        "not.supported": "Không hỗ trợ đổi mức log cho nút DP này."
+      }
+    }
+  }
+}

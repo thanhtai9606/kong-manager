@@ -68,7 +68,17 @@
     }
   },
   "not-found": {
-    "description": "Không tìm thấy trang. Quay lại trang trước hoặc {overview}."
+    "description": "Không tìm thấy trang. Quay lại trang trước hoặc {overview}.",
+    "returnHome": "về trang chủ"
+  },
+  "plugins": {
+    "viewDocumentation": "Xem tài liệu",
+    "pageTitleNew": "Plugin mới: {type}",
+    "pageTitleEdit": "Sửa plugin: {type}"
+  },
+  "navbar": {
+    "logoAlt": "Logo Kong Manager",
+    "overviewLinkTitle": "Về trang tổng quan"
   },
   "wish": {
     "text": "Tôi mong trang này sẽ…",

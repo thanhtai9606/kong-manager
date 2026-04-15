@@ -345,7 +345,17 @@
     }
   },
   "not-found": {
-    "description": "We cannot find the page you were looking for. Go back to the previous page or {overview}."
+    "description": "We cannot find the page you were looking for. Go back to the previous page or {overview}.",
+    "returnHome": "return home"
+  },
+  "plugins": {
+    "viewDocumentation": "View documentation",
+    "pageTitleNew": "New Plugin: {type}",
+    "pageTitleEdit": "Edit Plugin: {type}"
+  },
+  "navbar": {
+    "logoAlt": "Kong Manager logo",
+    "overviewLinkTitle": "Go to overview"
   },
   "konnect-cta": {
     "name": "Konnect",

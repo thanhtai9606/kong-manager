@@ -133,10 +133,12 @@ To serve the built SPA from the Go binary (single origin, no Vite):
 
 | Symptom | Likely cause | What to do |
 |--------|----------------|------------|
-| **502** on `/kong-admin/c/default` (response may mention upstream in BFF logs) | BFF cannot connect to Kong Admin (wrong URL/port, Kong down, TLS verify failure) | Confirm Kong Admin URL for cluster `default` (DB or seed). Check BFF logs: `kong-admin proxy: upstream=…`. For TLS trust issues, use `KONG_UPSTREAM_TLS_SKIP_VERIFY=true` only where appropriate, or fix the certificate chain. |
+| **502** on `/kong-admin/c/default` (response may mention upstream in BFF logs) | BFF cannot connect to Kong Admin (wrong URL/port, Kong down, TLS verify failure) | Confirm Kong Admin URL for cluster `default` (DB or seed). Check BFF logs: `kong-admin proxy: upstream=…`. For **HTTPS with a private CA**, mount the CA PEM and set **`KONG_UPSTREAM_TLS_CA_FILE`** (see below). Avoid `KONG_UPSTREAM_TLS_SKIP_VERIFY` in production. |
 | **401** on `/kong-admin/…` while on the login page | Unauthenticated `getInfo` call before JWT is present | Expected noise in the network tab; sign in and retry. |
 | **502** on `/kconfig.js` in dev | Missing `public/kconfig.js` and Vite proxy target unreachable | Add `public/kconfig.js` from the example, or set `KONG_GUI_URL` to a host that serves `kconfig.js`. |
 | UI on wrong port | Vite vs BFF port confusion | Vite: **8080**; BFF in README examples: **8081**. Align `KONG_MANAGER_BFF_URL` if you change the BFF port. |
+
+**TLS to Kong Admin (HTTPS upstream):** The BFF verifies TLS using the OS trust store. For cluster-internal certs signed by your own CA, set **`KONG_UPSTREAM_TLS_CA_FILE`** to a path inside the container (PEM file; multiple CAs may be concatenated). The file is merged with the system root pool. Then **unset** `KONG_UPSTREAM_TLS_SKIP_VERIFY`. Example (Kubernetes): mount a `Secret` or `ConfigMap` containing `ca.pem` and set `KONG_UPSTREAM_TLS_CA_FILE=/path/to/ca.pem`.
 
 ## Database (Go BFF)
 

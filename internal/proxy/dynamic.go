@@ -2,10 +2,13 @@ package proxy
 
 import (
 	"crypto/tls"
+	"crypto/x509"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/kong/kong-manager/internal/config"
@@ -13,18 +16,45 @@ import (
 	"gorm.io/gorm"
 )
 
-func kongUpstreamTransport(insecureSkipVerify bool) http.RoundTripper {
-	if !insecureSkipVerify {
-		return http.DefaultTransport
+// KongAdminTransport builds the HTTP client used to reach Kong Admin (HTTPS).
+// If KONG_UPSTREAM_TLS_SKIP_VERIFY is true, verification is disabled (dev only).
+// Else if KONG_UPSTREAM_TLS_CA_FILE is set, that PEM is merged into the system root pool (production-friendly).
+// Otherwise the default system roots are used.
+func KongAdminTransport(cfg *config.Config) (http.RoundTripper, error) {
+	if cfg.KongUpstreamTLSSkipVerify {
+		t := http.DefaultTransport.(*http.Transport).Clone()
+		t.TLSClientConfig = &tls.Config{
+			InsecureSkipVerify: true, //nolint:gosec // gated by KONG_UPSTREAM_TLS_SKIP_VERIFY
+			MinVersion:         tls.VersionTLS12,
+		}
+		return t, nil
+	}
+	caPath := strings.TrimSpace(cfg.KongUpstreamTLSCAFile)
+	if caPath == "" {
+		return http.DefaultTransport, nil
+	}
+	pemData, err := os.ReadFile(caPath)
+	if err != nil {
+		return nil, fmt.Errorf("KONG_UPSTREAM_TLS_CA_FILE: %w", err)
+	}
+	pool, err := x509.SystemCertPool()
+	if err != nil || pool == nil {
+		pool = x509.NewCertPool()
+	}
+	if !pool.AppendCertsFromPEM(pemData) {
+		return nil, fmt.Errorf("KONG_UPSTREAM_TLS_CA_FILE: no valid PEM certificates in %s", caPath)
 	}
 	t := http.DefaultTransport.(*http.Transport).Clone()
-	t.TLSClientConfig = &tls.Config{InsecureSkipVerify: true} //nolint:gosec // gated by KONG_UPSTREAM_TLS_SKIP_VERIFY
-	return t
+	t.TLSClientConfig = &tls.Config{
+		RootCAs:    pool,
+		MinVersion: tls.VersionTLS12,
+	}
+	return t, nil
 }
 
 // DynamicKongHandler proxies to Kong Admin: /kong-admin/... uses the "default" cluster row;
 // /kong-admin/c/{slug}/... looks up KongCluster by slug.
-func DynamicKongHandler(db *gorm.DB, cfg *config.Config) http.Handler {
+func DynamicKongHandler(db *gorm.DB, cfg *config.Config, rt http.RoundTripper) http.Handler {
 	defaultToken := cfg.KongAdminToken
 	fallbackBase, err := url.Parse(strings.TrimSpace(cfg.KongAdminURL))
 	if err != nil || fallbackBase.Host == "" {
@@ -35,7 +65,6 @@ func DynamicKongHandler(db *gorm.DB, cfg *config.Config) http.Handler {
 		prefix = "/kong-admin"
 	}
 	cPrefix := prefix + "/c/"
-	rt := kongUpstreamTransport(cfg.KongUpstreamTLSSkipVerify)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		p := r.URL.Path

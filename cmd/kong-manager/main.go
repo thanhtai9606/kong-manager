@@ -38,6 +38,11 @@ func main() {
 
 	jwtSvc := auth.NewService(cfg)
 
+	kongRT, err := proxy.KongAdminTransport(cfg)
+	if err != nil {
+		log.Fatalf("kong-admin transport: %v", err)
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
@@ -90,7 +95,7 @@ func main() {
 
 	kongHandler := httpapi.JWTAuth(jwtSvc)(
 		httpapi.CasbinAuthorize(enforcer, cfg.KongProxyPrefix)(
-			proxy.DynamicKongHandler(db, cfg),
+			proxy.DynamicKongHandler(db, cfg, kongRT),
 		),
 	)
 

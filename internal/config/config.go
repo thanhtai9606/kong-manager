@@ -25,6 +25,9 @@ type Config struct {
 	// Set via KONG_UPSTREAM_TLS_SKIP_VERIFY=true for local/dev Kong on https://localhost:8444 with self-signed certs.
 	// Do not enable in production unless you trust the network path to Kong Admin.
 	KongUpstreamTLSSkipVerify bool
+	// KongUpstreamTLSCAFile is an optional path to a PEM file (one or more CA certificates) appended to the
+	// system cert pool for verifying Kong Admin HTTPS. Prefer this over KONG_UPSTREAM_TLS_SKIP_VERIFY in production.
+	KongUpstreamTLSCAFile string
 	// AdminGUIPath is the SPA base path (e.g. /__km_base__) without trailing slash; empty if served at /.
 	// Must match window.K_CONFIG.ADMIN_GUI_PATH so API paths are normalized before Casbin.
 	AdminGUIPath       string
@@ -95,6 +98,7 @@ func Load() *Config {
 		KongAdminToken:  getenv("KONG_ADMIN_TOKEN", ""),
 		KongProxyPrefix: getenv("KONG_PROXY_PREFIX", "/kong-admin"),
 		KongUpstreamTLSSkipVerify: parseBool(getenv("KONG_UPSTREAM_TLS_SKIP_VERIFY", ""), false),
+		KongUpstreamTLSCAFile:     strings.TrimSpace(getenv("KONG_UPSTREAM_TLS_CA_FILE", "")),
 		AdminGUIPath:    adminGUIPath(),
 		BootstrapUsername: getenv("BOOTSTRAP_ADMIN_USERNAME", ""),
 		BootstrapPassword: getenv("BOOTSTRAP_ADMIN_PASSWORD", ""),

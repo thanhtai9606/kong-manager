@@ -3,6 +3,8 @@
     "title": "Sign in",
     "username": "Username",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "submit": "Sign in",
     "invalid": "Invalid username or password",
     "ssoDivider": "Or sign in with SSO",

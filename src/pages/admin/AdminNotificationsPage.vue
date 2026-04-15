@@ -53,10 +53,11 @@
             <td>{{ row.name }}</td>
             <td><code>{{ row.type }}</code></td>
             <td>{{ row.has_secret ? t('admin.notifications.yes') : t('admin.notifications.no') }}</td>
-            <td>
-              <KCheckbox
+            <td class="admin-notify__cell-switch">
+              <KInputSwitch
+                size="small"
                 :model-value="row.enabled"
-                @change="() => toggleEnabled(row)"
+                @update:model-value="(v: boolean) => setChannelEnabled(row, v)"
               />
             </td>
             <td class="admin-notify__actions">
@@ -144,13 +145,12 @@
           spellcheck="false"
         />
       </label>
-      <label class="admin-notify__field admin-notify__field--inline">
-        <KCheckbox
-          :model-value="createForm.enabled"
-          @update:model-value="(v: boolean) => { createForm.enabled = v }"
+      <div class="admin-notify__field">
+        <KInputSwitch
+          v-model="createForm.enabled"
+          :label="t('admin.notifications.fields.enabled')"
         />
-        <span>{{ t('admin.notifications.fields.enabled') }}</span>
-      </label>
+      </div>
       <label class="admin-notify__field">
         <span class="admin-notify__label">{{ t('admin.notifications.fields.sortOrder') }}</span>
         <KInput
@@ -220,13 +220,12 @@
           spellcheck="false"
         />
       </label>
-      <label class="admin-notify__field admin-notify__field--inline">
-        <KCheckbox
-          :model-value="editDraft.enabled"
-          @update:model-value="(v: boolean) => { editDraft.enabled = v }"
+      <div class="admin-notify__field">
+        <KInputSwitch
+          v-model="editDraft.enabled"
+          :label="t('admin.notifications.fields.enabled')"
         />
-        <span>{{ t('admin.notifications.fields.enabled') }}</span>
-      </label>
+      </div>
       <label class="admin-notify__field">
         <span class="admin-notify__label">{{ t('admin.notifications.fields.sortOrder') }}</span>
         <KInput
@@ -242,7 +241,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { KButton, KCard, KCheckbox, KInput, KModal } from '@kong/kongponents'
+import { KButton, KCard, KInput, KInputSwitch, KModal } from '@kong/kongponents'
 import PageHeader from '@/components/PageHeader.vue'
 import SupportText from '@/components/SupportText.vue'
 import { useI18n } from '@/composables/useI18n'
@@ -443,10 +442,13 @@ async function load() {
   }
 }
 
-async function toggleEnabled(row: NotificationChannelRow) {
+async function setChannelEnabled(row: NotificationChannelRow, enabled: boolean) {
+  if (row.enabled === enabled) {
+    return
+  }
   try {
     await apiService.bffPatch(`/api/admin/notification-channels/${row.id}`, {
-      enabled: !row.enabled,
+      enabled,
     })
     await load()
   } catch {
@@ -564,10 +566,9 @@ onMounted(() => {
   gap: 0.35rem;
 }
 
-.admin-notify__field--inline {
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
+.admin-notify__cell-switch {
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .admin-notify__label {

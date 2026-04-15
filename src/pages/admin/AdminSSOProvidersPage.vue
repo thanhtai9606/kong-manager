@@ -61,10 +61,11 @@
             <td class="admin-sso__issuer-cell">
               {{ p.issuer_url }}
             </td>
-            <td>
-              <KCheckbox
+            <td class="admin-sso__cell-switch">
+              <KInputSwitch
+                size="small"
                 :model-value="p.enabled"
-                @change="() => toggleEnabled(p)"
+                @update:model-value="(v: boolean) => setProviderEnabled(p, v)"
               />
             </td>
             <td class="admin-sso__actions">
@@ -172,13 +173,12 @@
         />
       </label>
 
-      <label class="admin-sso__field admin-sso__field--inline">
-        <KCheckbox
-          :model-value="createForm.enabled"
-          @update:model-value="(v: boolean) => { createForm.enabled = v }"
+      <div class="admin-sso__field">
+        <KInputSwitch
+          v-model="createForm.enabled"
+          :label="t('admin.sso.fields.enabled')"
         />
-        <span>{{ t('admin.sso.fields.enabled') }}</span>
-      </label>
+      </div>
 
       <label class="admin-sso__field">
         <span class="admin-sso__label">{{ t('admin.sso.fields.sortOrder') }}</span>
@@ -261,13 +261,12 @@
         <KInput v-model="editDraft.scopes" />
       </label>
 
-      <label class="admin-sso__field admin-sso__field--inline">
-        <KCheckbox
-          :model-value="editDraft.enabled"
-          @update:model-value="(v: boolean) => { editDraft.enabled = v }"
+      <div class="admin-sso__field">
+        <KInputSwitch
+          v-model="editDraft.enabled"
+          :label="t('admin.sso.fields.enabled')"
         />
-        <span>{{ t('admin.sso.fields.enabled') }}</span>
-      </label>
+      </div>
 
       <label class="admin-sso__field">
         <span class="admin-sso__label">{{ t('admin.sso.fields.sortOrder') }}</span>
@@ -284,7 +283,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { KButton, KCard, KCheckbox, KInput, KModal } from '@kong/kongponents'
+import { KButton, KCard, KInput, KInputSwitch, KModal } from '@kong/kongponents'
 import SupportText from '@/components/SupportText.vue'
 import { useI18n } from '@/composables/useI18n'
 import { useToaster } from '@/composables/useToaster'
@@ -498,10 +497,13 @@ async function load() {
   }
 }
 
-async function toggleEnabled(p: SSOProviderRow) {
+async function setProviderEnabled(p: SSOProviderRow, enabled: boolean) {
+  if (p.enabled === enabled) {
+    return
+  }
   try {
     await apiService.bffPatch(`/api/admin/sso-providers/${p.id}`, {
-      enabled: !p.enabled,
+      enabled,
     })
     await load()
   } catch {
@@ -610,10 +612,9 @@ onMounted(() => {
   gap: 0.35rem;
 }
 
-.admin-sso__field--inline {
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
+.admin-sso__cell-switch {
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .admin-sso__label {

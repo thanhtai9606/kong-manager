@@ -8,6 +8,8 @@
 window.K_CONFIG = {
   AUTH_REQUIRED: true,
   ADMIN_API_URL: '/kong-admin',
+  // Optional: override SPA base (defaults to Vite import.meta.env.BASE_URL, e.g. /__km_base__ in prod)
+  // ADMIN_GUI_PATH: '/__km_base__',
   // Optional: full URL or site path for the image above the login form (default: bundled Kong Manager logo).
   // LOGIN_LOGO_URL: 'https://example.com/brand.svg',
 }

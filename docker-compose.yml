@@ -33,6 +33,8 @@ services:
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
       KONG_ADMIN_URL: ${KONG_ADMIN_URL:-http://host.docker.internal:8001}
       KONG_PROXY_PREFIX: ${KONG_PROXY_PREFIX:-/kong-admin}
+      # Same default as Dockerfile; set to empty only if you built with DISABLE_BASE_PATH=true
+      ADMIN_GUI_PATH: "${ADMIN_GUI_PATH:-/__km_base__}"
       BOOTSTRAP_ADMIN_USERNAME: ${BOOTSTRAP_ADMIN_USERNAME:-admin}
       BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:?set BOOTSTRAP_ADMIN_PASSWORD in .env}
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-}

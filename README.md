@@ -203,9 +203,30 @@ docker run --rm -p 8080:8080 \
   -e KONG_ADMIN_URL=http://host.docker.internal:8001 \
   -e BOOTSTRAP_ADMIN_USERNAME=admin \
   -e BOOTSTRAP_ADMIN_PASSWORD=your-pass \
+  -e ADMIN_GUI_PATH=/__km_base__ \
   -v km-data:/data \
   kong-manager:latest
 ```
+
+### Kubernetes / reverse proxy: blank UI and MIME errors on `.js`
+
+If the browser console shows **`Failed to load module script`… `text/html`** or **`Unexpected token '<'` in `kconfig.js`**, the server is returning **HTML** (usually `index.html`) for URLs that should be **JavaScript**. Here that almost always means the **asset base path** is wrong.
+
+Production builds use Vite **`base: /__km_base__/`** (unless you set `DISABLE_BASE_PATH=true` when building). The Go BFF strips that prefix before serving files from `dist/` (`StripGUIPath` in `internal/httpapi/guipath.go`). You must set:
+
+```text
+ADMIN_GUI_PATH=/__km_base__
+```
+
+**This is now the default** when `ADMIN_GUI_PATH` is omitted (`internal/config/config.go`), so Docker images from this repo’s `Dockerfile` already include it. For **Kubernetes**, set the same env on the BFF Deployment (and redeploy after upgrading an older image).
+
+If you build with assets at the site root (`DISABLE_BASE_PATH=true`), set **`ADMIN_GUI_PATH` to empty** explicitly so the BFF does not strip `/__km_base__`:
+
+```text
+ADMIN_GUI_PATH=
+```
+
+Ensure your **Ingress** forwards **`/kong-admin`**, **`/api`**, and **`/__km_base__`** (or `/` if root build) to this service without rewriting those paths to the wrong backend. Do not send `/__km_base__/assets/*` to a generic “return index.html for unknown paths” rule that runs **before** static files are served.
 
 ## Why do I need this?
 

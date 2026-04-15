@@ -37,6 +37,8 @@ COPY --from=fe /app/dist /app/dist
 
 ENV STATIC_DIR=/app/dist
 ENV HTTP_ADDR=:8080
+# Must match Vite production `base` (vite.config.ts); StripGUIPath maps /__km_base__/assets → dist/assets
+ENV ADMIN_GUI_PATH=/__km_base__
 
 EXPOSE 8080
 USER nonroot:nonroot

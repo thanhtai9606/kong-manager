@@ -30,10 +30,20 @@ function authRequired(): boolean {
   return getConfig<boolean>('AUTH_REQUIRED', false)
 }
 
+function viteBaseGuiPath(): string {
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+  return base === '' ? '/' : base
+}
+
 export const config = {
 
+  /** Aligns with Vite `base` when not overridden in kconfig (required for router under /__km_base__/ in prod). */
   get ADMIN_GUI_PATH() {
-    return getConfig<string>('ADMIN_GUI_PATH', '/')
+    const fromK = getConfig<string | null>('ADMIN_GUI_PATH', null)
+    if (fromK != null && fromK !== '') {
+      return String(fromK).replace(/\/$/, '') || '/'
+    }
+    return viteBaseGuiPath()
   },
 
   get ADMIN_API_PORT() {

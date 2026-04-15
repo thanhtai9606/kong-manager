@@ -71,6 +71,17 @@ func parseBool(s string, def bool) bool {
 	return b
 }
 
+// adminGUIPath returns the SPA asset prefix (no trailing slash) for StripGUIPath.
+// Must match Vite `base` in production (default /__km_base__ in vite.config.ts).
+// If ADMIN_GUI_PATH is unset, use that default; if set to empty string explicitly, use "" (root build, e.g. DISABLE_BASE_PATH=true).
+func adminGUIPath() string {
+	v, ok := os.LookupEnv("ADMIN_GUI_PATH")
+	if !ok {
+		return "/__km_base__"
+	}
+	return strings.TrimSpace(v)
+}
+
 // Load reads configuration from environment variables.
 func Load() *Config {
 	return &Config{
@@ -84,7 +95,7 @@ func Load() *Config {
 		KongAdminToken:  getenv("KONG_ADMIN_TOKEN", ""),
 		KongProxyPrefix: getenv("KONG_PROXY_PREFIX", "/kong-admin"),
 		KongUpstreamTLSSkipVerify: parseBool(getenv("KONG_UPSTREAM_TLS_SKIP_VERIFY", ""), false),
-		AdminGUIPath:    strings.TrimSpace(getenv("ADMIN_GUI_PATH", "")),
+		AdminGUIPath:    adminGUIPath(),
 		BootstrapUsername: getenv("BOOTSTRAP_ADMIN_USERNAME", ""),
 		BootstrapPassword: getenv("BOOTSTRAP_ADMIN_PASSWORD", ""),
 		CookieSecure:      parseBool(getenv("COOKIE_SECURE", "false"), false),

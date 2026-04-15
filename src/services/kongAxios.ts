@@ -1,6 +1,8 @@
 import type { App } from 'vue'
-import type { AxiosRequestConfig } from 'axios'
+import type { AxiosError, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
+import { useToaster } from '@/composables/useToaster'
+import en from '@/locales/en.json'
 
 /** Must match @kong-ui-public/entities-shared (see getAxiosInstance → inject). */
 const GET_AXIOS_INSTANCE = 'get-axios-instance'
@@ -31,6 +33,30 @@ kongAxios.interceptors.request.use((reqConfig) => {
   }
   return reqConfig
 })
+
+const toaster = useToaster()
+/** Avoid stacking identical 403 toasts when the UI retries or fires several writes. */
+let lastKong403ToastAt = 0
+const KONG_403_TOAST_THROTTLE_MS = 1_200
+
+kongAxios.interceptors.response.use(
+  (res) => res,
+  (error: AxiosError) => {
+    const status = error.response?.status
+    const url = String(error.config?.url ?? '')
+    if (status === 403 && url.includes('kong-admin')) {
+      const now = Date.now()
+      if (now - lastKong403ToastAt >= KONG_403_TOAST_THROTTLE_MS) {
+        lastKong403ToastAt = now
+        toaster.open({
+          appearance: 'danger',
+          message: en.global.permissionDenied,
+        })
+      }
+    }
+    return Promise.reject(error)
+  },
+)
 
 /** Wire Kong UI packages to the same axios instance (JWT + same-origin Kong paths). */
 export function provideKongAxios(app: App) {

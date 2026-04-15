@@ -251,6 +251,7 @@
   "global": {
     "copied": "Successfully copied to clipboard",
     "error": "An error has occurred, please try again",
+    "permissionDenied": "You do not have permission for this action. Your role may be view-only for Gateway configuration (services, routes, plugins, etc.).",
     "buttons": {
       "back": "Back",
       "edit": "Edit",

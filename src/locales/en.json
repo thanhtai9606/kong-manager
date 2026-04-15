@@ -249,6 +249,7 @@
     }
   },
   "global": {
+    "language": "Language",
     "copied": "Successfully copied to clipboard",
     "error": "An error has occurred, please try again",
     "permissionDenied": "You do not have permission for this action. Your role may be view-only for Gateway configuration (services, routes, plugins, etc.).",
@@ -260,6 +261,23 @@
       "cancel": "Cancel"
     },
     "learn.more": "Learn more"
+  },
+  "app": {
+    "nav": {
+      "overview": "Overview",
+      "gatewayServices": "Gateway Services",
+      "routes": "Routes",
+      "consumers": "Consumers",
+      "plugins": "Plugins",
+      "upstreams": "Upstreams",
+      "certificates": "Certificates",
+      "caCertificates": "CA Certificates",
+      "snis": "SNIs",
+      "vaults": "Vaults",
+      "keys": "Keys",
+      "keySets": "Key Sets",
+      "dataPlaneNodes": "Data Plane Nodes"
+    }
   },
   "profile": {
     "title": "Profile",

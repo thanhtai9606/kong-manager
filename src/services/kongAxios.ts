@@ -2,7 +2,7 @@ import type { App } from 'vue'
 import type { AxiosError, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { useToaster } from '@/composables/useToaster'
-import en from '@/locales/en.json'
+import { getPermissionDeniedMessage } from '@/locales/catalog'
 
 /** Must match @kong-ui-public/entities-shared (see getAxiosInstance → inject). */
 const GET_AXIOS_INSTANCE = 'get-axios-instance'
@@ -50,7 +50,7 @@ kongAxios.interceptors.response.use(
         lastKong403ToastAt = now
         toaster.open({
           appearance: 'danger',
-          message: en.global.permissionDenied,
+          message: getPermissionDeniedMessage(),
         })
       }
     }

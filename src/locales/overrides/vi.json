@@ -1,0 +1,101 @@
+{
+  "auth": {
+    "title": "Đăng nhập",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "showPassword": "Hiện mật khẩu",
+    "hidePassword": "Ẩn mật khẩu",
+    "submit": "Đăng nhập",
+    "invalid": "Tên đăng nhập hoặc mật khẩu không đúng",
+    "ssoDivider": "Hoặc đăng nhập bằng SSO",
+    "ssoLoginWith": "Tiếp tục với {name}",
+    "ssoError": "Đăng nhập bên ngoài thất bại ({code}).",
+    "ssoRequired": "Tài khoản này dùng SSO của tổ chức. Hãy dùng nút SSO.",
+    "signOut": "Đăng xuất",
+    "menu": {
+      "profile": "Hồ sơ",
+      "admin": "Quản trị",
+      "signOut": "Đăng xuất"
+    }
+  },
+  "global": {
+    "language": "Ngôn ngữ",
+    "copied": "Đã sao chép vào clipboard",
+    "error": "Đã xảy ra lỗi, vui lòng thử lại",
+    "permissionDenied": "Bạn không có quyền thực hiện thao tác này. Vai trò của bạn có thể chỉ xem cấu hình Gateway (dịch vụ, route, plugin, v.v.).",
+    "buttons": {
+      "back": "Quay lại",
+      "edit": "Sửa",
+      "save": "Lưu",
+      "create": "Tạo",
+      "cancel": "Hủy"
+    },
+    "learn.more": "Tìm hiểu thêm"
+  },
+  "app": {
+    "nav": {
+      "overview": "Tổng quan",
+      "gatewayServices": "Dịch vụ Gateway",
+      "routes": "Route",
+      "consumers": "Consumer",
+      "plugins": "Plugin",
+      "upstreams": "Upstream",
+      "certificates": "Chứng chỉ",
+      "caCertificates": "Chứng chỉ CA",
+      "snis": "SNI",
+      "vaults": "Vault",
+      "keys": "Khóa",
+      "keySets": "Bộ khóa",
+      "dataPlaneNodes": "Nút Data Plane"
+    }
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "description": "Chi tiết phiên lấy từ token; vai trò và email tải từ tài khoản Kong Manager.",
+    "notSignedIn": "Bạn chưa đăng nhập.",
+    "openAdmin": "Mở quản trị",
+    "loading": "Đang tải…",
+    "loadError": "Không tải được thông tin tài khoản.",
+    "loadErrorAuth": "Phiên hết hạn. Vui lòng đăng nhập lại.",
+    "sessionUnknown": "Đã đăng nhập (không đọc được chi tiết token)",
+    "fields": {
+      "username": "Tên đăng nhập",
+      "userId": "ID người dùng",
+      "email": "Email",
+      "roles": "Vai trò",
+      "sessionExpires": "Phiên hết hạn",
+      "session": "Phiên"
+    }
+  },
+  "not-found": {
+    "description": "Không tìm thấy trang. Quay lại trang trước hoặc {overview}."
+  },
+  "wish": {
+    "text": "Tôi mong trang này sẽ…",
+    "subject": "Tôi mong trang này ({title}) sẽ…",
+    "tooltip": "Gửi phản hồi cho chúng tôi"
+  },
+  "admin": {
+    "nav": {
+      "profile": "Hồ sơ",
+      "backToGateway": "Về Gateway",
+      "users": "Người dùng",
+      "auditLog": "Nhật ký kiểm tra",
+      "rbac": "RBAC",
+      "clusters": "Cụm Kong",
+      "sso": "SSO",
+      "notifications": "Thông báo"
+    },
+    "clusters": {
+      "switchLabel": "Cụm Gateway"
+    },
+    "pages": {
+      "users": { "title": "Người dùng" },
+      "auditLog": { "title": "Nhật ký kiểm tra" },
+      "rbac": { "title": "RBAC" },
+      "clusters": { "title": "Cụm Kong" },
+      "sso": { "title": "SSO" },
+      "notifications": { "title": "Thông báo" }
+    }
+  }
+}

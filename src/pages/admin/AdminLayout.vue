@@ -2,6 +2,7 @@
   <AppLayout :sidebar-top-items="sidebarItems">
     <template #navbar-right>
       <KongClusterSwitch />
+      <LanguageSwitcher />
       <UserProfileBar v-if="config.AUTH_REQUIRED" />
     </template>
     <template #sidebar-header>
@@ -19,6 +20,7 @@ import { AppLayout, type SidebarPrimaryItem } from '@kong-ui-public/app-layout'
 import { config } from 'config'
 import NavbarLogo from '@/components/NavbarLogo.vue'
 import KongClusterSwitch from '@/components/KongClusterSwitch.vue'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import UserProfileBar from '@/components/UserProfileBar.vue'
 import { useI18n } from '@/composables/useI18n'
 

@@ -13,23 +13,21 @@
     "ssoRequired": "This account uses organization SSO. Use the SSO button instead.",
     "signOut": "Sign out",
     "menu": {
+      "profile": "Profile",
       "admin": "Admin",
       "signOut": "Sign out"
     }
   },
   "admin": {
     "nav": {
+      "profile": "Profile",
       "backToGateway": "Back to Gateway",
-      "home": "Admin",
       "users": "Users",
       "auditLog": "Audit log",
       "rbac": "RBAC",
       "clusters": "Kong clusters",
       "sso": "SSO",
       "notifications": "Notifications"
-    },
-    "placeholder": {
-      "description": "This section will be connected to the control plane. Placeholder content only."
     },
     "users": {
       "description": "Local accounts registered in Kong Manager. Group membership drives Casbin roles.",
@@ -230,9 +228,6 @@
       }
     },
     "pages": {
-      "home": {
-        "title": "Admin"
-      },
       "users": {
         "title": "Users"
       },
@@ -264,6 +259,24 @@
       "cancel": "Cancel"
     },
     "learn.more": "Learn more"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Session details come from your access token; roles and email are loaded from your Kong Manager account.",
+    "notSignedIn": "You are not signed in.",
+    "openAdmin": "Open admin",
+    "loading": "Loading…",
+    "loadError": "Could not load account details.",
+    "loadErrorAuth": "Session expired. Sign in again.",
+    "sessionUnknown": "Signed in (token details unavailable)",
+    "fields": {
+      "username": "Username",
+      "userId": "User ID",
+      "email": "Email",
+      "roles": "Roles",
+      "sessionExpires": "Session expires",
+      "session": "Session"
+    }
   },
   "overview": {
     "info": {

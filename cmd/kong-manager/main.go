@@ -52,6 +52,7 @@ func main() {
 	})
 
 	r.Post("/api/auth/login", jwtSvc.LoginHandler(db))
+	r.With(httpapi.JWTAuth(jwtSvc)).Get("/api/auth/me", httpapi.MeHandler(db))
 	r.Get("/api/auth/sso/providers", jwtSvc.PublicSSOProvidersHandler(db))
 	r.Get("/api/auth/oidc/{slug}/login", jwtSvc.OIDCLoginHandler(db))
 	r.Get("/api/auth/oidc/{slug}/callback", jwtSvc.OIDCCallbackHandler(db, enforcer))

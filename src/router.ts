@@ -18,6 +18,15 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    name: 'profile',
+    path: '/profile',
+    component: () => import('@/pages/profile/Profile.vue'),
+    meta: {
+      title: 'Profile',
+    },
+  },
+
+  {
     name: 'login',
     path: '/login',
     component: () => import('@/pages/auth/Login.vue'),
@@ -36,14 +45,8 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        name: 'admin-home',
         path: '',
-        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
-        meta: {
-          shell: 'admin',
-          adminPageKey: 'home',
-          title: 'Admin',
-        },
+        redirect: { name: 'admin-users' },
       },
       {
         name: 'admin-users',

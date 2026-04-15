@@ -40,10 +40,10 @@ const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
     active: false,
   },
   {
-    name: t('admin.nav.home'),
-    to: { name: 'admin-home' },
-    key: 'admin-home-nav',
-    active: route.name === 'admin-home',
+    name: t('admin.nav.profile'),
+    to: { name: 'profile' },
+    key: 'admin-profile',
+    active: false,
   },
   {
     name: t('admin.nav.users'),

@@ -18,6 +18,12 @@
       </KButton>
       <template #items>
         <KDropdownItem
+          data-testid="user-menu-profile"
+          @click="goProfile"
+        >
+          {{ t('auth.menu.profile') }}
+        </KDropdownItem>
+        <KDropdownItem
           v-if="config.AUTH_REQUIRED"
           data-testid="user-menu-admin"
           @click="goAdmin"
@@ -64,8 +70,12 @@ const initials = computed(() => {
   return u.slice(0, 2).toUpperCase()
 })
 
+function goProfile() {
+  void router.push({ name: 'profile' })
+}
+
 function goAdmin() {
-  void router.push({ name: 'admin-home' })
+  void router.push({ name: 'admin-users' })
 }
 
 async function signOut() {

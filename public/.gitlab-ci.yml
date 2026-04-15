@@ -1,0 +1,49 @@
+variables: 
+  CI_REGISTRY_IMAGE: "becamexidc2020/kong-manager"
+  DEPLOY_FILE: "apps/kong-manager"
+
+build-app:
+  stage: build-app
+  image: golang:1.25
+  script:
+    - go mod tidy
+    - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o kong-manager
+  cache:
+    key: ${CI_BUILD_REF_NAME}
+    paths:
+      - kong-manager
+  artifacts:
+    paths:
+      - kong-manager
+    expire_in: 1 day
+  only:
+    - develop
+    - master
+    - tags
+
+
+include:
+   # 1. Include các biến chung hoặc Anchor template
+  - project: 'becamex/template-cicd'
+    file: 'templates/variables.yml'
+    ref: 'master' 
+
+  # 2. Include định nghĩa Stages (Nếu bạn không định nghĩa stages trong file chính)
+  - project: 'becamex/template-cicd'
+    file: 'stages.yml'
+    ref: 'master'
+    
+  # # 3. Include các Job Build Dotnet
+  # - project: 'becamex/template-cicd'
+  #   file: 'jobs/build-go.yml'
+  #   ref: 'master'
+
+  # 4. Include các Job Docker
+  - project: 'becamex/template-cicd'
+    file: 'jobs/build-docker.yml'
+    ref: 'master'
+    
+  # 5. Include các Job Deploy
+  - project: 'becamex/template-cicd'
+    file: 'jobs/deploy.yml'
+    ref: 'master'

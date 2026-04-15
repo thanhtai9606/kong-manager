@@ -1,6 +1,6 @@
 # Kong Manager OSS
 
-[Installation](#getting-started) | [Provide feedback](https://github.com/kong/kong-manager/issues/new/choose) | [Ask a question](https://join.slack.com/t/kongcommunity/shared_invite/zt-1s4nb74vo-jLdMEk8MoTm~uMWYMMLPWg) | [Contributing](#contributing) | [Blog](https://konghq.com/blog)
+[Installation](#getting-started) | [Docker](#docker) | [Database (BFF)](#database-go-bff) | [Provide feedback](https://github.com/kong/kong-manager/issues/new/choose) | [Ask a question](https://join.slack.com/t/kongcommunity/shared_invite/zt-1s4nb74vo-jLdMEk8MoTm~uMWYMMLPWg) | [Contributing](#contributing) | [Blog](https://konghq.com/blog)
 
 > **Go BFF fork:** This repository adds a Go backend (JWT login, Casbin RBAC, multi-cluster Kong Admin proxy). Roadmap and design notes are in [BACKEND_PLAN.md](BACKEND_PLAN.md). For day-to-day development with login and `/kong-admin` proxying, see [Running locally with Vite and the Go BFF](#running-locally-with-vite-and-the-go-bff).
 
@@ -84,6 +84,7 @@ BOOTSTRAP_ADMIN_PASSWORD=changeme \
 go run ./cmd/kong-manager
 ```
 
+- **Database:** By default the BFF uses **SQLite** (`DATABASE_DRIVER=sqlite`, `DATABASE_URL=file:kong-manager.db?…`). For **PostgreSQL** or **MySQL**, set `DATABASE_DRIVER` and `DATABASE_URL` (see [Database (Go BFF)](#database-go-bff)). Schema is applied with GORM `AutoMigrate` on startup.
 - **`KONG_ADMIN_URL`**: Used only to **seed** the first `default` Kong cluster row when the `kong_clusters` table is empty. Runtime routing uses each row’s `admin_base_url` (see **Admin → Kong clusters** in the UI, or update the DB). If you already have clusters in the DB, changing this env alone does not retarget an existing row.
 - **`BOOTSTRAP_ADMIN_*`**: Creates the first admin user when no users exist.
 - **`JWT_SECRET`**: Set a strong secret in any shared or production deployment (default is development-only).
@@ -136,6 +137,75 @@ To serve the built SPA from the Go binary (single origin, no Vite):
 | **401** on `/kong-admin/…` while on the login page | Unauthenticated `getInfo` call before JWT is present | Expected noise in the network tab; sign in and retry. |
 | **502** on `/kconfig.js` in dev | Missing `public/kconfig.js` and Vite proxy target unreachable | Add `public/kconfig.js` from the example, or set `KONG_GUI_URL` to a host that serves `kconfig.js`. |
 | UI on wrong port | Vite vs BFF port confusion | Vite: **8080**; BFF in README examples: **8081**. Align `KONG_MANAGER_BFF_URL` if you change the BFF port. |
+
+## Database (Go BFF)
+
+The BFF stores users, groups, Casbin policies, Kong cluster rows, SSO providers, notification channels, and audit logs in a relational database. Configure it with:
+
+| Variable | Default (dev) | Values |
+|----------|----------------|--------|
+| `DATABASE_DRIVER` | `sqlite` | `sqlite` / `sqlite3`, `postgres` / `postgresql`, `mysql` |
+| `DATABASE_URL` | `file:kong-manager.db?cache=shared&mode=rwc` | Driver-specific DSN |
+
+**PostgreSQL example:**
+
+```bash
+export DATABASE_DRIVER=postgres
+export DATABASE_URL="host=127.0.0.1 user=kongmanager password=secret dbname=kong_manager port=5432 sslmode=disable TimeZone=UTC"
+```
+
+**PostgreSQL URL form:**
+
+```bash
+export DATABASE_URL="postgres://kongmanager:secret@127.0.0.1:5432/kong_manager?sslmode=disable"
+```
+
+Create the database (empty) before the first run; migrations run automatically. Switching from SQLite to Postgres does **not** migrate existing data—you need a separate export/import or tooling if you must keep rows.
+
+More context: [BACKEND_PLAN.md](BACKEND_PLAN.md), `internal/config/config.go`, `internal/db/db.go`.
+
+## Docker
+
+A multi-stage **`Dockerfile`** builds the Vite SPA into `dist/` and compiles the Go binary; the runtime image is **distroless** (non-root) with `STATIC_DIR=/app/dist` and `HTTP_ADDR=:8080`.
+
+### Build an image
+
+From the repository root:
+
+```bash
+docker build -t kong-manager:latest .
+```
+
+### Run with Docker Compose (PostgreSQL)
+
+[`docker-compose.yml`](docker-compose.yml) builds the app and starts **Postgres 16** with a named volume. Copy and edit environment variables first:
+
+```bash
+cp docker.env.example .env
+# Set at least: POSTGRES_PASSWORD, JWT_SECRET, BOOTSTRAP_ADMIN_PASSWORD
+docker compose --env-file .env up --build
+```
+
+Then open **http://localhost:8080** (or the host port in `KONG_MANAGER_PORT`).
+
+- **`KONG_ADMIN_URL`** defaults to `http://host.docker.internal:8001` so the BFF can reach Kong Admin on the **host** (Docker Desktop). On **Linux**, `host.docker.internal` may be unavailable unless you add it (e.g. `extra_hosts` or use the host’s LAN IP in `KONG_ADMIN_URL`).
+- Treat **`JWT_SECRET`**, database passwords, and bootstrap credentials as secrets in real deployments.
+
+### Run the container alone
+
+Example with SQLite on a volume (Postgres recommended for production):
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e DATABASE_DRIVER=sqlite \
+  -e 'DATABASE_URL=file:/data/kong-manager.db?cache=shared&mode=rwc' \
+  -e JWT_SECRET=your-secret \
+  -e KONG_ADMIN_URL=http://host.docker.internal:8001 \
+  -e BOOTSTRAP_ADMIN_USERNAME=admin \
+  -e BOOTSTRAP_ADMIN_PASSWORD=your-pass \
+  -v km-data:/data \
+  kong-manager:latest
+```
 
 ## Why do I need this?
 

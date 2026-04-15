@@ -98,7 +98,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'admin-notifications',
         path: 'notifications',
-        component: () => import('@/pages/admin/AdminPlaceholderPage.vue'),
+        component: () => import('@/pages/admin/AdminNotificationsPage.vue'),
         meta: {
           shell: 'admin',
           adminPageKey: 'notifications',

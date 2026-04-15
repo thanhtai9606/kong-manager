@@ -80,6 +80,11 @@ func main() {
 		ar.Post("/sso-providers", admin.CreateSSOProvider(db))
 		ar.Patch("/sso-providers/{ssoProviderID}", admin.PatchSSOProvider(db))
 		ar.Delete("/sso-providers/{ssoProviderID}", admin.DeleteSSOProvider(db))
+		ar.Get("/notification-channels", admin.ListNotificationChannels(db))
+		ar.Post("/notification-channels", admin.CreateNotificationChannel(db))
+		ar.Patch("/notification-channels/{notificationChannelID}", admin.PatchNotificationChannel(db))
+		ar.Delete("/notification-channels/{notificationChannelID}", admin.DeleteNotificationChannel(db))
+		ar.Post("/notification-channels/{notificationChannelID}/test", admin.TestNotificationChannel(db))
 	})
 
 	kongHandler := httpapi.JWTAuth(jwtSvc)(

@@ -2,6 +2,7 @@
   <AppLayout :sidebar-top-items="sidebarItems">
     <template #navbar-right>
       <KongClusterSwitch />
+      <LanguageSwitcher />
       <UserProfileBar v-if="config.AUTH_REQUIRED" />
     </template>
     <template #sidebar-header>
@@ -19,6 +20,7 @@ import { AppLayout, type SidebarPrimaryItem } from '@kong-ui-public/app-layout'
 import { config } from 'config'
 import NavbarLogo from '@/components/NavbarLogo.vue'
 import KongClusterSwitch from '@/components/KongClusterSwitch.vue'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import UserProfileBar from '@/components/UserProfileBar.vue'
 import { useI18n } from '@/composables/useI18n'
 
@@ -40,10 +42,10 @@ const sidebarItems = computed<SidebarPrimaryItem[]>(() => [
     active: false,
   },
   {
-    name: t('admin.nav.home'),
-    to: { name: 'admin-home' },
-    key: 'admin-home-nav',
-    active: route.name === 'admin-home',
+    name: t('admin.nav.profile'),
+    to: { name: 'profile' },
+    key: 'admin-profile',
+    active: false,
   },
   {
     name: t('admin.nav.users'),

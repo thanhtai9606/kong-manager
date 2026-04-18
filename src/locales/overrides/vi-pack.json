@@ -1,0 +1,429 @@
+{
+  "overview": {
+    "info": {
+      "gateway": {
+        "title": "Gateway",
+        "edition": "Phiên bản",
+        "version": "Phiên bản phần mềm"
+      },
+      "node": {
+        "title": "Chi tiết nút",
+        "address": "Địa chỉ",
+        "hostname": "Tên máy"
+      },
+      "port": {
+        "title": "Chi tiết cổng",
+        "port": "Cổng Kong Manager",
+        "ssl": "Cổng SSL Kong Manager",
+        "proxy": "Cổng proxy",
+        "proxy.ssl": "Cổng proxy SSL"
+      },
+      "datastore": {
+        "title": "Kho dữ liệu",
+        "type": "Loại",
+        "user": "Người dùng",
+        "host": "Máy chủ",
+        "port": "Cổng",
+        "ssl": "SSL"
+      }
+    },
+    "resource": {
+      "intro": {
+        "title": "Giới thiệu",
+        "description": "API gateway gốc đám mây nhẹ, nhanh và linh hoạt."
+      },
+      "start": {
+        "title": "Bắt đầu",
+        "description": "Mới dùng Kong? Bắt đầu với các bước cơ bản."
+      },
+      "plugin": {
+        "title": "Plugin Hub",
+        "description": "Mở rộng Kong Gateway bằng các plugin mạnh."
+      },
+      "discuss": {
+        "title": "Kong Nation",
+        "description": "Trao đổi với cộng đồng về Kong."
+      }
+    }
+  },
+  "konnect-cta": {
+    "name": "Konnect",
+    "description": "Cách dễ nhất để bắt đầu với Kong Gateway.",
+    "get.started": "Bắt đầu",
+    "footer.description": "Không cần thẻ tín dụng — có gói miễn phí",
+    "feature.1": "Đơn giản hóa vận hành Gateway với control plane SaaS của Konnect",
+    "feature.2": "Dùng thử plugin doanh nghiệp như OpenID Connect, mTLS, OPA",
+    "feature.3": "Phân tích API sẵn có",
+    "feature.4": "Nâng cấp Kong Gateway thuận tiện hơn",
+    "feature.5": "Trao API Dev Portal kèm quản lý đăng ký"
+  },
+  "entities": {
+    "service": {
+      "description": "Gateway Service là lớp trừu tượng cho từng dịch vụ upstream của bạn (ví dụ microservice biến đổi dữ liệu, API thanh toán).",
+      "created": "Đã tạo Gateway Service \"{name}\"!",
+      "updated": "Đã cập nhật Gateway Service \"{name}\"!",
+      "deleted": "Đã xóa Gateway Service \"{name}\"!",
+      "list.title": "Dịch vụ Gateway",
+      "detail.title": "Gateway Service: {name}",
+      "create.form.title": "Gateway Service mới",
+      "edit.form.title": "Sửa Gateway Service"
+    },
+    "route": {
+      "description": "Route định nghĩa quy tắc khớp yêu cầu từ client và gắn với một Service.",
+      "created": "Đã tạo Route \"{name}\"!",
+      "updated": "Đã cập nhật Route \"{name}\"!",
+      "deleted": "Đã xóa Route \"{name}\"!",
+      "list.title": "Route",
+      "detail.title": "Route: {name}",
+      "create.form.title": "Route mới",
+      "edit.form.title": "Sửa Route"
+    },
+    "consumer": {
+      "description": "Consumer là người dùng cuối của một dịch vụ.",
+      "created": "Đã tạo Consumer \"{name}\"!",
+      "updated": "Đã cập nhật Consumer \"{name}\"!",
+      "deleted": "Đã xóa Consumer \"{name}\"!",
+      "list.title": "Consumer",
+      "detail.title": "Consumer: {name}",
+      "create.form.title": "Consumer mới",
+      "edit.form.title": "Sửa Consumer"
+    },
+    "consumer-credential": {
+      "created": "Đã tạo credential!",
+      "updated": "Đã cập nhật credential!",
+      "deleted": "Đã xóa credential!",
+      "empty": {
+        "title": "Chưa bật plugin",
+        "message": "Thêm một trong các plugin sau để có thể thêm credential cho Consumer này: {plugins}",
+        "button": "Cài plugin"
+      },
+      "create.form.title": "Tạo: {type}",
+      "edit.form.title": "Sửa: {type}"
+    },
+    "plugin": {
+      "description": "Plugin mở rộng Kong: giới hạn tốc độ, xác thực, ghi log, v.v.",
+      "created": "Đã tạo plugin \"{name}\"!",
+      "updated": "Đã cập nhật plugin \"{name}\"!",
+      "deleted": "Đã xóa plugin \"{name}\"!",
+      "enabled": "Đã bật plugin \"{name}\"!",
+      "disabled": "Đã tắt plugin \"{name}\"!",
+      "list.title": "Plugin",
+      "create.form.title": "Plugin mới",
+      "edit.form.title": "Sửa plugin"
+    },
+    "upstream": {
+      "description": "Upstream là hostname ảo để cân bằng tải yêu cầu tới nhiều dịch vụ.",
+      "created": "Đã tạo Upstream \"{name}\"!",
+      "updated": "Đã cập nhật Upstream \"{name}\"!",
+      "deleted": "Đã xóa Upstream \"{name}\"!",
+      "list.title": "Upstream",
+      "detail.title": "Upstream: {name}",
+      "create.form.title": "Upstream mới",
+      "edit.form.title": "Sửa Upstream"
+    },
+    "certificate": {
+      "description": "Chứng chỉ dùng để kết thúc SSL/TLS cho kết nối mã hóa.",
+      "created": "Đã tạo chứng chỉ \"{id}\"!",
+      "updated": "Đã cập nhật chứng chỉ \"{id}\"!",
+      "deleted": "Đã xóa chứng chỉ \"{id}\"!",
+      "list.title": "Chứng chỉ",
+      "detail.title": "Chứng chỉ: {id}",
+      "create.form.title": "Chứng chỉ mới",
+      "edit.form.title": "Sửa chứng chỉ"
+    },
+    "ca-certificate": {
+      "description": "Chứng chỉ CA dùng để xác thực chứng chỉ client hoặc server.",
+      "created": "Đã tạo CA Certificate \"{id}\"!",
+      "updated": "Đã cập nhật CA Certificate \"{id}\"!",
+      "deleted": "Đã xóa CA Certificate \"{id}\"!",
+      "list.title": "Chứng chỉ CA",
+      "detail.title": "CA Certificate: {id}",
+      "create.form.title": "CA Certificate mới",
+      "edit.form.title": "Sửa CA Certificate"
+    },
+    "sni": {
+      "description": "SNI ánh xạ nhiều hostname tới một chứng chỉ.",
+      "created": "Đã tạo SNI \"{name}\"!",
+      "updated": "Đã cập nhật SNI \"{name}\"!",
+      "deleted": "Đã xóa SNI \"{name}\"!",
+      "list.title": "SNI",
+      "detail.title": "SNI: {name}",
+      "create.form.title": "SNI mới",
+      "edit.form.title": "Sửa SNI"
+    },
+    "target": {
+      "created": "Đã tạo Target \"{name}\"!",
+      "updated": "Đã cập nhật Target \"{name}\"!",
+      "deleted": "Đã xóa Target \"{name}\"!",
+      "marked.as.healthy": "Đã đánh dấu Target là khỏe!",
+      "marked.as.unhealthy": "Đã đánh dấu Target là không khỏe!",
+      "list.title": "Target",
+      "detail.title": "Target: {name}",
+      "create.form.title": "Target mới",
+      "edit.form.title": "Sửa Target"
+    },
+    "vault": {
+      "description": "Tăng cường bảo mật Kong Gateway bằng bí mật tập trung.",
+      "created": "Đã tạo Vault \"{name}\"!",
+      "updated": "Đã cập nhật Vault \"{name}\"!",
+      "deleted": "Đã xóa Vault \"{name}\"!",
+      "list.title": "Vault",
+      "detail.title": "Vault: {name}",
+      "create.form.title": "Vault mới",
+      "edit.form.title": "Sửa Vault"
+    },
+    "key": {
+      "description": "Đối tượng Key chứa khóa bất đối xứng ở nhiều định dạng.",
+      "created": "Đã tạo Key \"{name}\"!",
+      "updated": "Đã cập nhật Key \"{name}\"!",
+      "deleted": "Đã xóa Key \"{name}\"!",
+      "list.title": "Khóa",
+      "detail.title": "Key: {name}",
+      "create.form.title": "Key mới",
+      "edit.form.title": "Sửa Key"
+    },
+    "key-set": {
+      "description": "Key Set là tập hợp các đối tượng khóa.",
+      "created": "Đã tạo Key Set \"{name}\"!",
+      "updated": "Đã cập nhật Key Set \"{name}\"!",
+      "deleted": "Đã xóa Key Set \"{name}\"!",
+      "list.title": "Bộ khóa",
+      "detail.title": "Key Set: {name}",
+      "create.form.title": "Key Set mới",
+      "edit.form.title": "Sửa Key Set"
+    },
+    "dp-nodes": {
+      "list.title": "Nút Data Plane",
+      "copy.id": "Sao chép ID",
+      "copy.success": "Đã sao chép {id} vào clipboard",
+      "not.applicable": "Không có",
+      "headers": {
+        "hostname": "Hostname",
+        "version": "Phiên bản",
+        "last.seen": "Lần thấy cuối",
+        "sync.status": "Trạng thái đồng bộ",
+        "cert.expires.at": "Hết hạn chứng chỉ",
+        "log.level": "Mức log",
+        "labels": "Nhãn"
+      },
+      "empty": {
+        "title": "Không có nút Data Plane",
+        "message": "Không có nút Data Plane nào kết nối tới Control Plane này"
+      },
+      "error": {
+        "title": "Không lấy được Data Plane Nodes",
+        "fetch.fail": "Không tải được data plane",
+        "copy.fail": "Không sao chép được vào clipboard",
+        "get.log.level.fail": "Không lấy được mức log của nút {id}"
+      },
+      "bulk.actions": {
+        "placeholder": "{count} thao tác hàng loạt",
+        "change.log.level": "Đổi mức log"
+      },
+      "tooltips": {
+        "revert": "Mức log sẽ hoàn về {level} lúc {time}",
+        "not.supported": "Không hỗ trợ đổi mức log cho nút DP này."
+      }
+    }
+  },
+  "admin": {
+    "users": {
+      "description": "Tài khoản cục bộ trong Kong Manager. Nhóm người dùng quyết định vai trò Casbin.",
+      "loading": "Đang tải…",
+      "empty": "Chưa có người dùng.",
+      "headers": {
+        "username": "Tên đăng nhập",
+        "groups": "Nhóm",
+        "createdAt": "Ngày tạo"
+      },
+      "error": {
+        "load": "Không tải được danh sách người dùng.",
+        "forbidden": "Bạn không có quyền xem người dùng (cần vai trò admin).",
+        "usernameRequired": "Bắt buộc nhập tên đăng nhập.",
+        "passwordMin": "Mật khẩu mới ít nhất 8 ký tự, hoặc để trống để giữ mật khẩu hiện tại."
+      },
+      "editUser": "Sửa",
+      "delete": "Xóa",
+      "newPassword": "Mật khẩu mới",
+      "passwordPlaceholder": "Để trống để giữ nguyên",
+      "editHint": "Đổi tên đăng nhập và/hoặc mật khẩu mới (tối thiểu 8 ký tự). Khi lưu, các ô vai trò thay thế nhóm của người dùng.",
+      "saveChanges": "Lưu thay đổi",
+      "saved": "Đã cập nhật người dùng.",
+      "confirmDelete": "Xóa người dùng \"{name}\"? Không thể hoàn tác.",
+      "deleted": "Đã xóa người dùng.",
+      "createTitle": "Thêm người dùng",
+      "createHint": "Mật khẩu ít nhất 8 ký tự. Tên có thể gồm chữ (mọi ngôn ngữ), số, _, ., @, -. Có thể gán vai trò trước lần đăng nhập đầu.",
+      "createSubmit": "Tạo người dùng",
+      "created": "Đã tạo người dùng.",
+      "createError": "Không tạo được người dùng (trùng tên hoặc dữ liệu không hợp lệ)."
+    },
+    "auditLog": {
+      "description": "Nhật ký chỉ thêm: hành động đặc quyền (ai làm gì, khi nào).",
+      "loading": "Đang tải…",
+      "empty": "Chưa có bản ghi. Các thao tác như tạo/sửa người dùng, vai trò sẽ ghi tại đây.",
+      "summary": "{count} bản ghi",
+      "prev": "Trước",
+      "next": "Sau",
+      "first": "Đầu",
+      "last": "Cuối",
+      "pageSize": "Số dòng mỗi trang",
+      "pageOf": "Trang {current} / {total}",
+      "range": "{start}–{end} trong {total}",
+      "refresh": "Làm mới",
+      "headers": {
+        "time": "Thời gian",
+        "actor": "Người thực hiện",
+        "action": "Hành động",
+        "resource": "Tài nguyên",
+        "details": "Chi tiết",
+        "ip": "IP client"
+      },
+      "error": {
+        "load": "Không tải được nhật ký.",
+        "forbidden": "Bạn không có quyền xem nhật ký (cần vai trò admin)."
+      }
+    },
+    "rbac": {
+      "description": "Chính sách Casbin hiệu lực: vai trò nào truy cập đường dẫn nào; người dùng thuộc vai trò nào.",
+      "loading": "Đang tải…",
+      "policiesTitle": "Chính sách (vai trò → tài nguyên → hành động)",
+      "groupingTitle": "Người dùng → vai trò",
+      "headers": {
+        "role": "Vai trò / subject",
+        "resource": "Tài nguyên",
+        "action": "Hành động",
+        "user": "Người dùng",
+        "group": "Vai trò"
+      },
+      "error": {
+        "load": "Không tải được dữ liệu RBAC.",
+        "forbidden": "Bạn không có quyền xem RBAC (cần vai trò admin)."
+      },
+      "roles": {
+        "title": "Vai trò",
+        "newNamePlaceholder": "ten-vai-tro-moi",
+        "create": "Thêm vai trò",
+        "rename": "Đổi tên",
+        "delete": "Xóa",
+        "policies": "Chính sách",
+        "policyHint": "Đường dẫn phải bắt đầu bằng / (vd. /kong-admin/*) hoặc *. Hành động: GET, POST, PATCH, DELETE hoặc *.",
+        "addPolicyRow": "Thêm quy tắc",
+        "savePolicies": "Lưu chính sách",
+        "systemRole": "Hệ thống",
+        "rawSnapshot": "Ảnh Casbin thô",
+        "policiesFor": "Chính sách cho vai trò: {name}",
+        "roleCreated": "Đã tạo vai trò.",
+        "roleDeleted": "Đã xóa vai trò.",
+        "roleRenamed": "Đã đổi tên vai trò.",
+        "policiesSaved": "Đã lưu chính sách.",
+        "confirmDelete": "Xóa vai trò \"{name}\"?",
+        "deleteBlockedUsers": "Gỡ hết người dùng khỏi vai trò này trước khi xóa."
+      }
+    },
+    "clusters": {
+      "switchLabel": "Cụm Gateway",
+      "description": "URL Kong Admin upstream lưu theo từng cụm (động). Biến KONG_ADMIN_URL chỉ tạo dòng \"default\" khi bảng trống; sau đó thêm/sửa cụm tại đây. UI gọi BFF /kong-admin/c/{slug}/… và BFF chuyển tới admin_base_url tương ứng.",
+      "addTitle": "Thêm cụm",
+      "loading": "Đang tải…",
+      "fields": {
+        "name": "Tên hiển thị",
+        "slug": "Slug (đoạn URL)",
+        "adminBaseUrl": "URL nền Kong Admin",
+        "adminTokenOptional": "Token Kong Admin (tuỳ chọn)",
+        "enabled": "Bật"
+      },
+      "delete": "Xóa",
+      "created": "Đã thêm cụm.",
+      "saved": "Đã cập nhật cụm.",
+      "deleted": "Đã xóa cụm.",
+      "confirmDelete": "Xóa cụm \"{name}\"?",
+      "deleteBlocked": "Không thể xóa cụm này.",
+      "error": {
+        "load": "Không tải được danh sách cụm.",
+        "forbidden": "Bạn không có quyền quản lý cụm."
+      }
+    },
+    "sso": {
+      "title": "SSO (OpenID Connect)",
+      "description": "Đăng ký mỗi IdP với redirect URI {origin}{gui}/api/auth/oidc/{slug}/callback (chỉ thêm {gui} khi có ADMIN_GUI_PATH). Đặt PUBLIC_BASE_URL nếu origin công khai không suy ra đúng.",
+      "addTitle": "Thêm nhà cung cấp",
+      "loading": "Đang tải…",
+      "fields": {
+        "slug": "Slug URL",
+        "name": "Tên hiển thị",
+        "issuerUrl": "URL issuer",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "scopes": "Scopes (tuỳ chọn)",
+        "enabled": "Bật",
+        "sortOrder": "Thứ tự sắp xếp"
+      },
+      "created": "Đã tạo nhà cung cấp SSO.",
+      "saved": "Đã cập nhật nhà cung cấp SSO.",
+      "deleted": "Đã xóa nhà cung cấp SSO.",
+      "delete": "Xóa",
+      "confirmDelete": "Xóa nhà cung cấp SSO \"{name}\"?",
+      "editTitle": "Sửa nhà cung cấp SSO",
+      "editLead": "Cập nhật cấu hình IdP. Redirect URI bên dưới phải khớp chính xác trên Keycloak (hoặc IdP) trong Valid redirect URIs.",
+      "redirectUriKeycloak": "Nếu Keycloak báo “Invalid parameter: redirect_uri”, URL callback trên IdP không khớp URL Kong Manager gửi. Sao chép Redirect URI vào đúng client Keycloak cùng Client ID, mục Valid redirect URIs — scheme, host, path, port phải khớp.",
+      "redirectUriSameHost": "Dùng cùng host trên trình duyệt và Keycloak (localhost khác 127.0.0.1, hoặc cổng khác nhau là URI khác). Nếu FE cổng 8080 và BFF 8081, proxy dev phải giữ Host của trình duyệt, hoặc đặt PUBLIC_BASE_URL=http://localhost:8080 để BFF build redirect_uri đúng.",
+      "providersList": "Nhà cung cấp",
+      "addProviderButton": "Thêm nhà cung cấp",
+      "createModalTitle": "Thêm nhà cung cấp SSO",
+      "createLead": "Sau khi lưu, đăng ký Redirect URI bên dưới trên IdP. Chưa khớp thì đăng nhập sẽ lỗi invalid redirect_uri.",
+      "createValidation": "Điền slug URL, tên hiển thị, issuer URL, client ID và client secret.",
+      "redirectPreviewNeedSlug": "(Nhập slug URL để xem trước redirect URI.)",
+      "redirectUriLabel": "Redirect URI (đăng ký trên IdP)",
+      "redirectUriRegister": "Thêm đúng URL này vào Valid redirect URIs. Có thể dùng wildcard đuôi trên Keycloak (vd. https://host/*) nếu vẫn khớp đường dẫn trình duyệt dùng.",
+      "copyRedirectUri": "Sao chép",
+      "secretPlaceholder": "Để trống để giữ secret hiện tại",
+      "redirectUriCopied": "Đã sao chép Redirect URI.",
+      "copyFailed": "Không sao chép được.",
+      "error": {
+        "load": "Không tải được nhà cung cấp SSO.",
+        "forbidden": "Bạn không có quyền (cần vai trò admin)."
+      }
+    },
+    "notifications": {
+      "title": "Kênh thông báo",
+      "description": "Gửi tin thử tới Slack, Microsoft Teams, Telegram hoặc email SMTP. Bí mật (webhook, token bot, mật khẩu SMTP) lưu trên server và không hiển thị lại sau khi lưu.",
+      "channelsList": "Kênh",
+      "addChannel": "Thêm kênh",
+      "loading": "Đang tải…",
+      "test": "Thử",
+      "delete": "Xóa",
+      "yes": "Có",
+      "no": "Không",
+      "created": "Đã tạo kênh.",
+      "saved": "Đã cập nhật kênh.",
+      "deleted": "Đã xóa kênh.",
+      "testOk": "Đã gửi tin thử.",
+      "confirmDelete": "Xóa kênh thông báo \"{name}\"?",
+      "createModalTitle": "Thêm kênh thông báo",
+      "editTitle": "Sửa kênh thông báo",
+      "validationRequired": "Bắt buộc có tên và bí mật.",
+      "validationName": "Bắt buộc có tên.",
+      "invalidConfigJson": "Cấu hình phải là JSON object hợp lệ (vd. {} hoặc {\"chat_id\":\"…\"}).",
+      "secretPlaceholder": "URL webhook, token bot hoặc mật khẩu SMTP",
+      "secretEditPlaceholder": "Để trống để giữ bí mật hiện tại",
+      "fields": {
+        "name": "Tên hiển thị",
+        "type": "Loại kênh",
+        "hasSecret": "Đã lưu thông tin xác thực",
+        "secret": "Bí mật / credential",
+        "configJson": "Cấu hình (JSON object)",
+        "enabled": "Bật",
+        "sortOrder": "Thứ tự sắp xếp"
+      },
+      "hints": {
+        "webhook": "Slack và Teams dùng URL webhook làm bí mật; cấu hình có thể là {}.",
+        "telegram": "Bí mật là token bot từ BotFather. Cấu hình phải có chat_id (chuỗi hoặc số).",
+        "email": "Bí mật là mật khẩu SMTP. Cấu hình cần smtp_host, from, to và tuỳ chọn smtp_port (mặc định 587), smtp_user, use_tls (true cho SMTPS cổng 465)."
+      },
+      "error": {
+        "load": "Không tải được kênh thông báo.",
+        "forbidden": "Bạn không có quyền (cần vai trò admin)."
+      }
+    }
+  }
+}

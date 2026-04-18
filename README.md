@@ -1,12 +1,8 @@
 # Kong Manager OSS
 
-[Installation](#getting-started) | [Provide feedback](https://github.com/Kong/kong-manager/issues/new/choose) | [Ask a question](https://join.slack.com/t/kongcommunity/shared_invite/zt-1s4nb74vo-jLdMEk8MoTm~uMWYMMLPWg) | [Contributing](#contributing) | [Blog](https://konghq.com/blog)
+[Installation](#getting-started) | [Provide feedback](https://github.com/kong/kong-manager/issues/new/choose) | [Ask a question](https://join.slack.com/t/kongcommunity/shared_invite/zt-1s4nb74vo-jLdMEk8MoTm~uMWYMMLPWg) | [Contributing](#contributing) | [Blog](https://konghq.com/blog)
 
-> **BFF / backend (fork & roadmap):** xem [BACKEND_PLAN.md](BACKEND_PLAN.md) — kế hoạch Go + auth + Casbin + proxy Kong và trạng thái triển khai.
-
-**Chạy UI + Go BFF (login + proxy Kong):** build với `DISABLE_BASE_PATH=true` (tránh base `/__km_base__/`) và bật auth bằng `VITE_AUTH_REQUIRED=true`, rồi phục vụ thư mục `dist` bằng binary Go. Hoặc copy [public/kconfig.bff.example.js](public/kconfig.bff.example.js) → `public/kconfig.js` rồi `pnpm build`. Cổng mặc định của Go là `:8080` (`HTTP_ADDR`).
-
-**Test local (Vite + Go):** terminal 1 — `HTTP_ADDR=:8081 KONG_ADMIN_URL=http://127.0.0.1:9090 BOOTSTRAP_ADMIN_USERNAME=admin BOOTSTRAP_ADMIN_PASSWORD=changeme go run ./cmd/kong-manager` (SQLite mặc định). **`KONG_ADMIN_URL` chỉ dùng để seed bản ghi cluster `default` khi DB chưa có bảng / bảng rỗng**; mọi cụm bổ sung và URL thật sau đó nằm trong DB (**Admin → Kong clusters**), BFF proxy động theo `admin_base_url` từng dòng. Terminal 2 — `pnpm serve:bff` (UI `http://localhost:8080`, auth bật; proxy `/api` và `/kong-admin` → BFF). UI gọi Kong qua `/kong-admin/c/{slug}/…` (dropdown **Gateway cluster**). Đổi cổng BFF bằng `KONG_MANAGER_BFF_URL` khi chạy Vite. Nếu Kong Admin là **HTTPS** (ví dụ `https://localhost:8444`) với chứng chỉ tự ký, BFF cần `KONG_UPSTREAM_TLS_SKIP_VERIFY=true` (chỉ dùng dev/tin cậy).
+> **Go BFF fork:** This repository adds a Go backend (JWT login, Casbin RBAC, multi-cluster Kong Admin proxy). Roadmap and design notes are in [BACKEND_PLAN.md](BACKEND_PLAN.md). For day-to-day development with login and `/kong-admin` proxying, see [Running locally with Vite and the Go BFF](#running-locally-with-vite-and-the-go-bff).
 
 ![Kong Manager OSS - Plugin list](./media/Plugin%20list.png)
 
@@ -42,9 +38,104 @@ Finally, visit https://localhost:8002 to view Kong Manager.
 
 Kong Manager OSS is intended to be a local testing tool. However, you can also use it on a public server.
 
-> If running Kong Manger OSS on a public server, ensure that ports `8001` and `8002` are only accessible to your IP address
+> If running Kong Manager OSS on a public server, ensure that ports `8001` and `8002` are only accessible to your IP address
 
 To access Kong Manager OSS from a remote machine, ensure that `admin_listen` and `admin_gui_listen` are binding to `0.0.0.0` rather than `127.0.0.1` in `kong.conf` and restart your Kong Gateway instance.
+
+## Running locally with Vite and the Go BFF
+
+Use this flow when you need **authentication**, **Casbin RBAC**, and **same-origin Kong Admin** via the BFF (`/kong-admin/c/{cluster}/…`).
+
+### Prerequisites
+
+- **Go** (for `go run ./cmd/kong-manager`)
+- **Node.js 18+** and **pnpm**
+- A **reachable Kong Admin API** (HTTP or HTTPS). Default listen is often `http://127.0.0.1:8001`; adjust to your environment.
+
+### 1. Frontend config (`kconfig.js`)
+
+The UI reads runtime flags from `/kconfig.js` (`window.K_CONFIG`). For BFF mode:
+
+1. Copy the example file to a local (gitignored) file:
+
+   ```bash
+   cp public/kconfig.bff.example.js public/kconfig.js
+   ```
+
+2. Typical values (already in the example):
+
+   - `AUTH_REQUIRED: true`
+   - `ADMIN_API_URL: '/kong-admin'` (browser calls the BFF; the BFF proxies to Kong using the cluster row in the database)
+
+If `public/kconfig.js` is missing, the Vite dev server may proxy `/kconfig.js` to another host (see `vite.config.ts`), which can fail with **502** if that upstream is not running. Keeping `public/kconfig.js` in place avoids that.
+
+### 2. Start the Go BFF (terminal 1)
+
+Run the BFF on **port `8081`** so it does not collide with Vite on **`8080`**. The Vite dev server proxies `/api` and `/kong-admin` to `http://127.0.0.1:8081` by default (`KONG_MANAGER_BFF_URL` overrides this).
+
+Minimal example (SQLite DB file created next to the process unless you set `DATABASE_URL`):
+
+```bash
+KONG_UPSTREAM_TLS_SKIP_VERIFY=true \
+HTTP_ADDR=:8081 \
+KONG_ADMIN_URL=http://127.0.0.1:8001 \
+BOOTSTRAP_ADMIN_USERNAME=admin \
+BOOTSTRAP_ADMIN_PASSWORD=changeme \
+go run ./cmd/kong-manager
+```
+
+- **`KONG_ADMIN_URL`**: Used only to **seed** the first `default` Kong cluster row when the `kong_clusters` table is empty. Runtime routing uses each row’s `admin_base_url` (see **Admin → Kong clusters** in the UI, or update the DB). If you already have clusters in the DB, changing this env alone does not retarget an existing row.
+- **`BOOTSTRAP_ADMIN_*`**: Creates the first admin user when no users exist.
+- **`JWT_SECRET`**: Set a strong secret in any shared or production deployment (default is development-only).
+
+**HTTPS upstream (corporate CA or self-signed):** If Kong Admin uses TLS that Go does not trust (e.g. `x509: certificate signed by unknown authority`), set:
+
+```bash
+KONG_UPSTREAM_TLS_SKIP_VERIFY=true
+```
+
+Use only in **development** or **trusted networks**. For production, prefer installing your organization’s CA in the OS trust store or using a publicly trusted certificate.
+
+### 3. Start the Vite dev server (terminal 2)
+
+From the repo root:
+
+```bash
+pnpm install
+pnpm serve:bff
+```
+
+- **`serve:bff`** sets `VITE_AUTH_REQUIRED=true` at build time. With `public/kconfig.js` present, `AUTH_REQUIRED` also comes from `window.K_CONFIG`.
+- Open the UI at **http://localhost:8080** (Vite default). Use the bootstrap username/password to sign in.
+
+If the BFF listens elsewhere, point Vite at it:
+
+```bash
+KONG_MANAGER_BFF_URL=http://127.0.0.1:9090 pnpm serve:bff
+```
+
+### 4. Production-style build (optional)
+
+To serve the built SPA from the Go binary (single origin, no Vite):
+
+1. Build the frontend with a root base path and auth enabled, e.g.:
+
+   ```bash
+   DISABLE_BASE_PATH=true VITE_AUTH_REQUIRED=true pnpm build
+   ```
+
+2. Ensure `public/kconfig.js` exists before build so it is copied into `dist`, or rely on `VITE_AUTH_REQUIRED=true` as documented in `public/kconfig.bff.example.js`.
+
+3. Run the binary with `STATIC_DIR` pointing at `dist` and `HTTP_ADDR` as needed (default `:8080`).
+
+### Troubleshooting
+
+| Symptom | Likely cause | What to do |
+|--------|----------------|------------|
+| **502** on `/kong-admin/c/default` (response may mention upstream in BFF logs) | BFF cannot connect to Kong Admin (wrong URL/port, Kong down, TLS verify failure) | Confirm Kong Admin URL for cluster `default` (DB or seed). Check BFF logs: `kong-admin proxy: upstream=…`. For TLS trust issues, use `KONG_UPSTREAM_TLS_SKIP_VERIFY=true` only where appropriate, or fix the certificate chain. |
+| **401** on `/kong-admin/…` while on the login page | Unauthenticated `getInfo` call before JWT is present | Expected noise in the network tab; sign in and retry. |
+| **502** on `/kconfig.js` in dev | Missing `public/kconfig.js` and Vite proxy target unreachable | Add `public/kconfig.js` from the example, or set `KONG_GUI_URL` to a host that serves `kconfig.js`. |
+| UI on wrong port | Vite vs BFF port confusion | Vite: **8080**; BFF in README examples: **8081**. Align `KONG_MANAGER_BFF_URL` if you change the BFF port. |
 
 ## Why do I need this?
 
@@ -58,14 +149,23 @@ In addition, the plugin configuration UI provides instructions for each configur
 
 ## Contributing
 
-Kong Manager OSS is written in JavaScript. It uses Vue for it's UI components, and `pnpm` for managing dependencies. To build Kong Manager OSS locally please ensure that you have `node.js 18+` and `pnpm` installed.
+Kong Manager OSS is written in JavaScript. It uses Vue for its UI components, and `pnpm` for managing dependencies. To build Kong Manager OSS locally please ensure that you have `node.js 18+` and `pnpm` installed.
 
-You'll also need a running Kong Gateway instance. See [local testing](#local-testing) for a one-line solution. Alternatively, you can [build Kong Gateway from source](https://github.com/Kong/kong/tree/master/build).
+You'll also need a running Kong Gateway instance. See [local testing](#local-testing) for a one-line solution. Alternatively, you can [build Kong Gateway from source](https://github.com/kong/kong/tree/master/build).
 
-Once Kong Gateway is running, run the following command to start the development server:
+**UI only (no BFF, Kong Admin directly):** once Kong Gateway is running with Admin API exposed (often port `8001`), start the dev server:
 
 ```bash
-pnpm && pnpm serve
+pnpm install
+pnpm serve
 ```
 
-Kong Manager OSS is now available at http://localhost:8080
+Kong Manager OSS is available at http://localhost:8080.
+
+**This fork (UI + Go BFF):** use [Running locally with Vite and the Go BFF](#running-locally-with-vite-and-the-go-bff): `pnpm serve:bff` with the BFF running separately.
+
+Lint:
+
+```bash
+pnpm lint
+```

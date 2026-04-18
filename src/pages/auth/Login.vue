@@ -29,14 +29,37 @@
         </label>
         <label class="field">
           <span class="label">{{ t('auth.password') }}</span>
-          <KInput
-            v-model="password"
-            type="password"
-            autocomplete="current-password"
-            :placeholder="t('auth.password')"
-            required
-            data-testid="login-password"
-          />
+          <div class="password-field">
+            <div class="password-field__input-wrap">
+              <KInput
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                autocomplete="current-password"
+                :placeholder="t('auth.password')"
+                required
+                data-testid="login-password"
+              />
+            </div>
+            <KButton
+              type="button"
+              appearance="tertiary"
+              class="password-field__toggle"
+              :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
+              :title="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
+              @click="showPassword = !showPassword"
+            >
+              <VisibilityOffIcon
+                v-if="showPassword"
+                decorative
+                :size="20"
+              />
+              <VisibilityIcon
+                v-else
+                decorative
+                :size="20"
+              />
+            </KButton>
+          </div>
         </label>
         <p
           v-if="error"
@@ -81,6 +104,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import { KButton, KCard, KInput } from '@kong/kongponents'
 import { useI18n } from '@/composables/useI18n'
 import { config } from 'config'
@@ -96,6 +120,7 @@ const authStore = useAuthStore()
 
 const username = ref('')
 const password = ref('')
+const showPassword = ref(false)
 const loading = ref(false)
 const error = ref('')
 const ssoProviders = ref<Array<{ slug: string, name: string }>>([])
@@ -239,6 +264,30 @@ async function submit() {
 .label {
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+.password-field {
+  display: flex;
+  align-items: stretch;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.password-field__input-wrap {
+  flex: 1;
+  min-width: 0;
+
+  :deep(.k-input-wrapper) {
+    width: 100%;
+  }
+}
+
+.password-field__toggle {
+  flex-shrink: 0;
+  align-self: stretch;
+  min-width: 2.5rem;
+  padding-left: 0.35rem;
+  padding-right: 0.35rem;
 }
 
 .error {

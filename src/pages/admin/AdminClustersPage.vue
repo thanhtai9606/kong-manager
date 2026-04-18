@@ -81,10 +81,11 @@
                 {{ c.admin_base_url }}
               </template>
             </td>
-            <td>
-              <KCheckbox
+            <td class="admin-clusters__cell-switch">
+              <KInputSwitch
+                size="small"
                 :model-value="c.enabled"
-                @change="() => toggleFlip(c)"
+                @update:model-value="(v: boolean) => setClusterEnabled(c, v)"
               />
             </td>
             <td class="admin-clusters__actions">
@@ -132,7 +133,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { KButton, KCard, KCheckbox, KInput } from '@kong/kongponents'
+import { KButton, KCard, KInput, KInputSwitch } from '@kong/kongponents'
 import SupportText from '@/components/SupportText.vue'
 import { useI18n } from '@/composables/useI18n'
 import { useToaster } from '@/composables/useToaster'
@@ -223,9 +224,12 @@ async function saveUrl(c: KongClusterRow) {
   }
 }
 
-async function toggleFlip(c: KongClusterRow) {
+async function setClusterEnabled(c: KongClusterRow, enabled: boolean) {
+  if (c.enabled === enabled) {
+    return
+  }
   try {
-    await apiService.bffPatch(`/api/admin/kong-clusters/${c.id}`, { enabled: !c.enabled })
+    await apiService.bffPatch(`/api/admin/kong-clusters/${c.id}`, { enabled })
     await load()
     await kongClusterStore.loadClusters()
   } catch {
@@ -309,6 +313,11 @@ onMounted(() => {
   code {
     font-size: 0.8125rem;
   }
+}
+
+.admin-clusters__cell-switch {
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .admin-clusters__actions {

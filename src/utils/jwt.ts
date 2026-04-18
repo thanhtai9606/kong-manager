@@ -22,3 +22,32 @@ export function jwtSubject(token: string | null): string | null {
   const sub = p?.sub
   return typeof sub === 'string' ? sub : null
 }
+
+/** `uid` claim from Kong Manager access tokens (local or SSO-linked user). */
+export function jwtUserId(token: string | null): number | null {
+  if (!token) {
+    return null
+  }
+  const p = parseJwtPayload(token)
+  const uid = p?.uid
+  if (typeof uid === 'number' && Number.isFinite(uid)) {
+    return uid
+  }
+  if (typeof uid === 'string' && /^\d+$/.test(uid)) {
+    return parseInt(uid, 10)
+  }
+  return null
+}
+
+/** Session expiry from JWT `exp` (seconds since epoch). */
+export function jwtExpiresAt(token: string | null): Date | null {
+  if (!token) {
+    return null
+  }
+  const p = parseJwtPayload(token)
+  const exp = p?.exp
+  if (typeof exp === 'number' && Number.isFinite(exp)) {
+    return new Date(exp * 1000)
+  }
+  return null
+}

@@ -3,6 +3,8 @@
     "title": "Sign in",
     "username": "Username",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "submit": "Sign in",
     "invalid": "Invalid username or password",
     "ssoDivider": "Or sign in with SSO",
@@ -11,23 +13,21 @@
     "ssoRequired": "This account uses organization SSO. Use the SSO button instead.",
     "signOut": "Sign out",
     "menu": {
+      "profile": "Profile",
       "admin": "Admin",
       "signOut": "Sign out"
     }
   },
   "admin": {
     "nav": {
+      "profile": "Profile",
       "backToGateway": "Back to Gateway",
-      "home": "Admin",
       "users": "Users",
       "auditLog": "Audit log",
       "rbac": "RBAC",
       "clusters": "Kong clusters",
       "sso": "SSO",
       "notifications": "Notifications"
-    },
-    "placeholder": {
-      "description": "This section will be connected to the control plane. Placeholder content only."
     },
     "users": {
       "description": "Local accounts registered in Kong Manager. Group membership drives Casbin roles.",
@@ -186,10 +186,48 @@
         "forbidden": "You do not have permission (admin role required)."
       }
     },
-    "pages": {
-      "home": {
-        "title": "Admin"
+    "notifications": {
+      "title": "Notification channels",
+      "description": "Send test messages to Slack, Microsoft Teams, Telegram, or SMTP email. Secrets (webhook URLs, bot tokens, SMTP passwords) are stored on the server and are never shown again after save.",
+      "channelsList": "Channels",
+      "addChannel": "Add channel",
+      "loading": "Loading…",
+      "test": "Test",
+      "delete": "Delete",
+      "yes": "Yes",
+      "no": "No",
+      "created": "Channel created.",
+      "saved": "Channel updated.",
+      "deleted": "Channel removed.",
+      "testOk": "Test message sent.",
+      "confirmDelete": "Delete notification channel \"{name}\"?",
+      "createModalTitle": "Add notification channel",
+      "editTitle": "Edit notification channel",
+      "validationRequired": "Name and secret are required.",
+      "validationName": "Name is required.",
+      "invalidConfigJson": "Config must be valid JSON object (e.g. {} or {\"chat_id\":\"…\"}).",
+      "secretPlaceholder": "Webhook URL, bot token, or SMTP password",
+      "secretEditPlaceholder": "Leave empty to keep the current secret",
+      "fields": {
+        "name": "Display name",
+        "type": "Channel type",
+        "hasSecret": "Credential saved",
+        "secret": "Secret / credential",
+        "configJson": "Config (JSON object)",
+        "enabled": "Enabled",
+        "sortOrder": "Sort order"
       },
+      "hints": {
+        "webhook": "Slack and Teams use an incoming webhook URL as the secret; config can be {}.",
+        "telegram": "Secret is the bot token from BotFather. Config must include chat_id (string or number).",
+        "email": "Secret is the SMTP password. Config needs smtp_host, from, to, and optionally smtp_port (default 587), smtp_user, and use_tls (true for SMTPS on port 465)."
+      },
+      "error": {
+        "load": "Could not load notification channels.",
+        "forbidden": "You do not have permission (admin role required)."
+      }
+    },
+    "pages": {
       "users": {
         "title": "Users"
       },
@@ -211,8 +249,10 @@
     }
   },
   "global": {
+    "language": "Language",
     "copied": "Successfully copied to clipboard",
     "error": "An error has occurred, please try again",
+    "permissionDenied": "You do not have permission for this action. Your role may be view-only for Gateway configuration (services, routes, plugins, etc.).",
     "buttons": {
       "back": "Back",
       "edit": "Edit",
@@ -221,6 +261,41 @@
       "cancel": "Cancel"
     },
     "learn.more": "Learn more"
+  },
+  "app": {
+    "nav": {
+      "overview": "Overview",
+      "gatewayServices": "Gateway Services",
+      "routes": "Routes",
+      "consumers": "Consumers",
+      "plugins": "Plugins",
+      "upstreams": "Upstreams",
+      "certificates": "Certificates",
+      "caCertificates": "CA Certificates",
+      "snis": "SNIs",
+      "vaults": "Vaults",
+      "keys": "Keys",
+      "keySets": "Key Sets",
+      "dataPlaneNodes": "Data Plane Nodes"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Session details come from your access token; roles and email are loaded from your Kong Manager account.",
+    "notSignedIn": "You are not signed in.",
+    "openAdmin": "Open admin",
+    "loading": "Loading…",
+    "loadError": "Could not load account details.",
+    "loadErrorAuth": "Session expired. Sign in again.",
+    "sessionUnknown": "Signed in (token details unavailable)",
+    "fields": {
+      "username": "Username",
+      "userId": "User ID",
+      "email": "Email",
+      "roles": "Roles",
+      "sessionExpires": "Session expires",
+      "session": "Session"
+    }
   },
   "overview": {
     "info": {
@@ -270,7 +345,17 @@
     }
   },
   "not-found": {
-    "description": "We cannot find the page you were looking for. Go back to the previous page or {overview}."
+    "description": "We cannot find the page you were looking for. Go back to the previous page or {overview}.",
+    "returnHome": "return home"
+  },
+  "plugins": {
+    "viewDocumentation": "View documentation",
+    "pageTitleNew": "New Plugin: {type}",
+    "pageTitleEdit": "Edit Plugin: {type}"
+  },
+  "navbar": {
+    "logoAlt": "Kong Manager logo",
+    "overviewLinkTitle": "Go to overview"
   },
   "konnect-cta": {
     "name": "Konnect",

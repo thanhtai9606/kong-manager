@@ -4,7 +4,7 @@
     :title="pageTitle"
   >
     <KExternalLink :href="docsLink">
-      View documentation
+      {{ t('plugins.viewDocumentation') }}
     </KExternalLink>
   </PageHeader>
   <PluginForm
@@ -39,7 +39,11 @@ const { t } = useI18n()
 
 const pluginType = computed(() => route.params.pluginType as string)
 const pluginId = computed(() => route.params.id as string)
-const pageTitle = computed(() => `${pluginId.value ? 'Edit' : 'New'} Plugin: ${pluginType.value}`)
+const pageTitle = computed(() =>
+  pluginId.value
+    ? t('plugins.pageTitleEdit', { type: pluginType.value })
+    : t('plugins.pageTitleNew', { type: pluginType.value }),
+)
 const docsLink = computed(() => {
   return pluginMeta[pluginType.value] ? `https://docs.konghq.com/hub/kong-inc/${pluginType.value}` : ''
 })

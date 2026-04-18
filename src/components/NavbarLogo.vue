@@ -2,12 +2,18 @@
   <div class="brand-logo">
     <router-link
       :to="{ name: 'overview' }"
-      title="go to overview page"
+      :title="t('navbar.overviewLinkTitle')"
     >
       <img
         src="@/assets/logo.svg?external"
-        alt="Kong Manager Logo"
+        :alt="t('navbar.logoAlt')"
       >
     </router-link>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useI18n } from '@/composables/useI18n'
+
+const { t } = useI18n()
+</script>

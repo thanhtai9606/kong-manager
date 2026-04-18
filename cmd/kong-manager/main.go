@@ -52,6 +52,7 @@ func main() {
 	})
 
 	r.Post("/api/auth/login", jwtSvc.LoginHandler(db))
+	r.With(httpapi.JWTAuth(jwtSvc)).Get("/api/auth/me", httpapi.MeHandler(db))
 	r.Get("/api/auth/sso/providers", jwtSvc.PublicSSOProvidersHandler(db))
 	r.Get("/api/auth/oidc/{slug}/login", jwtSvc.OIDCLoginHandler(db))
 	r.Get("/api/auth/oidc/{slug}/callback", jwtSvc.OIDCCallbackHandler(db, enforcer))
@@ -80,6 +81,11 @@ func main() {
 		ar.Post("/sso-providers", admin.CreateSSOProvider(db))
 		ar.Patch("/sso-providers/{ssoProviderID}", admin.PatchSSOProvider(db))
 		ar.Delete("/sso-providers/{ssoProviderID}", admin.DeleteSSOProvider(db))
+		ar.Get("/notification-channels", admin.ListNotificationChannels(db))
+		ar.Post("/notification-channels", admin.CreateNotificationChannel(db))
+		ar.Patch("/notification-channels/{notificationChannelID}", admin.PatchNotificationChannel(db))
+		ar.Delete("/notification-channels/{notificationChannelID}", admin.DeleteNotificationChannel(db))
+		ar.Post("/notification-channels/{notificationChannelID}/test", admin.TestNotificationChannel(db))
 	})
 
 	kongHandler := httpapi.JWTAuth(jwtSvc)(

@@ -7,12 +7,18 @@
     >
       <template #overview>
         <router-link :to="{ name: 'overview' }">
-          return home
+          {{ t('not-found.returnHome') }}
         </router-link>
       </template>
     </i18n-t>
   </section>
 </template>
+
+<script setup lang="ts">
+import { useI18n } from '@/composables/useI18n'
+
+const { t } = useI18n()
+</script>
 
 <style lang="scss" scoped>
 .not-found {
